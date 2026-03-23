@@ -1,6 +1,6 @@
-﻿using E_commerce_API.Enums;
+﻿using E_commerce_API.src.Domain.Enums;
 
-namespace E_commerce_API.Entities
+namespace E_commerce_API.src.Domain.Entities
 {
     public class Order
     {

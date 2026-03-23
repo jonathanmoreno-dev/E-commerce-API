@@ -1,4 +1,4 @@
-﻿namespace E_commerce_API.Enums
+﻿namespace E_commerce_API.src.Domain.Enums
 {
     public enum ShippingStatus
     {

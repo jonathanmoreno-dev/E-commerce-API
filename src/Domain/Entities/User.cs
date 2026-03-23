@@ -1,4 +1,4 @@
-﻿namespace E_commerce_API.Entities
+﻿namespace E_commerce_API.src.Domain.Entities
 {
     public class User
     {
