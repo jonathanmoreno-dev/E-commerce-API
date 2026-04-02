@@ -1,5 +1,5 @@
 ﻿using E_commerce_API.src.Domain.Entities;
-using E_commerce_API.src.Infrastructure.Data.Configuration;
+using E_commerce_API.src.Infrastructure.Configuration;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_commerce_API.src.Infrastructure.Data
