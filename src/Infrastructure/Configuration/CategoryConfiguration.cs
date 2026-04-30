@@ -10,7 +10,7 @@ namespace E_commerce_API.src.Infrastructure.Configuration
         {
             builder.HasKey(x => x.CategoryId);
             builder.Property(x => x.Name).IsRequired().HasMaxLength(100);
-            builder.Property(x => x.Description).IsRequired();
+            builder.Property(x => x.Description).IsRequired().HasMaxLength(400);
         }
     }
 }
