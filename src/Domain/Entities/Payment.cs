@@ -1,4 +1,5 @@
 ﻿using E_commerce_API.src.Domain.Enums;
+using E_commerce_API.src.Domain.ValueObjects;
 
 namespace E_commerce_API.src.Domain.Entities
 {
@@ -7,7 +8,7 @@ namespace E_commerce_API.src.Domain.Entities
         public int PaymentId { get; private set; }
         public int OrderId { get; private set; }
         public Order Order { get; private set; } = null!;
-        public decimal Amount { get; private set; }
+        public Money Amount { get; private set; } = null!;
         public DateTime PaymentDate { get; private set; }
         public PaymentMethod Method { get; private set; }
         public PaymentStatus Status { get; private set; }
@@ -15,9 +16,7 @@ namespace E_commerce_API.src.Domain.Entities
         private Payment() { }
         public Payment(decimal amount, PaymentMethod method)
         {
-            if (amount <= 0)
-                throw new ArgumentException("Amount must be greater than zero");
-            Amount = amount;
+            Amount = new Money(amount);
             Status = PaymentStatus.Pending;
             Method = method;
             PaymentDate = DateTime.UtcNow;
