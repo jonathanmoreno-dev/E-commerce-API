@@ -6,23 +6,24 @@ namespace E_commerce_API.src.Domain.Entities
     {
         public int CategoryId { get; private set; }
         public CategoryName Name { get; private set; } = null!;
-        public string Description { get; private set; } = "";
+        public CategoryDescription Description { get; private set; } = null!;
 
         private readonly List<Product> _products = new();
         public IReadOnlyCollection<Product> Products => _products;
 
         private Category() { }
-        public Category(string name)
+        public Category(string name, string description)
         {
             ChangeName(name);
+            ChangeDescription(description);
         }
         public void ChangeName(string name)
         {
             Name = new CategoryName(name);
         }
-        public void SetDescription(string description)
+        public void ChangeDescription(string description)
         {
-            Description = description;
+            Description = new CategoryDescription(description);
         }
         public void AddProduct(Product product)
         {
