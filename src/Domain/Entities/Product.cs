@@ -6,9 +6,9 @@ namespace E_commerce_API.src.Domain.Entities
 {
     public class Product
     {
-        public int ProductId { get; set; }
-        public string Name { get; set; } = "";
-        public string ShortDescription { get; set; } = "";
+        public int ProductId { get; private set; }
+        public string Name { get; private set; } = "";
+        public string ShortDescription { get; private set; } = "";
         public string LongDescription { get; private set; } = "";
         public Money Price { get; private set; } = null!;
         public Quantity Stock { get; private set; } = null!;
@@ -25,13 +25,13 @@ namespace E_commerce_API.src.Domain.Entities
         private Product() { }
         public Product(string name, string shortDescription, string longDescription, decimal price, int stock)
         {
-            SetName(name);
-            SetShortDescription(shortDescription);
-            SetLongDescription(longDescription);
+            ChangeName(name);
+            ChangeShortDescription(shortDescription);
+            ChangeLongDescription(longDescription);
             Price = new Money(price);
             Stock = new Quantity(stock);
         }
-        public void SetName(string name)
+        public void ChangeName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Product's name cannot be empty");
@@ -40,7 +40,7 @@ namespace E_commerce_API.src.Domain.Entities
 
             Name = name;
         }
-        public void SetShortDescription(string shortDescription)
+        public void ChangeShortDescription(string shortDescription)
         {
             if (string.IsNullOrWhiteSpace(shortDescription))
                 throw new ArgumentException("Product's ShortDescription cannot be empty");
@@ -49,7 +49,7 @@ namespace E_commerce_API.src.Domain.Entities
 
             ShortDescription = shortDescription;
         }
-        public void SetLongDescription(string longDescription)
+        public void ChangeLongDescription(string longDescription)
         {
             if (string.IsNullOrWhiteSpace(longDescription))
                 throw new ArgumentException("Product's LongDescription cannot be empty");
