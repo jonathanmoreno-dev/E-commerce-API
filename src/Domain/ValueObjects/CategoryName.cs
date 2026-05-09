@@ -2,17 +2,17 @@
 {
     public record CategoryName
     {
-        public string Name { get; } = "";
+        public string Value { get; } = null!;
 
         private CategoryName() { }
-        public CategoryName(string name)
+        public CategoryName(string value)
         {
-            if (string.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(value))
                 throw new ArgumentException("Category's name cannot be empty");
-            if (name.Length > 100)
+            if (value.Length > 100)
                 throw new ArgumentException("Category's name cannot exceed 100 characters");
 
-            Name = name;
+            Value = value;
         }
     }
 }
