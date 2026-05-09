@@ -19,6 +19,7 @@ namespace E_commerce_API.src.Domain.Entities
         {
             UserId = userId;
             CreatedAt = DateTime.UtcNow;
+            UpdatedAt = CreatedAt;
         }
         public void AddItem(int productId, decimal unitPrice, int quantity)
         {
