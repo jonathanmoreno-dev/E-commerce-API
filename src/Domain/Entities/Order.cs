@@ -1,11 +1,12 @@
 ﻿using E_commerce_API.src.Domain.Enums;
+using E_commerce_API.src.Domain.ValueObjects;
 
 namespace E_commerce_API.src.Domain.Entities
 {
     public class Order
     {
         public int OrderId { get; private set; }
-        public decimal TotalAmount { get; private set; }
+        public Money TotalAmount { get; private set; } = null!;
         public DateTime CreatedAt { get; private set; }
         public OrderStatus Status { get; private set; }
         public int UserId { get; private set; }
@@ -60,7 +61,9 @@ namespace E_commerce_API.src.Domain.Entities
         {
             if (Status != OrderStatus.PendingPayment)
                 throw new InvalidOperationException("Order is not in a payable state");
-            if(amount <= 0)
+            if (_payments.Any(p => p.Status == PaymentStatus.Pending))
+                throw new ArgumentException("There is already a pending payment");
+            if (amount <= 0)
                 throw new ArgumentException("Amount must be greater than zero");
             
             _payments.Add(new Payment(amount, paymentMethod));
@@ -69,6 +72,8 @@ namespace E_commerce_API.src.Domain.Entities
         {
             if (Status != OrderStatus.PendingPayment)
                 throw new ArgumentException("Only pending orders can be paid");
+            if (!_payments.Any(p => p.Status == PaymentStatus.Completed))
+                throw new InvalidOperationException("No payment approved");
 
             Status = OrderStatus.Paid;
         }
@@ -101,7 +106,7 @@ namespace E_commerce_API.src.Domain.Entities
         }
         public void RecalculateTotal()
         {
-            TotalAmount = _orderItems.Sum(x => x.UnitPrice * x.Quantity);
+            TotalAmount = new Money(_orderItems.Sum(x => x.UnitPrice.Value * x.Quantity.Value));
         }
         public void AuthorizePayment(Payment payment)
         {
