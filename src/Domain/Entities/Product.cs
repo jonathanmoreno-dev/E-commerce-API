@@ -7,9 +7,9 @@ namespace E_commerce_API.src.Domain.Entities
     public class Product
     {
         public int ProductId { get; private set; }
-        public string Name { get; private set; } = "";
-        public string ShortDescription { get; private set; } = "";
-        public string LongDescription { get; private set; } = "";
+        public ProductName Name { get; private set; } = null!;
+        public ProductShortDescription ShortDescription { get; private set; } = null!;
+        public ProductLongDescription LongDescription { get; private set; } = null!;
         public Money Price { get; private set; } = null!;
         public Quantity Stock { get; private set; } = null!;
 
@@ -28,33 +28,24 @@ namespace E_commerce_API.src.Domain.Entities
             ChangeName(name);
             ChangeShortDescription(shortDescription);
             ChangeLongDescription(longDescription);
-            Price = new Money(price);
+            ChangePrice(price);
             Stock = new Quantity(stock);
         }
         public void ChangeName(string name)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("Product's name cannot be empty");
-            if (name.Length > 255)
-                throw new ArgumentException("Product's name cannot exceed 255 characters");
-
-            Name = name;
+            Name = new ProductName(name);
         }
         public void ChangeShortDescription(string shortDescription)
         {
-            if (string.IsNullOrWhiteSpace(shortDescription))
-                throw new ArgumentException("Product's ShortDescription cannot be empty");
-            if (shortDescription.Length > 400)
-                throw new ArgumentException("Product's ShortDescription cannot exceed 400 characters");
-
-            ShortDescription = shortDescription;
+            ShortDescription = new ProductShortDescription(shortDescription);
         }
         public void ChangeLongDescription(string longDescription)
         {
-            if (string.IsNullOrWhiteSpace(longDescription))
-                throw new ArgumentException("Product's LongDescription cannot be empty");
-
-            LongDescription = longDescription;
+            LongDescription = new ProductLongDescription(longDescription);
+        }
+        public void ChangePrice(decimal price)
+        {
+            Price = new Money(price);
         }
         public void IncreaseStock(int stock)
         {
