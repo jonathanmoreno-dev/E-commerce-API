@@ -29,17 +29,14 @@ namespace E_commerce_API.src.Domain.Entities
         public void SetShipping(Shipping shipping)
         {
             if (shipping is null)
-                throw new ArgumentNullException("Shipping cannot be null");
+                throw new ArgumentNullException(nameof(shipping));
             Shipping = shipping;
         }
         public void AddItem(int productId, decimal unitPrice, int quantity)
         {
             if (Status != OrderStatus.PendingPayment)
-                throw new ArgumentException("Cannot modify an order in progress");
-            if (quantity <= 0)
-                throw new ArgumentException("Quantity must be greater than zero");
-            if (unitPrice <= 0)
-                throw new ArgumentException("Price must be greater than zero");
+                throw new InvalidOperationException("Cannot modify an order in progress");
+
             var existingItem = _orderItems.FirstOrDefault(x => x.ProductId == productId);
             if (existingItem is null)
                 _orderItems.Add(new OrderItem(productId, unitPrice, quantity));
@@ -51,9 +48,7 @@ namespace E_commerce_API.src.Domain.Entities
         {
             var item = _orderItems.FirstOrDefault(x => x.OrderItemId == orderItemId);
             if (item is null)
-                throw new ArgumentNullException("OrderItem cannot be null");
-            if (quantity <= 0)
-                throw new ArgumentException("Quantity must be greater than zero");
+                throw new KeyNotFoundException($"OrderItem with this Id {orderItemId} not found");
 
             item.AddRefund(quantity);
         }
@@ -62,16 +57,14 @@ namespace E_commerce_API.src.Domain.Entities
             if (Status != OrderStatus.PendingPayment)
                 throw new InvalidOperationException("Order is not in a payable state");
             if (_payments.Any(p => p.Status == PaymentStatus.Pending))
-                throw new ArgumentException("There is already a pending payment");
-            if (amount <= 0)
-                throw new ArgumentException("Amount must be greater than zero");
-            
+                throw new InvalidOperationException("There is already a pending payment");
+
             _payments.Add(new Payment(amount, paymentMethod));
         }
         public void MarkAsPaid()
         {
             if (Status != OrderStatus.PendingPayment)
-                throw new ArgumentException("Only pending orders can be paid");
+                throw new InvalidOperationException("Only pending orders can be paid");
             if (!_payments.Any(p => p.Status == PaymentStatus.Completed))
                 throw new InvalidOperationException("No payment approved");
 
@@ -80,27 +73,27 @@ namespace E_commerce_API.src.Domain.Entities
         public void MarkAsShipped()
         {
             if (Status != OrderStatus.Paid)
-                throw new ArgumentException("Only paid orders can be shipped");
+                throw new InvalidOperationException("Only paid orders can be shipped");
 
             Status = OrderStatus.Shipped;
         }
         public void MarkAsDelivered()
         {
             if (Status != OrderStatus.Shipped)
-                throw new ArgumentException("Only shipped orders can be delivered");
+                throw new InvalidOperationException("Only shipped orders can be delivered");
 
             Status = OrderStatus.Delivered;
         }
         public void Cancel()
         {
             if (Status != OrderStatus.PendingPayment && Status != OrderStatus.Paid)
-                throw new ArgumentException("Only pending or paid orders can be canceled");
+                throw new InvalidOperationException("Only pending or paid orders can be canceled");
             Status = OrderStatus.Canceled;
         }
         public void MarkAsAbandoned()
         {
             if (Status != OrderStatus.PendingPayment)
-                throw new ArgumentException("Only pending orders can be abandoned");
+                throw new InvalidOperationException("Only pending orders can be abandoned");
 
             Status = OrderStatus.Abandoned;
         }
@@ -137,7 +130,7 @@ namespace E_commerce_API.src.Domain.Entities
         public void EnsurePaymentBelongsToOrder(Payment payment)
         {
             if (!_payments.Contains(payment))
-                throw new ArgumentException("Payment does not belong to this order");
+                throw new InvalidOperationException("Payment does not belong to this order");
         }
     }
 }

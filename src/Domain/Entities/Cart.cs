@@ -34,7 +34,7 @@ namespace E_commerce_API.src.Domain.Entities
         {
             var item = _cartItems.FirstOrDefault(x => x.ProductId == productId);
             if (item is null)
-                throw new ArgumentException($"CartItem with this Product Id: {productId} doesn't exists");
+                throw new KeyNotFoundException($"CartItem with this Product Id: {productId} doesn't exists");
 
             _cartItems.Remove(item);
             UpdatedAt = DateTime.UtcNow;

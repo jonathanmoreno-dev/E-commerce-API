@@ -28,9 +28,9 @@ namespace E_commerce_API.src.Domain.Entities
         public void AddProduct(Product product)
         {
             if (product is null)
-                throw new ArgumentNullException("Product cannot be null");
+                throw new ArgumentNullException(nameof(product));
             if (_products.Any(x => x.ProductId == product.ProductId))
-                throw new ArgumentException($"Product with this Id: {product.ProductId} already in category");
+                throw new InvalidOperationException($"Product with this Id: {product.ProductId} already in category");
 
             _products.Add(product);
         }
@@ -38,7 +38,7 @@ namespace E_commerce_API.src.Domain.Entities
         {
             var product = _products.FirstOrDefault(x => x.ProductId == productId);
             if(product is null)
-                throw new ArgumentException($"Product not found with this Id: {productId}");
+                throw new KeyNotFoundException($"Product with this Id: {productId} not found");
 
             _products.Remove(product);
         }
