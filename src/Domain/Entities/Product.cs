@@ -69,7 +69,7 @@ namespace E_commerce_API.src.Domain.Entities
         {
             var category = _categories.FirstOrDefault(x => x.CategoryId == categoryId);
             if (category is null)
-                throw new ArgumentNullException(nameof(category));
+                throw new KeyNotFoundException(nameof(category));
 
             _categories.Remove(category);
             category.RemoveProduct(ProductId);

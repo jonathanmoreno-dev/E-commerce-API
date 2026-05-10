@@ -35,7 +35,7 @@ namespace E_commerce_API.src.Domain.Entities
         {
             var totalRefunded = _refunds.Sum(x => x.Quantity.Value);
             if ((totalRefunded + quantity) > Quantity.Value)
-                throw new ArgumentException("Refund quantity exceeds purchased quantity");
+                throw new InvalidOperationException("Refund quantity exceeds purchased quantity");
 
             _refunds.Add(new Refund(quantity));
         }

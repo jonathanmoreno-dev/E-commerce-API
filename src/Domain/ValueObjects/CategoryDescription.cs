@@ -7,9 +7,9 @@
         public CategoryDescription(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
-                throw new ArgumentException("Category's name cannot be empty");
+                throw new ArgumentException("Category name cannot be empty");
             if (value.Length > 400)
-                throw new ArgumentException("Category's name cannot exceed 100 characters");
+                throw new ArgumentException("Category name cannot exceed 100 characters");
 
             Value = value;
         }
