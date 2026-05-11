@@ -64,44 +64,44 @@
         private void ValidateNeighborhood(string neighborhood)
         {
             if (string.IsNullOrWhiteSpace(neighborhood))
-                throw new ArgumentException($"Neighborhood cannot be empty {nameof(neighborhood)}");
+                throw new ArgumentException("Neighborhood cannot be empty", nameof(neighborhood));
             if(neighborhood.Length > 100)
-                throw new ArgumentException($"Neighborhood cannot exceed 100 characters {nameof(neighborhood)}");
+                throw new ArgumentException("Neighborhood cannot exceed 100 characters {nameof(neighborhood)}", nameof(neighborhood));
         }
         private void ValidateStreet(string street)
         {
             if (string.IsNullOrWhiteSpace(street))
-                throw new ArgumentException($"Street cannot be empty {nameof(street)}");
+                throw new ArgumentException("Street cannot be empty", nameof(street));
             if (street.Length > 50)
-                throw new ArgumentException($"Street cannot exceed 50 characters {nameof(street)}");
+                throw new ArgumentException("Street cannot exceed 50 characters", nameof(street));
         }
         private void ValidateNumber(string number)
         {
             if (string.IsNullOrWhiteSpace(number))
-                throw new ArgumentException($"Number cannot be empty {nameof(number)}");
+                throw new ArgumentException("Number cannot be empty", nameof(number));
             if (number.Length > 20)
-                throw new ArgumentException($"Number cannot exceed 20 characters {nameof(number)}");
+                throw new ArgumentException("Number cannot exceed 20 characters", nameof(number));
         }
         private void ValidateState(string state)
         {
             if (string.IsNullOrWhiteSpace(state))
-                throw new ArgumentException($"State cannot be empty {nameof(state)}");
+                throw new ArgumentException("State cannot be empty", nameof(state));
             if (state.Length > 50)
-                throw new ArgumentException($"State cannot exceed 50 characters {nameof(state)}");
+                throw new ArgumentException("State cannot exceed 50 characters", nameof(state));
         }
         private void ValidateCity(string city)
         {
             if (string.IsNullOrWhiteSpace(city))
-                throw new ArgumentException($"City cannot be empty {nameof(city)}");
+                throw new ArgumentException("City cannot be empty", nameof(city));
             if (city.Length > 100)
-                throw new ArgumentException($"City cannot exceed 100 characters {nameof(city)}");
+                throw new ArgumentException("City cannot exceed 100 characters", nameof(city));
         }
         private void ValidateZipCode(string zipCode)
         {
             if (string.IsNullOrWhiteSpace(zipCode))
-                throw new ArgumentException($"ZipCode cannot be empty {nameof(zipCode)}");
+                throw new ArgumentException("ZipCode cannot be empty", nameof(zipCode));
             if (zipCode.Length > 20)
-                throw new ArgumentException($"ZipCode cannot exceed 20 characters {nameof(zipCode)}");
+                throw new ArgumentException("ZipCode cannot exceed 20 characters", nameof(zipCode));
         }
     }
 }
