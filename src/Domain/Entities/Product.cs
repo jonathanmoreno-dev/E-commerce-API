@@ -60,7 +60,7 @@ namespace E_commerce_API.src.Domain.Entities
             if (category is null)
                 throw new ArgumentNullException(nameof(category));
             if (_categories.Any(x => x.CategoryId == category.CategoryId))
-                throw new InvalidOperationException($"Category with this Id: {category.CategoryId} already in product");
+                throw new InvalidOperationException($"Category with Id: {category.CategoryId} already in product");
 
             _categories.Add(category);
             category.AddProduct(this);
@@ -69,7 +69,7 @@ namespace E_commerce_API.src.Domain.Entities
         {
             var category = _categories.FirstOrDefault(x => x.CategoryId == categoryId);
             if (category is null)
-                throw new KeyNotFoundException(nameof(category));
+                throw new KeyNotFoundException($"Category with Id: {categoryId} was not found");
 
             _categories.Remove(category);
             category.RemoveProduct(ProductId);
