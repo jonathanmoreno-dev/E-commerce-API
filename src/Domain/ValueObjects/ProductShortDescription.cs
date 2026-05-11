@@ -6,9 +6,9 @@
         public ProductShortDescription(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
-                throw new ArgumentException("Product ShortDescription cannot be empty");
+                throw new ArgumentException("Product ShortDescription cannot be empty", nameof(value));
             if (value.Length > 400)
-                throw new ArgumentException("Product ShortDescription cannot exceed 400 characters");
+                throw new ArgumentException("Product ShortDescription cannot exceed 400 characters", nameof(value));
 
             Value = value;
         }

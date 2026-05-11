@@ -8,7 +8,7 @@
         public Money(decimal value)
         {
             if (value <= 0)
-                throw new ArgumentOutOfRangeException("Money must be greater than zero");
+                throw new ArgumentOutOfRangeException(nameof(value), "Money must be greater than zero");
 
             Value = value;
         }

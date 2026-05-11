@@ -8,21 +8,21 @@
         public Quantity(int value)
         {
             if (value < 0)
-                throw new ArgumentOutOfRangeException("Quantity cannot be negative");
+                throw new ArgumentOutOfRangeException(nameof(value), "Quantity cannot be negative");
 
             Value = value;
         }
         public Quantity Add(int value)
         {
             if (value <= 0)
-                throw new ArgumentOutOfRangeException("Quantity must be greater than zero");
+                throw new ArgumentOutOfRangeException(nameof(value), "Quantity must be greater than zero");
 
             return new Quantity(Value + value);
         }
         public Quantity Remove(int value)
         {
             if (value <= 0)
-                throw new ArgumentOutOfRangeException("Quantity must be greater than zero");
+                throw new ArgumentOutOfRangeException(nameof(value), "Quantity must be greater than zero");
             if(value > Value)
                 throw new InvalidOperationException("Cannot remove more than available quantity");
 
