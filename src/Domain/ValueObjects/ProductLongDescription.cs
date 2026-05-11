@@ -3,6 +3,7 @@
     public record ProductLongDescription
     {
         public string Value { get; } = null!;
+        private ProductLongDescription() { }
         public ProductLongDescription(string value)
         {
             if (string.IsNullOrWhiteSpace(value))

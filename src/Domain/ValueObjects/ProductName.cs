@@ -5,6 +5,7 @@ namespace E_commerce_API.src.Domain.ValueObjects
     public class ProductName
     {
         public string Value { get; } = null!;
+        private ProductName() { }
         public ProductName(string value)
         {
             if (string.IsNullOrWhiteSpace(value))

@@ -3,6 +3,7 @@
     public class ProductShortDescription
     {
         public string Value { get; } = null!;
+        private ProductShortDescription() { }
         public ProductShortDescription(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
