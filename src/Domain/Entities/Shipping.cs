@@ -1,21 +1,18 @@
 ﻿using E_commerce_API.src.Domain.Enums;
+using E_commerce_API.src.Domain.ValueObjects;
 
 namespace E_commerce_API.src.Domain.Entities
 {
     public class Shipping
     {
-        public int ShippingId { get; set; }
-        public int OrderId { get; set; }
-        public Order Order { get; set; } = null!;
-        public string RecipientName { get; set; } = "";
-        public string Address { get; set; } = "";
-        public string State { get; set; } = "";
-        public string City { get; set; } = "";
-        public string ZipCode { get; set; } = "";
-        public decimal ShippingCost { get; set; }
-        public string? TrackingCode { get; set; }
-        public DateTime? ShippedDate { get; set; }
-        public DateTime? DeliveredDate { get; set; }
-        public ShippingStatus Status { get; set; }
+        public int ShippingId { get; private set; }
+        public int OrderId { get; private set; }
+        public Order Order { get; private set; } = null!;
+        public ShippingAddress Address { get; private set; } = null!;
+        public Money ShippingCost { get; private set; } = null!;
+        public string? TrackingCode { get; private set; }
+        public DateTime? ShippedDate { get; private set; }
+        public DateTime? DeliveredDate { get; private set; }
+        public ShippingStatus Status { get; private set; }
     }
 }
