@@ -1,6 +1,6 @@
 ﻿namespace E_commerce_API.src.Domain.ValueObjects
 {
-    public class ProductShortDescription
+    public record ProductShortDescription
     {
         public string Value { get; } = null!;
         private ProductShortDescription() { }

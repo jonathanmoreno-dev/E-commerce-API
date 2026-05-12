@@ -2,7 +2,7 @@
 
 namespace E_commerce_API.src.Domain.ValueObjects
 {
-    public class ProductName
+    public record ProductName
     {
         public string Value { get; } = null!;
         private ProductName() { }
