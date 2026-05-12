@@ -9,7 +9,7 @@
             if (string.IsNullOrWhiteSpace(value))
                 throw new ArgumentException("Category description cannot be empty", nameof(value));
             if (value.Length > 400)
-                throw new ArgumentException("Category description cannot exceed 100 characters", nameof(value));
+                throw new ArgumentException("Category description cannot exceed 400 characters", nameof(value));
 
             Value = value;
         }
