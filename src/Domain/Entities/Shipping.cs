@@ -18,14 +18,7 @@ namespace E_commerce_API.src.Domain.Entities
         private Shipping() { }
         public Shipping(string recipientName, string phoneNumber, string neighborhood, string street, string number, string state, string city, string zipCode, decimal shippingCost)
         {
-            ChangeRecipientName(recipientName);
-            ChangePhoneNumber(phoneNumber);
-            ChangeNeighborhood(neighborhood);
-            ChangeStreet(street);
-            ChangeNumber(number);
-            ChangeState(state);
-            ChangeCity(city);
-            ChangeZipCode(zipCode);
+            ShippingAddress = new ShippingAddress(new PersonName(recipientName), new PhoneNumber(phoneNumber), neighborhood, street, number, state, city, zipCode);
             Status = ShippingStatus.Pending;
         }
         public void ChangeRecipientName(string recipientName)
@@ -59,6 +52,17 @@ namespace E_commerce_API.src.Domain.Entities
         public void ChangeZipCode(string zipCode)
         {
             ShippingAddress = ShippingAddress.WithZipCode(zipCode);
+        }
+        public void ChangeShippingCost(decimal shippingCost)
+        {
+            ShippingCost = new Money(shippingCost);
+        }
+        public void SetTrackingCode(string trackingCode)
+        {
+            if (string.IsNullOrWhiteSpace(trackingCode))
+                throw new ArgumentException("Tracking code cannot be empty", nameof(trackingCode));
+
+            TrackingCode = trackingCode;
         }
     }
 }
