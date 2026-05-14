@@ -9,7 +9,8 @@ namespace E_commerce_API.src.Infrastructure.Configuration
         public void Configure(EntityTypeBuilder<CartItem> builder)
         {
             builder.HasKey(x => x.CartItemId);
-            builder.Property(x => x.UnitPrice).HasPrecision(18, 2);
+            builder.ComplexProperty(x => x.UnitPrice, p => p.Property(v => v.Value).HasColumnName("UnitPrice"));
+            builder.ComplexProperty(x => x.Quantity, p => p.Property(v => v.Value).HasColumnName("Quantity"));
             builder.HasOne(x => x.Cart).WithMany(y => y.CartItems).HasForeignKey(x => x.CartId);
             builder.HasOne(x => x.Product).WithMany(y => y.CartItems).HasForeignKey(x => x.ProductId);
             builder.HasIndex(x => x.CartId).IsUnique();
