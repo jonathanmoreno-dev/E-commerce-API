@@ -64,5 +64,39 @@ namespace E_commerce_API.src.Domain.Entities
 
             TrackingCode = trackingCode;
         }
+        public void MarkAsProcessing()
+        {
+            if (Status != ShippingStatus.Pending)
+                throw new InvalidOperationException("Only pending shipping can be processing");
+
+            Status = ShippingStatus.Processing;
+        }
+        public void MarkAsShipped()
+        {
+            if (Status != ShippingStatus.Processing)
+                throw new InvalidOperationException("Only processing shipping can be shipped");
+
+            Status = ShippingStatus.Shipped;
+            ShippedDate = DateTime.UtcNow;
+        }
+        public void MarkAsInTransit()
+        {
+            if (Status != ShippingStatus.Shipped)
+                throw new InvalidOperationException("Only shipped shipping can be in transit");
+
+            Status = ShippingStatus.InTransit;
+        }
+        public void MarkAsDelivered()
+        {
+            if (Status != ShippingStatus.InTransit)
+                throw new InvalidOperationException("Only shipping in transit can be delivered");
+
+            Status = ShippingStatus.Delivered;
+            DeliveredDate = DateTime.UtcNow;
+        }
+        public void MarkAsReturned()
+        {
+            Status = ShippingStatus.Returned;
+        }
     }
 }
