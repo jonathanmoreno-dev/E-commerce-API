@@ -21,6 +21,10 @@ namespace E_commerce_API.src.Domain.Entities
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = CreatedAt;
         }
+        public Cart(User user) : this(user.UserId)
+        {
+            User = user;
+        }
         public void AddItem(int productId, decimal unitPrice, int quantity)
         {
             var existingItem = _cartItems.FirstOrDefault(x => x.ProductId == productId);
