@@ -10,7 +10,7 @@ namespace E_commerce_API.src.Infrastructure.Configuration
         {
             builder.HasKey(x => x.PaymentId);
             builder.HasOne(x => x.Order).WithMany(y => y.Payments).HasForeignKey(x => x.OrderId);
-            builder.Property(x => x.Amount).HasPrecision(18, 2);
+            builder.ComplexProperty(x => x.Amount, p => p.Property(v => v.Value).HasColumnName("Amount").HasPrecision(18, 2));
             builder.Property(x => x.PaymentDate).HasDefaultValueSql("CURRENT_TIMESTAMP");
             builder.Property(x => x.Method).HasConversion<string>();
             builder.Property(x => x.Status).HasConversion<string>();
