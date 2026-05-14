@@ -9,8 +9,8 @@ namespace E_commerce_API.src.Infrastructure.Configuration
         public void Configure(EntityTypeBuilder<Category> builder)
         {
             builder.HasKey(x => x.CategoryId);
-            builder.Property(x => x.Name).IsRequired().HasMaxLength(100);
-            builder.Property(x => x.Description).IsRequired().HasMaxLength(400);
+            builder.ComplexProperty(x => x.Name, p => p.Property(v => v.Value).HasColumnName("Name").IsRequired().HasMaxLength(100));
+            builder.ComplexProperty(x => x.Description, p => p.Property(v => v.Value).HasColumnName("Description").IsRequired().HasMaxLength(400));
         }
     }
 }
