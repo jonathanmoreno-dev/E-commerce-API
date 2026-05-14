@@ -9,7 +9,8 @@ namespace E_commerce_API.src.Infrastructure.Configuration
         public void Configure(EntityTypeBuilder<OrderItem> builder)
         {
             builder.HasKey(x => x.OrderItemId);
-            builder.Property(x => x.UnitPrice).HasPrecision(18, 2);
+            builder.ComplexProperty(x => x.UnitPrice, p => p.Property(v => v.Value).HasColumnName("UnitPrice").HasPrecision(18, 2));
+            builder.ComplexProperty(x => x.Quantity, p => p.Property(v => v.Value).HasColumnName("Quantity"));
             builder.HasOne(x => x.Order).WithMany(y => y.OrderItems).HasForeignKey(x => x.OrderId);
             builder.HasOne(x => x.Product).WithMany(y => y.OrderItems).HasForeignKey(x => x.ProductId);
             builder.HasIndex(x => x.ProductId).IsUnique();
