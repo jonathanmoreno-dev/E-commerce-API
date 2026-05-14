@@ -14,11 +14,11 @@ namespace E_commerce_API.src.Domain.Entities
         public DateTime? ShippedDate { get; private set; }
         public DateTime? DeliveredDate { get; private set; }
         public ShippingStatus Status { get; private set; }
-
         private Shipping() { }
         public Shipping(string recipientName, string phoneNumber, string neighborhood, string street, string number, string state, string city, string zipCode, decimal shippingCost)
         {
             ShippingAddress = new ShippingAddress(new PersonName(recipientName), new PhoneNumber(phoneNumber), neighborhood, street, number, state, city, zipCode);
+            ChangeShippingCost(shippingCost);
             Status = ShippingStatus.Pending;
         }
         public void ChangeRecipientName(string recipientName)
