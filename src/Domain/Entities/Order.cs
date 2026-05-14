@@ -27,6 +27,10 @@ namespace E_commerce_API.src.Domain.Entities
             Status = OrderStatus.PendingPayment;
             CreatedAt = DateTime.UtcNow;
         }
+        public Order(User user) : this(user.UserId)
+        {
+            User = user;
+        }
         public void SetShipping(Shipping shipping)
         {
             if (shipping is null)
