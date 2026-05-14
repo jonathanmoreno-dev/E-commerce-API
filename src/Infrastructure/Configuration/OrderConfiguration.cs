@@ -9,7 +9,7 @@ namespace E_commerce_API.src.Infrastructure.Configuration
         public void Configure(EntityTypeBuilder<Order> builder)
         {
             builder.HasKey(x => x.OrderId);
-            builder.Property(x => x.TotalAmount).HasPrecision(18, 2);
+            builder.ComplexProperty(x => x.TotalAmount, p => p.Property(v => v.Value).HasColumnName("TotalAmount").HasPrecision(18, 2));
             builder.Property(x => x.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
             builder.Property(x => x.Status).HasConversion<string>();
             builder.HasOne(x => x.User).WithMany(y => y.Orders).HasForeignKey(x => x.UserId);
