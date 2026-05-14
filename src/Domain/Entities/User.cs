@@ -1,11 +1,13 @@
-﻿namespace E_commerce_API.src.Domain.Entities
+﻿using E_commerce_API.src.Domain.ValueObjects;
+
+namespace E_commerce_API.src.Domain.Entities
 {
     public class User
     {
         public int UserId { get; set; }
-        public string FullName { get; set; } = "";
-        public string Email { get; set; } = "";
-        public string Phone { get; set; } = "";
+        public PersonName FullName { get; set; } = null!;
+        public Email Email { get; set; } = null!;
+        public PhoneNumber Phone { get; set; } = null!;
         public string PasswordHash { get; set; } = "";
         public int CartId { get; set; }
         public Cart Cart { get; set; } = null!;
