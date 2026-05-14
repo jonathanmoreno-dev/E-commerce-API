@@ -19,6 +19,10 @@ namespace E_commerce_API.src.Domain.Entities
             UnitPrice = new Money(unitPrice);
             Quantity = new Quantity(quantity);
         }
+        public CartItem(Product product, decimal unitPrice, int quantity) : this(product.ProductId, unitPrice, quantity)
+        {
+            Product = product;
+        }
         public void IncreaseQuantity(int quantity)
         {
             Quantity = Quantity.Add(quantity);
