@@ -6,7 +6,7 @@ namespace E_commerce_API.src.Domain.Entities
     public class Order
     {
         public int OrderId { get; private set; }
-        public Money TotalAmount { get; private set; } = null!;
+        public Money TotalAmount => new Money(_orderItems.Sum(x => x.UnitPrice.Value * x.Quantity.Value));
         public DateTime CreatedAt { get; private set; }
         public OrderStatus Status { get; private set; }
         public int UserId { get; private set; }
@@ -45,7 +45,6 @@ namespace E_commerce_API.src.Domain.Entities
                 _orderItems.Add(new OrderItem(productId, unitPrice, quantity));
             else
                 existingItem.IncreaseQuantity(quantity);
-            RecalculateTotal();
         }
         public void MarkAsPaid()
         {
@@ -84,7 +83,7 @@ namespace E_commerce_API.src.Domain.Entities
 
         public void CreateShipping(string recipientName, string phoneNumber, string neighborhood, string street, string number, string state, string city, string zipCode, decimal shippingCost)
         {
-            if(Shipping is not null)
+            if (Shipping is not null)
                 throw new InvalidOperationException("Shipping already exists");
 
             Shipping = new Shipping(recipientName, phoneNumber, neighborhood, street, number, state, city, zipCode, shippingCost);
@@ -186,10 +185,6 @@ namespace E_commerce_API.src.Domain.Entities
         {
             if (!_payments.Contains(payment))
                 throw new InvalidOperationException("Payment does not belong to this order");
-        }
-        private void RecalculateTotal()
-        {
-            TotalAmount = new Money(_orderItems.Sum(x => x.UnitPrice.Value * x.Quantity.Value));
         }
     }
 }
