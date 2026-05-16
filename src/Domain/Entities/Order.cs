@@ -11,7 +11,6 @@ namespace E_commerce_API.src.Domain.Entities
         public OrderStatus Status { get; private set; }
         public int UserId { get; private set; }
         public User User { get; private set; } = null!;
-        public int ShippingId { get; private set; }
         public Shipping Shipping { get; private set; } = null!;
 
         private List<Payment> _payments = new();
@@ -30,12 +29,6 @@ namespace E_commerce_API.src.Domain.Entities
         public Order(User user) : this(user.UserId)
         {
             User = user;
-        }
-        public void SetShipping(Shipping shipping)
-        {
-            if (shipping is null)
-                throw new ArgumentNullException(nameof(shipping));
-            Shipping = shipping;
         }
         public void AddItem(int productId, decimal unitPrice, int quantity)
         {
@@ -66,6 +59,61 @@ namespace E_commerce_API.src.Domain.Entities
 
             _payments.Add(new Payment(amount, paymentMethod));
         }
+        public void CreateShipping(string recipientName, string phoneNumber, string neighborhood, string street, string number, string state, string city, string zipCode, decimal shippingCost)
+        {
+            if(Shipping is not null)
+                throw new InvalidOperationException("Shipping already exists");
+
+            Shipping = new Shipping(recipientName, phoneNumber, neighborhood, street, number, state, city, zipCode, shippingCost);
+        }
+        public void MarkAsProcessing()
+        {
+            if (Shipping is null)
+                throw new InvalidOperationException("Shipping already exists");
+            if (Status != OrderStatus.Paid)
+                throw new InvalidOperationException("Only paid orders can be ProcessingShipping");
+
+            Shipping.MarkAsProcessing();
+        }
+        public void MarkAsShipped()
+        {
+            if (Shipping is null)
+                throw new InvalidOperationException("Shipping doesn't exists");
+
+            if (Status != OrderStatus.Paid)
+                throw new InvalidOperationException("Only paid orders can be shipped");
+
+            Shipping.MarkAsShipped();
+            Status = OrderStatus.Shipped;
+        }
+        public void MarkAsInTransit()
+        {
+            if (Shipping is null)
+                throw new InvalidOperationException("Shipping doesn't exists");
+
+            if (Status != OrderStatus.Shipped)
+                throw new InvalidOperationException("Only shipped orders can be in transit");
+
+            Shipping.MarkAsInTransit();
+        }
+        public void MarkAsDelivered()
+        {
+            if (Shipping is null)
+                throw new InvalidOperationException("Shipping doesn't exists");
+
+            if (Status != OrderStatus.Shipped)
+                throw new InvalidOperationException("Only shipped orders can be delivered");
+
+            Shipping.MarkAsDelivered();
+            Status = OrderStatus.Delivered;
+        }
+        public void MarkAsReturned()
+        {
+            if (Shipping is null)
+                throw new InvalidOperationException("Shipping doesn't exists");
+
+            Shipping.MarkAsReturned();
+        }
         public void MarkAsPaid()
         {
             if (Status != OrderStatus.PendingPayment)
@@ -74,20 +122,6 @@ namespace E_commerce_API.src.Domain.Entities
                 throw new InvalidOperationException("No payment approved");
 
             Status = OrderStatus.Paid;
-        }
-        public void MarkAsShipped()
-        {
-            if (Status != OrderStatus.Paid)
-                throw new InvalidOperationException("Only paid orders can be shipped");
-
-            Status = OrderStatus.Shipped;
-        }
-        public void MarkAsDelivered()
-        {
-            if (Status != OrderStatus.Shipped)
-                throw new InvalidOperationException("Only shipped orders can be delivered");
-
-            Status = OrderStatus.Delivered;
         }
         public void Cancel()
         {

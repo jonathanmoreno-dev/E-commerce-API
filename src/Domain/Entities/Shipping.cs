@@ -7,7 +7,6 @@ namespace E_commerce_API.src.Domain.Entities
     {
         public int ShippingId { get; private set; }
         public int OrderId { get; private set; }
-        public Order Order { get; private set; } = null!;
         public ShippingAddress ShippingAddress { get; private set; } = null!;
         public Money ShippingCost { get; private set; } = null!;
         public string? TrackingCode { get; private set; }
@@ -15,17 +14,11 @@ namespace E_commerce_API.src.Domain.Entities
         public DateTime? DeliveredDate { get; private set; }
         public ShippingStatus Status { get; private set; }
         private Shipping() { }
-        public Shipping(int orderId, string recipientName, string phoneNumber, string neighborhood, string street, string number, string state, string city, string zipCode, decimal shippingCost)
+        public Shipping(string recipientName, string phoneNumber, string neighborhood, string street, string number, string state, string city, string zipCode, decimal shippingCost)
         {
-            OrderId = orderId;
             ShippingAddress = new ShippingAddress(new PersonName(recipientName), new PhoneNumber(phoneNumber), neighborhood, street, number, state, city, zipCode);
             ChangeShippingCost(shippingCost);
             Status = ShippingStatus.Pending;
-        }
-        public Shipping(Order order, string recipientName, string phoneNumber, string neighborhood, string street, string number, string state, string city, string zipCode, decimal shippingCost) 
-            : this(order.OrderId, recipientName, phoneNumber, neighborhood, street, number, state, city, zipCode, shippingCost)
-        {
-            Order = order;
         }
         public void ChangeRecipientName(string recipientName)
         {
