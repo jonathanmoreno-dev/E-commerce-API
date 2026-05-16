@@ -30,6 +30,11 @@ namespace E_commerce_API.src.Domain.Entities
         {
             User = user;
         }
+
+        // =========================
+        //          ORDER
+        // =========================
+
         public void AddItem(int productId, decimal unitPrice, int quantity)
         {
             if (Status != OrderStatus.PendingPayment)
@@ -42,6 +47,28 @@ namespace E_commerce_API.src.Domain.Entities
                 existingItem.IncreaseQuantity(quantity);
             RecalculateTotal();
         }
+        public void MarkAsPaid()
+        {
+            if (Status != OrderStatus.PendingPayment)
+                throw new InvalidOperationException("Only pending orders can be paid");
+            if (!_payments.Any(p => p.Status == PaymentStatus.Completed))
+                throw new InvalidOperationException("No payment approved");
+
+            Status = OrderStatus.Paid;
+        }
+        public void Cancel()
+        {
+            if (Status != OrderStatus.PendingPayment && Status != OrderStatus.Paid)
+                throw new InvalidOperationException("Only pending or paid orders can be canceled");
+            Status = OrderStatus.Canceled;
+        }
+        public void MarkAsAbandoned()
+        {
+            if (Status != OrderStatus.PendingPayment)
+                throw new InvalidOperationException("Only pending orders can be abandoned");
+
+            Status = OrderStatus.Abandoned;
+        }
         public void RefundItem(int orderItemId, int quantity)
         {
             var item = _orderItems.FirstOrDefault(x => x.OrderItemId == orderItemId);
@@ -50,15 +77,11 @@ namespace E_commerce_API.src.Domain.Entities
 
             item.AddRefund(quantity);
         }
-        public void CreatePayment(decimal amount, PaymentMethod paymentMethod)
-        {
-            if (Status != OrderStatus.PendingPayment)
-                throw new InvalidOperationException("Order is not in a payable state");
-            if (_payments.Any(p => p.Status == PaymentStatus.Pending))
-                throw new InvalidOperationException("There is already a pending payment");
 
-            _payments.Add(new Payment(amount, paymentMethod));
-        }
+        // =========================
+        //          SHIPPING
+        // =========================
+
         public void CreateShipping(string recipientName, string phoneNumber, string neighborhood, string street, string number, string state, string city, string zipCode, decimal shippingCost)
         {
             if(Shipping is not null)
@@ -114,31 +137,19 @@ namespace E_commerce_API.src.Domain.Entities
 
             Shipping.MarkAsReturned();
         }
-        public void MarkAsPaid()
+
+        // =========================
+        //          PAYMENT
+        // =========================
+
+        public void CreatePayment(decimal amount, PaymentMethod paymentMethod)
         {
             if (Status != OrderStatus.PendingPayment)
-                throw new InvalidOperationException("Only pending orders can be paid");
-            if (!_payments.Any(p => p.Status == PaymentStatus.Completed))
-                throw new InvalidOperationException("No payment approved");
+                throw new InvalidOperationException("Order is not in a payable state");
+            if (_payments.Any(p => p.Status == PaymentStatus.Pending))
+                throw new InvalidOperationException("There is already a pending payment");
 
-            Status = OrderStatus.Paid;
-        }
-        public void Cancel()
-        {
-            if (Status != OrderStatus.PendingPayment && Status != OrderStatus.Paid)
-                throw new InvalidOperationException("Only pending or paid orders can be canceled");
-            Status = OrderStatus.Canceled;
-        }
-        public void MarkAsAbandoned()
-        {
-            if (Status != OrderStatus.PendingPayment)
-                throw new InvalidOperationException("Only pending orders can be abandoned");
-
-            Status = OrderStatus.Abandoned;
-        }
-        public void RecalculateTotal()
-        {
-            TotalAmount = new Money(_orderItems.Sum(x => x.UnitPrice.Value * x.Quantity.Value));
+            _payments.Add(new Payment(amount, paymentMethod));
         }
         public void AuthorizePayment(Payment payment)
         {
@@ -166,10 +177,19 @@ namespace E_commerce_API.src.Domain.Entities
             EnsurePaymentBelongsToOrder(payment);
             payment.MarkAsAbandoned();
         }
-        public void EnsurePaymentBelongsToOrder(Payment payment)
+
+        // =========================
+        //          HELPER
+        // =========================
+
+        private void EnsurePaymentBelongsToOrder(Payment payment)
         {
             if (!_payments.Contains(payment))
                 throw new InvalidOperationException("Payment does not belong to this order");
+        }
+        private void RecalculateTotal()
+        {
+            TotalAmount = new Money(_orderItems.Sum(x => x.UnitPrice.Value * x.Quantity.Value));
         }
     }
 }
