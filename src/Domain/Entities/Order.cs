@@ -11,7 +11,7 @@ namespace E_commerce_API.src.Domain.Entities
         public OrderStatus Status { get; private set; }
         public int UserId { get; private set; }
         public User User { get; private set; } = null!;
-        public Shipping Shipping { get; private set; } = null!;
+        public Shipping? Shipping { get; private set; }
 
         private List<Payment> _payments = new();
         public IReadOnlyCollection<Payment> Payments => _payments;
