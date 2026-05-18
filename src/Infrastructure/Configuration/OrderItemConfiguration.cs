@@ -13,8 +13,8 @@ namespace E_commerce_API.src.Infrastructure.Configuration
             builder.ComplexProperty(x => x.Quantity, p => p.Property(v => v.Value).HasColumnName("Quantity"));
             builder.HasOne(x => x.Order).WithMany(y => y.OrderItems).HasForeignKey(x => x.OrderId);
             builder.HasOne(x => x.Product).WithMany(y => y.OrderItems).HasForeignKey(x => x.ProductId);
-            builder.HasIndex(x => x.ProductId).IsUnique();
-            builder.HasIndex(x => x.OrderId).IsUnique();
+            builder.HasIndex(x => x.ProductId);
+            builder.HasIndex(x => x.OrderId);
         }
     }
 }

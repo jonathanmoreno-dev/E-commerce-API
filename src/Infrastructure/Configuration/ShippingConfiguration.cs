@@ -18,7 +18,8 @@ namespace E_commerce_API.src.Infrastructure.Configuration
             {
                 p.Property(r => r.RecipientName).HasColumnName("RecipientName").IsRequired().HasMaxLength(100);
                 p.Property(r => r.PhoneNumber).HasColumnName("PhoneNumber").IsRequired().HasMaxLength(20);
-                p.Property(r => r.Street).HasColumnName("Neighborhood").IsRequired().HasMaxLength(100);
+                p.Property(r => r.Neighborhood).HasColumnName("Neighborhood").IsRequired().HasMaxLength(100);
+                p.Property(r => r.Street).HasColumnName("Street").IsRequired().HasMaxLength(50);
                 p.Property(r => r.Number).HasColumnName("Number").IsRequired().HasMaxLength(50);
                 p.Property(r => r.State).HasColumnName("State").IsRequired().HasMaxLength(20);
                 p.Property(r => r.City).HasColumnName("City").IsRequired().HasMaxLength(50);

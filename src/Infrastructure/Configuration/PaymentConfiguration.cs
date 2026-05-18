@@ -14,7 +14,7 @@ namespace E_commerce_API.src.Infrastructure.Configuration
             builder.Property(x => x.PaymentDate).HasDefaultValueSql("CURRENT_TIMESTAMP");
             builder.Property(x => x.Method).HasConversion<string>();
             builder.Property(x => x.Status).HasConversion<string>();
-            builder.HasIndex(x => x.OrderId).IsUnique();
+            builder.HasIndex(x => x.OrderId);
         }
     }
 }
