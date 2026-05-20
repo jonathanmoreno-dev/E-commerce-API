@@ -2,5 +2,7 @@
 {
     public class CategoryListDTO
     {
+        public int CategoryId { get; set; }
+        public string Name { get; set; } = "";
     }
 }
