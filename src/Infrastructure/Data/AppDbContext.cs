@@ -11,7 +11,7 @@ namespace E_commerce_API.src.Infrastructure.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
-        public DbSet<PaymentAttempt> Payments { get; set; }
+        public DbSet<PaymentAttempt> PaymentAttempts { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Shipping> Shippings { get; set; }
         public DbSet<User> Users { get; set; }
