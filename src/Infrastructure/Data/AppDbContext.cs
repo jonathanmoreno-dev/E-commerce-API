@@ -13,6 +13,7 @@ namespace E_commerce_API.src.Infrastructure.Data
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<PaymentAttempt> PaymentAttempts { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<Refund> Refunds { get; set; }
         public DbSet<Shipping> Shippings { get; set; }
         public DbSet<User> Users { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
