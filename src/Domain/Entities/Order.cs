@@ -13,8 +13,8 @@ namespace E_commerce_API.src.Domain.Entities
         public User User { get; private set; } = null!;
         public Shipping? Shipping { get; private set; }
 
-        private List<Payment> _payments = new();
-        public IReadOnlyCollection<Payment> Payments => _payments;
+        private List<PaymentAttempt> _paymentAttempts = new();
+        public IReadOnlyCollection<PaymentAttempt> PaymentAttempts => _paymentAttempts;
 
         private List<OrderItem> _orderItems = new();
         public IReadOnlyCollection<OrderItem> OrderItems => _orderItems;
@@ -50,7 +50,7 @@ namespace E_commerce_API.src.Domain.Entities
         {
             if (Status != OrderStatus.PendingPayment)
                 throw new InvalidOperationException("Only pending orders can be paid");
-            if (!_payments.Any(p => p.Status == PaymentStatus.Completed))
+            if (!_paymentAttempts.Any(p => p.Status == PaymentStatus.Completed))
                 throw new InvalidOperationException("No payment approved");
 
             Status = OrderStatus.Paid;
@@ -145,45 +145,45 @@ namespace E_commerce_API.src.Domain.Entities
         {
             if (Status != OrderStatus.PendingPayment)
                 throw new InvalidOperationException("Order is not in a payable state");
-            if (_payments.Any(p => p.Status == PaymentStatus.Pending))
+            if (_paymentAttempts.Any(p => p.Status == PaymentStatus.Pending))
                 throw new InvalidOperationException("There is already a pending payment");
 
-            _payments.Add(new Payment(amount, paymentMethod));
+            _paymentAttempts.Add(new PaymentAttempt(amount, paymentMethod));
         }
-        public void AuthorizePayment(Payment payment)
+        public void AuthorizePayment(PaymentAttempt paymentAttempt)
         {
-            EnsurePaymentBelongsToOrder(payment);
-            payment.MarkAsAuthorized();
+            EnsurePaymentBelongsToOrder(paymentAttempt);
+            paymentAttempt.MarkAsAuthorized();
         }
-        public void CompletePayment(Payment payment)
+        public void CompletePayment(PaymentAttempt paymentAttempt)
         {
-            EnsurePaymentBelongsToOrder(payment);
-            payment.MarkAsCompleted();
+            EnsurePaymentBelongsToOrder(paymentAttempt);
+            paymentAttempt.MarkAsCompleted();
             MarkAsPaid();
         }
-        public void FailPayment(Payment payment)
+        public void FailPayment(PaymentAttempt paymentAttempt)
         {
-            EnsurePaymentBelongsToOrder(payment);
-            payment.MarkAsFailed();
+            EnsurePaymentBelongsToOrder(paymentAttempt);
+            paymentAttempt.MarkAsFailed();
         }
-        public void CancelPayment(Payment payment)
+        public void CancelPayment(PaymentAttempt paymentAttempt)
         {
-            EnsurePaymentBelongsToOrder(payment);
-            payment.MarkAsCanceled();
+            EnsurePaymentBelongsToOrder(paymentAttempt);
+            paymentAttempt.MarkAsCanceled();
         }
-        public void AbandonPayment(Payment payment)
+        public void AbandonPayment(PaymentAttempt paymentAttempt)
         {
-            EnsurePaymentBelongsToOrder(payment);
-            payment.MarkAsAbandoned();
+            EnsurePaymentBelongsToOrder(paymentAttempt);
+            paymentAttempt.MarkAsAbandoned();
         }
 
         // =========================
         //          HELPER
         // =========================
 
-        private void EnsurePaymentBelongsToOrder(Payment payment)
+        private void EnsurePaymentBelongsToOrder(PaymentAttempt paymentAttempt)
         {
-            if (!_payments.Contains(payment))
+            if (!_paymentAttempts.Contains(paymentAttempt))
                 throw new InvalidOperationException("Payment does not belong to this order");
         }
     }

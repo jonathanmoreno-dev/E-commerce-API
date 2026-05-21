@@ -3,9 +3,9 @@ using E_commerce_API.src.Domain.ValueObjects;
 
 namespace E_commerce_API.src.Domain.Entities
 {
-    public class Payment
+    public class PaymentAttempt
     {
-        public int PaymentId { get; private set; }
+        public int PaymentAttemptId { get; private set; }
         public int OrderId { get; private set; }
         public Order Order { get; private set; } = null!;
         public Money Amount { get; private set; } = null!;
@@ -13,8 +13,8 @@ namespace E_commerce_API.src.Domain.Entities
         public PaymentMethod Method { get; private set; }
         public PaymentStatus Status { get; private set; }
 
-        private Payment() { }
-        public Payment(decimal amount, PaymentMethod method)
+        private PaymentAttempt() { }
+        public PaymentAttempt(decimal amount, PaymentMethod method)
         {
             Amount = new Money(amount);
             Status = PaymentStatus.Pending;

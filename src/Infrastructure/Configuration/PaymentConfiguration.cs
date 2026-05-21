@@ -4,12 +4,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace E_commerce_API.src.Infrastructure.Configuration
 {
-    public class PaymentConfiguration : IEntityTypeConfiguration<Payment>
+    public class PaymentAttemptConfiguration : IEntityTypeConfiguration<PaymentAttempt>
     {
-        public void Configure(EntityTypeBuilder<Payment> builder)
+        public void Configure(EntityTypeBuilder<PaymentAttempt> builder)
         {
-            builder.HasKey(x => x.PaymentId);
-            builder.HasOne(x => x.Order).WithMany(y => y.Payments).HasForeignKey(x => x.OrderId);
+            builder.HasKey(x => x.PaymentAttemptId);
+            builder.HasOne(x => x.Order).WithMany(y => y.PaymentAttempts).HasForeignKey(x => x.OrderId);
             builder.ComplexProperty(x => x.Amount, p => p.Property(v => v.Value).HasColumnName("Amount").HasPrecision(18, 2));
             builder.Property(x => x.PaymentDate).HasDefaultValueSql("CURRENT_TIMESTAMP");
             builder.Property(x => x.Method).HasConversion<string>();
