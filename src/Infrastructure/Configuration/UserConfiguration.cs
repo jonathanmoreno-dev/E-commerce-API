@@ -9,7 +9,7 @@ namespace E_commerce_API.src.Infrastructure.Configuration
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.HasKey(x => x.UserId);
-            builder.HasIndex(x => x.Email).IsUnique();
+            builder.HasIndex("Email").IsUnique();
 
             builder.ComplexProperty(x => x.FullName, p => p.Property(v => v.Value).HasColumnName("FullName").IsRequired().HasMaxLength(150));
             builder.ComplexProperty(x => x.Email, p => p.Property(v => v.Value).HasColumnName("Email").IsRequired().HasMaxLength(255));
