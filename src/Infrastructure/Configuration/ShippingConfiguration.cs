@@ -16,8 +16,8 @@ namespace E_commerce_API.src.Infrastructure.Configuration
 
             builder.ComplexProperty(x => x.ShippingAddress, p =>
             {
-                p.Property(r => r.RecipientName).HasColumnName("RecipientName").IsRequired().HasMaxLength(100);
-                p.Property(r => r.PhoneNumber).HasColumnName("PhoneNumber").IsRequired().HasMaxLength(20);
+                p.ComplexProperty(r => r.RecipientName, pn => pn.Property(v => v.Value).HasColumnName("RecipientName").IsRequired().HasMaxLength(100));
+                p.ComplexProperty(r => r.PhoneNumber, pn => pn.Property(v => v.Value).HasColumnName("PhoneNumber").IsRequired().HasMaxLength(20));
                 p.Property(r => r.Neighborhood).HasColumnName("Neighborhood").IsRequired().HasMaxLength(100);
                 p.Property(r => r.Street).HasColumnName("Street").IsRequired().HasMaxLength(50);
                 p.Property(r => r.Number).HasColumnName("Number").IsRequired().HasMaxLength(50);
