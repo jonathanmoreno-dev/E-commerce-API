@@ -12,7 +12,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 string? postgreSQLStringConnectionString = builder.Configuration.GetConnectionString("Default");
-builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(postgreSQLStringConnectionString));
+builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(postgreSQLStringConnectionString).UseSnakeCaseNamingConvention());
 
 var app = builder.Build();
 

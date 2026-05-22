@@ -12,18 +12,18 @@ namespace E_commerce_API.src.Infrastructure.Configuration
 
             builder.HasOne(x => x.Order).WithOne(y => y.Shipping).HasForeignKey<Shipping>(x => x.OrderId);
 
-            builder.ComplexProperty(x => x.ShippingCost, p => p.Property(v => v.Value).HasColumnName("ShippingCost").HasPrecision(18, 2));
+            builder.ComplexProperty(x => x.ShippingCost, p => p.Property(v => v.Value).HasColumnName("shipping_cost").HasPrecision(18, 2));
 
             builder.ComplexProperty(x => x.ShippingAddress, p =>
             {
-                p.ComplexProperty(r => r.RecipientName, pn => pn.Property(v => v.Value).HasColumnName("RecipientName").IsRequired().HasMaxLength(100));
-                p.ComplexProperty(r => r.PhoneNumber, pn => pn.Property(v => v.Value).HasColumnName("PhoneNumber").IsRequired().HasMaxLength(20));
-                p.Property(r => r.Neighborhood).HasColumnName("Neighborhood").IsRequired().HasMaxLength(100);
-                p.Property(r => r.Street).HasColumnName("Street").IsRequired().HasMaxLength(50);
-                p.Property(r => r.Number).HasColumnName("Number").IsRequired().HasMaxLength(50);
-                p.Property(r => r.State).HasColumnName("State").IsRequired().HasMaxLength(20);
-                p.Property(r => r.City).HasColumnName("City").IsRequired().HasMaxLength(50);
-                p.Property(r => r.ZipCode).HasColumnName("ZipCode").IsRequired().HasMaxLength(20);
+                p.ComplexProperty(r => r.RecipientName, pn => pn.Property(v => v.Value).HasColumnName("recipient_name").IsRequired().HasMaxLength(100));
+                p.ComplexProperty(r => r.PhoneNumber, pn => pn.Property(v => v.Value).HasColumnName("phone_number").IsRequired().HasMaxLength(20));
+                p.Property(r => r.Neighborhood).HasColumnName("neighborhood").IsRequired().HasMaxLength(100);
+                p.Property(r => r.Street).HasColumnName("street").IsRequired().HasMaxLength(50);
+                p.Property(r => r.Number).HasColumnName("number").IsRequired().HasMaxLength(50);
+                p.Property(r => r.State).HasColumnName("state").IsRequired().HasMaxLength(20);
+                p.Property(r => r.City).HasColumnName("city").IsRequired().HasMaxLength(50);
+                p.Property(r => r.ZipCode).HasColumnName("zip_code").IsRequired().HasMaxLength(20);
             });
 
             builder.Property(x => x.TrackingCode).HasMaxLength(100);
