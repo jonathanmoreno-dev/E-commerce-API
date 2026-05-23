@@ -7,7 +7,7 @@ namespace E_commerce_API.src.Application.DTOs.OrderDTOs
 {
     public class OrderDetailsDTO
     {
-        public int OrderId { get; set; }
+        public int Id { get; set; }
         public decimal TotalAmount { get; set; }
         public string Status { get; set; } = "";
         public DateTime CreateAt { get; set; }

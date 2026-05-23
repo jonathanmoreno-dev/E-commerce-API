@@ -4,7 +4,7 @@ namespace E_commerce_API.src.Application.DTOs.OrderDTOs
 {
     public class OrderListDTO
     {
-        public int OrderId { get; set; }
+        public int Id { get; set; }
         public UserListDTO UserListDTO { get; set; } = null!;
     }
 }
