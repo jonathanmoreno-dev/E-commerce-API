@@ -8,8 +8,10 @@ namespace E_commerce_API.src.Infrastructure.Configuration
     {
         public void Configure(EntityTypeBuilder<Shipping> builder)
         {
+            builder.ToTable("shippings");
             builder.HasKey(x => x.Id);
-
+            builder.Property(x => x.Id).HasColumnName("id");
+            builder.Property(x => x.OrderId).HasColumnName("order_id");
             builder.HasOne(x => x.Order).WithOne(y => y.Shipping).HasForeignKey<Shipping>(x => x.OrderId);
 
             builder.ComplexProperty(x => x.ShippingCost, p => p.Property(v => v.Value).HasColumnName("shipping_cost").HasPrecision(18, 2));
@@ -25,9 +27,10 @@ namespace E_commerce_API.src.Infrastructure.Configuration
                 p.Property(r => r.City).HasColumnName("city").IsRequired().HasMaxLength(50);
                 p.Property(r => r.ZipCode).HasColumnName("zip_code").IsRequired().HasMaxLength(20);
             });
-
-            builder.Property(x => x.TrackingCode).HasMaxLength(100);
-            builder.Property(x => x.Status).HasConversion<string>();
+            builder.Property(x => x.ShippedDate).HasColumnName("shipped_date");
+            builder.Property(x => x.DeliveredDate).HasColumnName("delivered_date");
+            builder.Property(x => x.TrackingCode).HasMaxLength(100).HasColumnName("tracking_code");
+            builder.Property(x => x.Status).HasConversion<string>().HasColumnName("status");
             builder.HasIndex(x => x.OrderId).IsUnique();
         }
     }
