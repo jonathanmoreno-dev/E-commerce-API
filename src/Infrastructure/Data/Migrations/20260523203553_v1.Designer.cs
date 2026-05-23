@@ -13,8 +13,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace E_commerce_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260522012641_Initial")]
-    partial class Initial
+    [Migration("20260523203553_v1")]
+    partial class v1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,61 +28,68 @@ namespace E_commerce_API.Migrations
 
             modelBuilder.Entity("CategoryProduct", b =>
                 {
-                    b.Property<int>("CategoriesCategoryId")
+                    b.Property<int>("CategoriesId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ProductsProductId")
+                    b.Property<int>("ProductsId")
                         .HasColumnType("integer");
 
-                    b.HasKey("CategoriesCategoryId", "ProductsProductId");
+                    b.HasKey("CategoriesId", "ProductsId");
 
-                    b.HasIndex("ProductsProductId");
+                    b.HasIndex("ProductsId");
 
                     b.ToTable("CategoryProduct");
                 });
 
             modelBuilder.Entity("E_commerce_API.src.Domain.Entities.Cart", b =>
                 {
-                    b.Property<int>("CartId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CartId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("user_id");
 
-                    b.HasKey("CartId");
+                    b.HasKey("Id");
 
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Carts");
+                    b.ToTable("carts", (string)null);
                 });
 
             modelBuilder.Entity("E_commerce_API.src.Domain.Entities.CartItem", b =>
                 {
-                    b.Property<int>("CartItemId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CartItemId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CartId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("cart_id");
 
                     b.Property<int>("ProductId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("product_id");
 
                     b.ComplexProperty<Dictionary<string, object>>("Quantity", "E_commerce_API.src.Domain.Entities.CartItem.Quantity#Quantity", b1 =>
                         {
@@ -90,7 +97,7 @@ namespace E_commerce_API.Migrations
 
                             b1.Property<int>("Value")
                                 .HasColumnType("integer")
-                                .HasColumnName("Quantity");
+                                .HasColumnName("quantity");
                         });
 
                     b.ComplexProperty<Dictionary<string, object>>("UnitPrice", "E_commerce_API.src.Domain.Entities.CartItem.UnitPrice#Money", b1 =>
@@ -100,25 +107,26 @@ namespace E_commerce_API.Migrations
                             b1.Property<decimal>("Value")
                                 .HasPrecision(18, 2)
                                 .HasColumnType("numeric(18,2)")
-                                .HasColumnName("UnitPrice");
+                                .HasColumnName("unit_price");
                         });
 
-                    b.HasKey("CartItemId");
+                    b.HasKey("Id");
 
                     b.HasIndex("CartId");
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("CartItems");
+                    b.ToTable("cart_items", (string)null);
                 });
 
             modelBuilder.Entity("E_commerce_API.src.Domain.Entities.Category", b =>
                 {
-                    b.Property<int>("CategoryId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CategoryId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.ComplexProperty<Dictionary<string, object>>("Description", "E_commerce_API.src.Domain.Entities.Category.Description#CategoryDescription", b1 =>
                         {
@@ -128,7 +136,7 @@ namespace E_commerce_API.Migrations
                                 .IsRequired()
                                 .HasMaxLength(400)
                                 .HasColumnType("character varying(400)")
-                                .HasColumnName("Description");
+                                .HasColumnName("description");
                         });
 
                     b.ComplexProperty<Dictionary<string, object>>("Name", "E_commerce_API.src.Domain.Entities.Category.Name#CategoryName", b1 =>
@@ -139,54 +147,61 @@ namespace E_commerce_API.Migrations
                                 .IsRequired()
                                 .HasMaxLength(100)
                                 .HasColumnType("character varying(100)")
-                                .HasColumnName("Name");
+                                .HasColumnName("name");
                         });
 
-                    b.HasKey("CategoryId");
+                    b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("categories", (string)null);
                 });
 
             modelBuilder.Entity("E_commerce_API.src.Domain.Entities.Order", b =>
                 {
-                    b.Property<int>("OrderId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("OrderId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("status");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("user_id");
 
-                    b.HasKey("OrderId");
+                    b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("orders", (string)null);
                 });
 
             modelBuilder.Entity("E_commerce_API.src.Domain.Entities.OrderItem", b =>
                 {
-                    b.Property<int>("OrderItemId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("OrderItemId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("OrderId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("order_id");
 
                     b.Property<int>("ProductId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("product_id");
 
                     b.ComplexProperty<Dictionary<string, object>>("Quantity", "E_commerce_API.src.Domain.Entities.OrderItem.Quantity#Quantity", b1 =>
                         {
@@ -194,7 +209,7 @@ namespace E_commerce_API.Migrations
 
                             b1.Property<int>("Value")
                                 .HasColumnType("integer")
-                                .HasColumnName("Quantity");
+                                .HasColumnName("quantity");
                         });
 
                     b.ComplexProperty<Dictionary<string, object>>("UnitPrice", "E_commerce_API.src.Domain.Entities.OrderItem.UnitPrice#Money", b1 =>
@@ -204,41 +219,46 @@ namespace E_commerce_API.Migrations
                             b1.Property<decimal>("Value")
                                 .HasPrecision(18, 2)
                                 .HasColumnType("numeric(18,2)")
-                                .HasColumnName("UnitPrice");
+                                .HasColumnName("unit_price");
                         });
 
-                    b.HasKey("OrderItemId");
+                    b.HasKey("Id");
 
                     b.HasIndex("OrderId");
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("order_items", (string)null);
                 });
 
             modelBuilder.Entity("E_commerce_API.src.Domain.Entities.PaymentAttempt", b =>
                 {
-                    b.Property<int>("PaymentAttemptId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PaymentAttemptId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Method")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("method");
 
                     b.Property<int>("OrderId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("order_id");
 
                     b.Property<DateTime>("PaymentDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
+                        .HasColumnName("payment_date")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("status");
 
                     b.ComplexProperty<Dictionary<string, object>>("Amount", "E_commerce_API.src.Domain.Entities.PaymentAttempt.Amount#Money", b1 =>
                         {
@@ -247,23 +267,24 @@ namespace E_commerce_API.Migrations
                             b1.Property<decimal>("Value")
                                 .HasPrecision(18, 2)
                                 .HasColumnType("numeric(18,2)")
-                                .HasColumnName("Amount");
+                                .HasColumnName("amount");
                         });
 
-                    b.HasKey("PaymentAttemptId");
+                    b.HasKey("Id");
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("PaymentAttempts");
+                    b.ToTable("payment_attempts", (string)null);
                 });
 
             modelBuilder.Entity("E_commerce_API.src.Domain.Entities.Product", b =>
                 {
-                    b.Property<int>("ProductId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ProductId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.ComplexProperty<Dictionary<string, object>>("LongDescription", "E_commerce_API.src.Domain.Entities.Product.LongDescription#ProductLongDescription", b1 =>
                         {
@@ -272,7 +293,7 @@ namespace E_commerce_API.Migrations
                             b1.Property<string>("Value")
                                 .IsRequired()
                                 .HasColumnType("text")
-                                .HasColumnName("LongDescription");
+                                .HasColumnName("long_description");
                         });
 
                     b.ComplexProperty<Dictionary<string, object>>("Name", "E_commerce_API.src.Domain.Entities.Product.Name#ProductName", b1 =>
@@ -283,7 +304,7 @@ namespace E_commerce_API.Migrations
                                 .IsRequired()
                                 .HasMaxLength(255)
                                 .HasColumnType("character varying(255)")
-                                .HasColumnName("Name");
+                                .HasColumnName("name");
                         });
 
                     b.ComplexProperty<Dictionary<string, object>>("Price", "E_commerce_API.src.Domain.Entities.Product.Price#Money", b1 =>
@@ -293,7 +314,7 @@ namespace E_commerce_API.Migrations
                             b1.Property<decimal>("Value")
                                 .HasPrecision(18, 2)
                                 .HasColumnType("numeric(18,2)")
-                                .HasColumnName("Price");
+                                .HasColumnName("price");
                         });
 
                     b.ComplexProperty<Dictionary<string, object>>("ShortDescription", "E_commerce_API.src.Domain.Entities.Product.ShortDescription#ProductShortDescription", b1 =>
@@ -304,7 +325,7 @@ namespace E_commerce_API.Migrations
                                 .IsRequired()
                                 .HasMaxLength(400)
                                 .HasColumnType("character varying(400)")
-                                .HasColumnName("ShortDescription");
+                                .HasColumnName("short_description");
                         });
 
                     b.ComplexProperty<Dictionary<string, object>>("Stock", "E_commerce_API.src.Domain.Entities.Product.Stock#Quantity", b1 =>
@@ -313,28 +334,31 @@ namespace E_commerce_API.Migrations
 
                             b1.Property<int>("Value")
                                 .HasColumnType("integer")
-                                .HasColumnName("Stock");
+                                .HasColumnName("stock");
                         });
 
-                    b.HasKey("ProductId");
+                    b.HasKey("Id");
 
-                    b.ToTable("Products");
+                    b.ToTable("products", (string)null);
                 });
 
             modelBuilder.Entity("E_commerce_API.src.Domain.Entities.Refund", b =>
                 {
-                    b.Property<int>("RefundId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("RefundId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("OrderItemId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("order_item_id");
 
                     b.Property<DateTime>("RefundDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
+                        .HasColumnName("refund_date")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.ComplexProperty<Dictionary<string, object>>("Quantity", "E_commerce_API.src.Domain.Entities.Refund.Quantity#Quantity", b1 =>
@@ -343,40 +367,46 @@ namespace E_commerce_API.Migrations
 
                             b1.Property<int>("Value")
                                 .HasColumnType("integer")
-                                .HasColumnName("Quantity");
+                                .HasColumnName("quantity");
                         });
 
-                    b.HasKey("RefundId");
+                    b.HasKey("Id");
 
                     b.HasIndex("OrderItemId");
 
-                    b.ToTable("Refunds");
+                    b.ToTable("refunds", (string)null);
                 });
 
             modelBuilder.Entity("E_commerce_API.src.Domain.Entities.Shipping", b =>
                 {
-                    b.Property<int>("ShippingId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ShippingId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime?>("DeliveredDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("delivered_date");
 
                     b.Property<int>("OrderId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("order_id");
 
                     b.Property<DateTime?>("ShippedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("shipped_date");
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("status");
 
                     b.Property<string>("TrackingCode")
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("tracking_code");
 
                     b.ComplexProperty<Dictionary<string, object>>("ShippingAddress", "E_commerce_API.src.Domain.Entities.Shipping.ShippingAddress#ShippingAddress", b1 =>
                         {
@@ -386,37 +416,37 @@ namespace E_commerce_API.Migrations
                                 .IsRequired()
                                 .HasMaxLength(50)
                                 .HasColumnType("character varying(50)")
-                                .HasColumnName("City");
+                                .HasColumnName("city");
 
                             b1.Property<string>("Neighborhood")
                                 .IsRequired()
                                 .HasMaxLength(100)
                                 .HasColumnType("character varying(100)")
-                                .HasColumnName("Neighborhood");
+                                .HasColumnName("neighborhood");
 
                             b1.Property<string>("Number")
                                 .IsRequired()
                                 .HasMaxLength(50)
                                 .HasColumnType("character varying(50)")
-                                .HasColumnName("Number");
+                                .HasColumnName("number");
 
                             b1.Property<string>("State")
                                 .IsRequired()
                                 .HasMaxLength(20)
                                 .HasColumnType("character varying(20)")
-                                .HasColumnName("State");
+                                .HasColumnName("state");
 
                             b1.Property<string>("Street")
                                 .IsRequired()
                                 .HasMaxLength(50)
                                 .HasColumnType("character varying(50)")
-                                .HasColumnName("Street");
+                                .HasColumnName("street");
 
                             b1.Property<string>("ZipCode")
                                 .IsRequired()
                                 .HasMaxLength(20)
                                 .HasColumnType("character varying(20)")
-                                .HasColumnName("ZipCode");
+                                .HasColumnName("zip_code");
 
                             b1.ComplexProperty<Dictionary<string, object>>("PhoneNumber", "E_commerce_API.src.Domain.Entities.Shipping.ShippingAddress#ShippingAddress.PhoneNumber#PhoneNumber", b2 =>
                                 {
@@ -426,7 +456,7 @@ namespace E_commerce_API.Migrations
                                         .IsRequired()
                                         .HasMaxLength(20)
                                         .HasColumnType("character varying(20)")
-                                        .HasColumnName("PhoneNumber");
+                                        .HasColumnName("phone_number");
                                 });
 
                             b1.ComplexProperty<Dictionary<string, object>>("RecipientName", "E_commerce_API.src.Domain.Entities.Shipping.ShippingAddress#ShippingAddress.RecipientName#PersonName", b2 =>
@@ -437,7 +467,7 @@ namespace E_commerce_API.Migrations
                                         .IsRequired()
                                         .HasMaxLength(100)
                                         .HasColumnType("character varying(100)")
-                                        .HasColumnName("RecipientName");
+                                        .HasColumnName("recipient_name");
                                 });
                         });
 
@@ -448,41 +478,44 @@ namespace E_commerce_API.Migrations
                             b1.Property<decimal>("Value")
                                 .HasPrecision(18, 2)
                                 .HasColumnType("numeric(18,2)")
-                                .HasColumnName("ShippingCost");
+                                .HasColumnName("shipping_cost");
                         });
 
-                    b.HasKey("ShippingId");
+                    b.HasKey("Id");
 
                     b.HasIndex("OrderId")
                         .IsUnique();
 
-                    b.ToTable("Shippings");
+                    b.ToTable("shippings", (string)null);
                 });
 
             modelBuilder.Entity("E_commerce_API.src.Domain.Entities.User", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CartId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("EmailValue")
+                    b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)")
-                        .HasColumnName("Email");
+                        .HasColumnName("email");
 
                     b.Property<bool>("IsAdmin")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_admin");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("password_hash");
 
                     b.ComplexProperty<Dictionary<string, object>>("FullName", "E_commerce_API.src.Domain.Entities.User.FullName#PersonName", b1 =>
                         {
@@ -492,7 +525,7 @@ namespace E_commerce_API.Migrations
                                 .IsRequired()
                                 .HasMaxLength(150)
                                 .HasColumnType("character varying(150)")
-                                .HasColumnName("FullName");
+                                .HasColumnName("full_name");
                         });
 
                     b.ComplexProperty<Dictionary<string, object>>("PhoneNumber", "E_commerce_API.src.Domain.Entities.User.PhoneNumber#PhoneNumber", b1 =>
@@ -503,28 +536,28 @@ namespace E_commerce_API.Migrations
                                 .IsRequired()
                                 .HasMaxLength(50)
                                 .HasColumnType("character varying(50)")
-                                .HasColumnName("PhoneNumber");
+                                .HasColumnName("phone_number");
                         });
 
-                    b.HasKey("UserId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("EmailValue")
+                    b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("users", (string)null);
                 });
 
             modelBuilder.Entity("CategoryProduct", b =>
                 {
                     b.HasOne("E_commerce_API.src.Domain.Entities.Category", null)
                         .WithMany()
-                        .HasForeignKey("CategoriesCategoryId")
+                        .HasForeignKey("CategoriesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("E_commerce_API.src.Domain.Entities.Product", null)
                         .WithMany()
-                        .HasForeignKey("ProductsProductId")
+                        .HasForeignKey("ProductsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
