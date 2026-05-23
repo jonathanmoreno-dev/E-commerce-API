@@ -4,7 +4,7 @@ namespace E_commerce_API.src.Domain.Entities
 {
     public class Refund
     {
-        public int RefundId { get; private set; }
+        public int Id { get; private set; }
         public int OrderItemId { get; private set; }
         public OrderItem OrderItem { get; private set; } = null!;
         public Quantity Quantity { get; private set; } = null!;

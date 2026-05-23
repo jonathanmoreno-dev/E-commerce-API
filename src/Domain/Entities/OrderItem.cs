@@ -5,7 +5,7 @@ namespace E_commerce_API.src.Domain.Entities
 {
     public class OrderItem
     {
-        public int OrderItemId { get; private set; }
+        public int Id { get; private set; }
         public int OrderId { get; private set; }
         public Order Order { get; private set; } = null!;
         public int ProductId { get; private set; }
@@ -23,7 +23,7 @@ namespace E_commerce_API.src.Domain.Entities
             UnitPrice = new Money(unitPrice);
             Quantity = new Quantity(quantity);
         }
-        public OrderItem(Product product, decimal unitPrice, int quantity) : this(product.ProductId, unitPrice, quantity)
+        public OrderItem(Product product, decimal unitPrice, int quantity) : this(product.Id, unitPrice, quantity)
         {
             Product = product;
         }

@@ -5,7 +5,7 @@ namespace E_commerce_API.src.Domain.Entities
 {
     public class Order
     {
-        public int OrderId { get; private set; }
+        public int Id { get; private set; }
         public Money TotalAmount => new Money(_orderItems.Sum(x => x.UnitPrice.Value * x.Quantity.Value));
         public DateTime CreatedAt { get; private set; }
         public OrderStatus Status { get; private set; }
@@ -26,7 +26,7 @@ namespace E_commerce_API.src.Domain.Entities
             Status = OrderStatus.PendingPayment;
             CreatedAt = DateTime.UtcNow;
         }
-        public Order(User user) : this(user.UserId)
+        public Order(User user) : this(user.Id)
         {
             User = user;
         }
@@ -70,7 +70,7 @@ namespace E_commerce_API.src.Domain.Entities
         }
         public void RefundItem(int orderItemId, int quantity)
         {
-            var item = _orderItems.FirstOrDefault(x => x.OrderItemId == orderItemId);
+            var item = _orderItems.FirstOrDefault(x => x.Id == orderItemId);
             if (item is null)
                 throw new KeyNotFoundException($"OrderItem with this Id {orderItemId} not found");
 

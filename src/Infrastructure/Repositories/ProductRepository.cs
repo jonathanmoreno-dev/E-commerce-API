@@ -18,7 +18,7 @@ namespace E_commerce_API.src.Infrastructure.Repositories
         }
         public async Task<Product?> GetByIdAsync(int id)
         {
-            return await _appDbContext.Products.FirstOrDefaultAsync(x => x.ProductId == id);
+            return await _appDbContext.Products.FirstOrDefaultAsync(x => x.Id == id);
         }
         public void Add(Product product)
         {

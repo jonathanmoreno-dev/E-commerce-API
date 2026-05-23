@@ -5,7 +5,7 @@ namespace E_commerce_API.src.Domain.Entities
 {
     public class Shipping
     {
-        public int ShippingId { get; private set; }
+        public int Id { get; private set; }
         public int OrderId { get; private set; }
         public Order Order { get; private set; } = null!;
         public ShippingAddress ShippingAddress { get; private set; } = null!;

@@ -18,7 +18,7 @@ namespace E_commerce_API.src.Infrastructure.Repositories
         }
         public async Task<Order?> GetByIdAsync(int id)
         {
-            return await _appDbContext.Orders.FirstOrDefaultAsync(x => x.OrderId == id);
+            return await _appDbContext.Orders.FirstOrDefaultAsync(x => x.Id == id);
         }
         public void Add(Order order)
         {

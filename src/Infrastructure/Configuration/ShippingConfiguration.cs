@@ -8,7 +8,7 @@ namespace E_commerce_API.src.Infrastructure.Configuration
     {
         public void Configure(EntityTypeBuilder<Shipping> builder)
         {
-            builder.HasKey(x => x.ShippingId);
+            builder.HasKey(x => x.Id);
 
             builder.HasOne(x => x.Order).WithOne(y => y.Shipping).HasForeignKey<Shipping>(x => x.OrderId);
 

@@ -8,7 +8,7 @@ namespace E_commerce_API.src.Infrastructure.Configuration
     {
         public void Configure(EntityTypeBuilder<Cart> builder)
         {
-            builder.HasKey(x => x.CartId);
+            builder.HasKey(x => x.Id);
             builder.Property(x => x.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
             builder.Property(x => x.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
             builder.HasOne(x => x.User).WithOne(x => x.Cart).HasForeignKey<Cart>(x => x.UserId);

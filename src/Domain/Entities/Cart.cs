@@ -5,7 +5,7 @@ namespace E_commerce_API.src.Domain.Entities
 {
     public class Cart
     {
-        public int CartId { get; private set; }
+        public int Id { get; private set; }
         public int UserId { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
@@ -21,7 +21,7 @@ namespace E_commerce_API.src.Domain.Entities
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = CreatedAt;
         }
-        public Cart(User user) : this(user.UserId)
+        public Cart(User user) : this(user.Id)
         {
             User = user;
         }

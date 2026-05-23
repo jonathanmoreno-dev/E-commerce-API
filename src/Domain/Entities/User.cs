@@ -4,7 +4,7 @@ namespace E_commerce_API.src.Domain.Entities
 {
     public class User
     {
-        public int UserId { get; private set; }
+        public int Id { get; private set; }
         public PersonName FullName { get; private set; } = null!;
         public Email Email { get; private set; } = null!;
         public PhoneNumber PhoneNumber { get; private set; } = null!;
@@ -23,7 +23,7 @@ namespace E_commerce_API.src.Domain.Entities
             ChangePhoneNumber(phoneNumber);
             ChangePasswordHash(passwordHash);
         }
-        public User(string fullName, string email, string phoneNumber, string passwordHash, Cart cart) : this(fullName, email, phoneNumber, passwordHash, cart.CartId)
+        public User(string fullName, string email, string phoneNumber, string passwordHash, Cart cart) : this(fullName, email, phoneNumber, passwordHash, cart.Id)
         {
             Cart = cart;
         }
@@ -47,14 +47,14 @@ namespace E_commerce_API.src.Domain.Entities
         {
             if (order is null)
                 throw new ArgumentNullException(nameof(order));
-            if (_orders.Any(x => x.OrderId == order.OrderId))
-                throw new InvalidOperationException($"Order with Id: {order.OrderId} already in user");
+            if (_orders.Any(x => x.Id == order.Id))
+                throw new InvalidOperationException($"Order with Id: {order.Id} already in user");
 
             _orders.Add(order);
         }
         public void RemoveOrder(int orderId)
         {
-            var order = _orders.FirstOrDefault(x => x.OrderId == orderId);
+            var order = _orders.FirstOrDefault(x => x.Id == orderId);
             if (order is null)
                 throw new KeyNotFoundException($"Order with Id: {orderId} was not found");
 

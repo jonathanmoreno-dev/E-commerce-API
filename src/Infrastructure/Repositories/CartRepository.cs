@@ -18,7 +18,7 @@ namespace E_commerce_API.src.Infrastructure.Repositories
         }
         public async Task<Cart?> GetByIdAsync(int id)
         {
-            return await _appDbContext.Carts.FirstOrDefaultAsync(x => x.CartId == id);
+            return await _appDbContext.Carts.FirstOrDefaultAsync(x => x.Id == id);
         }
         public void Add(Cart cart)
         {

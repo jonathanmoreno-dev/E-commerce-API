@@ -8,7 +8,7 @@ namespace E_commerce_API.src.Infrastructure.Configuration
     {
         public void Configure(EntityTypeBuilder<Product> builder)
         {
-            builder.HasKey(x => x.ProductId);
+            builder.HasKey(x => x.Id);
             builder.ComplexProperty(x => x.Name, p => p.Property(v => v.Value).HasColumnName("name").IsRequired().HasMaxLength(255));
             builder.ComplexProperty(x => x.ShortDescription, p => p.Property(v => v.Value).HasColumnName("short_description").IsRequired().HasMaxLength(400));
             builder.ComplexProperty(x => x.LongDescription, p => p.Property(v => v.Value).HasColumnName("long_description").IsRequired());

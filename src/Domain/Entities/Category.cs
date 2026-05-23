@@ -4,7 +4,7 @@ namespace E_commerce_API.src.Domain.Entities
 {
     public class Category
     {
-        public int CategoryId { get; private set; }
+        public int Id { get; private set; }
         public CategoryName Name { get; private set; } = null!;
         public CategoryDescription Description { get; private set; } = null!;
 
@@ -29,14 +29,14 @@ namespace E_commerce_API.src.Domain.Entities
         {
             if (product is null)
                 throw new ArgumentNullException(nameof(product));
-            if (_products.Any(x => x.ProductId == product.ProductId))
-                throw new InvalidOperationException($"Product with Id: {product.ProductId} already in category");
+            if (_products.Any(x => x.Id == product.Id))
+                throw new InvalidOperationException($"Product with Id: {product.Id} already in category");
 
             _products.Add(product);
         }
         public void RemoveProduct(int productId)
         {
-            var product = _products.FirstOrDefault(x => x.ProductId == productId);
+            var product = _products.FirstOrDefault(x => x.Id == productId);
             if(product is null)
                 throw new KeyNotFoundException($"Product with Id: {productId} was not found");
 

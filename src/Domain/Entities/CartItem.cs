@@ -4,7 +4,7 @@ namespace E_commerce_API.src.Domain.Entities
 {
     public class CartItem
     {
-        public int CartItemId { get; private set; }
+        public int Id { get; private set; }
         public int CartId { get; private set; }
         public Cart Cart { get; private set; } = null!;
         public int ProductId { get; private set; }
@@ -19,7 +19,7 @@ namespace E_commerce_API.src.Domain.Entities
             UnitPrice = new Money(unitPrice);
             Quantity = new Quantity(quantity);
         }
-        public CartItem(Product product, decimal unitPrice, int quantity) : this(product.ProductId, unitPrice, quantity)
+        public CartItem(Product product, decimal unitPrice, int quantity) : this(product.Id, unitPrice, quantity)
         {
             Product = product;
         }
