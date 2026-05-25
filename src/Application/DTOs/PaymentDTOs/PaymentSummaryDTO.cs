@@ -2,11 +2,10 @@
 
 namespace E_commerce_API.src.Application.DTOs.PaymentDTOs
 {
-    public class PaymentDetailsDTO
+    public class PaymentSummaryDTO
     {
         public int Id { get; set; }
         public decimal Amount { get; set; }
-        public DateTime PaymentDate { get; set; }
         public PaymentMethod Method { get; set; }
         public PaymentStatus Status { get; set; }
     }
