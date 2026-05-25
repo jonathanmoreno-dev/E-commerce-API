@@ -2,7 +2,7 @@
 
 namespace E_commerce_API.src.Application.DTOs.OrderItemDTOs
 {
-    public class OrderItemDetailsDTO
+    public class OrderItemSummaryDTO
     {
         public int Id { get; set; }
         public ProductSummaryDTO ProductSummaryDTO { get; set; } = null!;
