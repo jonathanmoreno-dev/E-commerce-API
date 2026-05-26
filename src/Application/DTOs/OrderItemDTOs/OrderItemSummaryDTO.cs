@@ -9,5 +9,7 @@ namespace E_commerce_API.src.Application.DTOs.OrderItemDTOs
         public decimal UnitPrice { get; set; }
         public int Quantity { get; set; }
         public decimal Total { get; set; }
+        public int RefundedQuantity { get; set; }
+        public decimal RefundedTotal { get; set; }
     }
 }
