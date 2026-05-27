@@ -14,6 +14,7 @@ namespace E_commerce_API.src.Domain.Entities
         private List<Order> _orders = new();
         public IReadOnlyCollection<Order> Orders => _orders;
         public bool IsAdmin { get; private set; }
+        public AvatarImage? AvatarImage { get; private set; }
         private User() { }
         public User(string fullName, string email, string phoneNumber, string passwordHash, int cartId)
         {
@@ -42,6 +43,10 @@ namespace E_commerce_API.src.Domain.Entities
         public void ChangePasswordHash(string passwordHash)
         {
             PasswordHash = passwordHash;
+        }
+        public void ChangeAvatarImage(string url)
+        {
+            AvatarImage = new AvatarImage(url);
         }
         public void AddOrder(Order order)
         {
