@@ -7,7 +7,7 @@ namespace E_commerce_API.src.Domain.Entities
         public int Id { get; private set; }
         public CategoryName Name { get; private set; } = null!;
         public CategoryDescription Description { get; private set; } = null!;
-
+        public CategoryImage? CategoryImage { get; private set; }
         private readonly List<Product> _products = new();
         public IReadOnlyCollection<Product> Products => _products;
 
@@ -24,6 +24,10 @@ namespace E_commerce_API.src.Domain.Entities
         public void ChangeDescription(string description)
         {
             Description = new CategoryDescription(description);
+        }
+        public void ChangeCategoryImage(string url)
+        {
+            CategoryImage = new CategoryImage(url);
         }
         public void AddProduct(Product product)
         {
