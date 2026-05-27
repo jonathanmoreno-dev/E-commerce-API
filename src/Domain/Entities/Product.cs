@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System;
+using System.Xml.Linq;
 using E_commerce_API.src.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
@@ -12,7 +13,8 @@ namespace E_commerce_API.src.Domain.Entities
         public ProductLongDescription LongDescription { get; private set; } = null!;
         public Money Price { get; private set; } = null!;
         public Quantity Stock { get; private set; } = null!;
-
+        public List<ProductImage> _productImages = new();
+        public IReadOnlyCollection<ProductImage> ProductImages => _productImages;
         private List<Category> _categories = new();
         public IReadOnlyCollection<Category> Categories => _categories;
         
@@ -46,6 +48,50 @@ namespace E_commerce_API.src.Domain.Entities
         public void ChangePrice(decimal price)
         {
             Price = new Money(price);
+        }
+        public void AddProductImage(string url, int order)
+        {
+            if (_productImages.Any(x => x.Url == url))
+                throw new InvalidOperationException($"ProductImage with Url: {url} already in product image");
+            if(_productImages.Any(x => x.Order == order))
+                throw new InvalidOperationException($"This order: {order} already in use");
+
+            _productImages.Add(new ProductImage(url, order));
+            OrganizeProductImageOrder();
+        }
+        public void RemoveProductImage(string url)
+        {
+            var productImage = _productImages.FirstOrDefault(x => x.Url == url);
+            if (productImage is null)
+                throw new KeyNotFoundException($"ProductImage with Url: {url} was not found");
+
+            _productImages.Remove(productImage);
+            OrganizeProductImageOrder();
+        }
+        private void OrganizeProductImageOrder() 
+        {
+            var ordered = _productImages.OrderBy(x => x.Order).ToList();
+
+            for (int i = 0; i < ordered.Count; i++)
+            {
+                ordered[i] = new ProductImage(ordered[i].Url, i + 1);
+            }
+            _productImages.Clear();
+            _productImages.AddRange(ordered);
+        }
+        public void ChangeOrderProcutImage(string url, int order)
+        {
+            var productImage = _productImages.FirstOrDefault(x => x.Url == url);
+            if(productImage is null)
+                throw new KeyNotFoundException($"ProductImage with Url: {url} was not found");
+            if (_productImages.Any(x => x.Order == order))
+                throw new InvalidOperationException($"This order: {order} already in use");
+            if (order > _productImages.Count)
+                throw new ArgumentOutOfRangeException(nameof(order), "Order cannot be bigger than size of list");
+
+            _productImages.Remove(productImage);
+            _productImages.Add(new ProductImage(url, order));
+            OrganizeProductImageOrder();
         }
         public void IncreaseStock(int stock)
         {
