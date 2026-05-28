@@ -16,6 +16,12 @@ namespace E_commerce_API.src.Infrastructure.Configuration
             builder.ComplexProperty(x => x.LongDescription, p => p.Property(v => v.Value).HasColumnName("long_description").IsRequired());
             builder.ComplexProperty(x => x.Price, p => p.Property(v => v.Value).HasColumnName("price").HasPrecision(18, 2));
             builder.ComplexProperty(x => x.Stock, p => p.Property(v => v.Value).HasColumnName("stock"));
+            builder.OwnsMany(x => x.ProductImages, p =>
+            {
+                p.Property(v => v.Url).HasColumnName("product_image_url").IsRequired();
+                p.Property(v => v.Order).HasColumnName("product_image_order");
+            });
+
             builder.HasMany(x => x.Categories).WithMany(y => y.Products);
         }
     }
