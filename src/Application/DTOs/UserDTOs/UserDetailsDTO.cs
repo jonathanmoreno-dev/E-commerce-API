@@ -10,6 +10,7 @@ namespace E_commerce_API.src.Application.DTOs.UserDTOs
         public string Email { get; set; } = "";
         public string PhoneNumber { get; set; } = "";
         public bool IsAdmin { get; set; }
+        public string AvatarImageUrl { get; set; } = "";
         public CartDetailsDTO CartDetailsDTO { get; set; } = null!;
         public List<OrderListDTO> OrderListDTOs { get; set; } = new();
     }

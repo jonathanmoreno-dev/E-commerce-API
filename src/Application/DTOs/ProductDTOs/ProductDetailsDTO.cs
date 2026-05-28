@@ -10,6 +10,7 @@ namespace E_commerce_API.src.Application.DTOs.ProductDTOs
         public string LongDescription { get; set; } = "";
         public decimal Price { get; set; }
         public int Stock { get; set; }
+        public List<ProductImageDTO> ProductImageDTOs { get; set; } = new();
         public List<CategoryListDTO> CategoryListDTOs { get; set; } = new();
     }
 }
