@@ -17,7 +17,12 @@ namespace E_commerce_API.src.Infrastructure.Configuration
             builder.ComplexProperty(x => x.FullName, p => p.Property(v => v.Value).HasColumnName("full_name").IsRequired().HasMaxLength(150));
             builder.Property(x => x.Email).HasConversion(v => v.Value, v => new Email(v)).HasColumnName("email").IsRequired().HasMaxLength(255);
             builder.ComplexProperty(x => x.PhoneNumber, p => p.Property(v => v.Value).HasColumnName("phone_number").IsRequired().HasMaxLength(50));
-            builder.ComplexProperty(x => x.AvatarImage, p => p.Property(v => v!.Url).HasColumnName("avatar_image_url").IsRequired(false));
+            builder.OwnsOne(x => x.AvatarImage, p =>
+            {
+                p.Property(v => v!.Url)
+                 .HasColumnName("avatar_image_url")
+                 .IsRequired(false);
+            });
 
             builder.Property(x => x.PasswordHash).IsRequired().HasMaxLength(255).HasColumnName("password_hash");
             builder.Property(x => x.IsAdmin).HasColumnName("is_admin");
