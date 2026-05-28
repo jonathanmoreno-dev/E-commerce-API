@@ -3,7 +3,7 @@ using E_commerce_API.src.Domain.Entities;
 using E_commerce_API.src.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace E_commerce_API.src.Infrastructure.Repositories
+namespace E_commerce_API.src.Infrastructure.Data.Repositories
 {
     public class CategoryRepository : ICategoryRepository
     {
