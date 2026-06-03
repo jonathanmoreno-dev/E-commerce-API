@@ -21,7 +21,7 @@ namespace E_commerce_API.src.Domain.Entities
         public IReadOnlyCollection<OrderItem> OrderItems => _orderItems;
 
         private Order() { }
-        public Order(int userId, ShippingAddress shippingAddress, Money shippingCost, PaymentMethod paymentMethod, IEnumerable<OrderItem> orderItems, Money totalPaid)
+        public Order(int userId, ShippingAddress shippingAddress, Money shippingCost, PaymentMethod paymentMethod, IEnumerable<(int productId, Money unitPrice, Quantity quantity)> items, Money totalPaid)
         {
             UserId = userId;
             ShippingAddress = shippingAddress;
@@ -29,21 +29,11 @@ namespace E_commerce_API.src.Domain.Entities
             Status = OrderStatus.Paid;
             PaymentMethod = paymentMethod;
             CreatedAt = DateTime.UtcNow;
-            if(!orderItems.Any())
-                throw new InvalidOperationException("Order must have at least one item");
-
-            _orderItems = orderItems.ToList();
-
-            SubTotal = new Money(_orderItems.Sum(x => x.UnitPrice.Value * x.Quantity.Value));
-            var expectedTotal = SubTotal.Value + ShippingCost.Value;
-
-            if (totalPaid.Value != expectedTotal)
-                throw new InvalidOperationException("Paid amount is less than expected total");
-
-            TotalPaid = totalPaid;
+            AddItems(items);
+            CalculateTotal(totalPaid);
         }
-        public Order(User user, ShippingAddress shippingAddress, Money shippingCost, PaymentMethod paymentMethod, List<OrderItem> orderItems, Money totalPaid) 
-            : this(user.Id, shippingAddress, shippingCost, paymentMethod, orderItems, totalPaid)
+        public Order(User user, ShippingAddress shippingAddress, Money shippingCost, PaymentMethod paymentMethod, IEnumerable<(int productId, Money unitPrice, Quantity quantity)> items, Money totalPaid) 
+            : this(user.Id, shippingAddress, shippingCost, paymentMethod, items, totalPaid)
         {
             User = user;
         }
@@ -51,7 +41,33 @@ namespace E_commerce_API.src.Domain.Entities
         // =========================
         //          ORDER
         // =========================
+        private void CalculateTotal(Money totalPaid)
+        {
+            SubTotal = new Money(_orderItems.Sum(x => x.UnitPrice.Value * x.Quantity.Value));
 
+            var expectedTotal = SubTotal.Value + ShippingCost.Value;
+
+            if (totalPaid.Value != expectedTotal)
+                throw new InvalidOperationException("Paid amount does not match expected total");
+
+            TotalPaid = totalPaid;
+        }
+        private void AddItems(IEnumerable<(int productId, Money unitPrice, Quantity quantity)> items)
+        {
+            if (items is null)
+                throw new ArgumentNullException(nameof(items));
+            if (!items.Any())
+                throw new InvalidOperationException("Order must have at least one item");
+
+            foreach (var item in items)
+            {
+                var existingItem = _orderItems.FirstOrDefault(x => x.ProductId == item.productId);
+                if (existingItem is null)
+                    _orderItems.Add(new OrderItem(item.productId, item.unitPrice, item.quantity));
+                else
+                    existingItem.IncreaseQuantity(item.quantity);
+            }
+        }
         public void Cancel()
         {
             if (Status != OrderStatus.Paid)
