@@ -15,47 +15,11 @@ namespace E_commerce_API.src.Domain.Entities
         public DateTime? DeliveredDate { get; private set; }
         public ShippingStatus Status { get; private set; }
         private Shipping() { }
-        public Shipping(string recipientName, string phoneNumber, string neighborhood, string street, string number, string state, string city, string zipCode, decimal shippingCost)
+        public Shipping(ShippingAddress shippingAddress, Money shippingCost)
         {
-            ShippingAddress = new ShippingAddress(new PersonName(recipientName), new PhoneNumber(phoneNumber), neighborhood, street, number, state, city, zipCode);
-            ChangeShippingCost(shippingCost);
+            ShippingAddress = shippingAddress;
+            ShippingCost = shippingCost;
             Status = ShippingStatus.Pending;
-        }
-        public void ChangeRecipientName(string recipientName)
-        {
-            ShippingAddress = ShippingAddress.WithRecipientName(new PersonName(recipientName));
-        }
-        public void ChangePhoneNumber(string phoneNumber)
-        {
-            ShippingAddress = ShippingAddress.WithPhoneNumber(new PhoneNumber(phoneNumber));
-        }
-        public void ChangeNeighborhood(string neighborhood)
-        {
-            ShippingAddress = ShippingAddress.WithNeighborhood(neighborhood);
-        }
-        public void ChangeStreet(string street)
-        {
-            ShippingAddress = ShippingAddress.WithStreet(street);
-        }
-        public void ChangeNumber(string number)
-        {
-            ShippingAddress = ShippingAddress.WithNumber(number);
-        }
-        public void ChangeState(string state)
-        {
-            ShippingAddress = ShippingAddress.WithState(state);
-        }
-        public void ChangeCity(string city)
-        {
-            ShippingAddress = ShippingAddress.WithCity(city);
-        }
-        public void ChangeZipCode(string zipCode)
-        {
-            ShippingAddress = ShippingAddress.WithZipCode(zipCode);
-        }
-        public void ChangeShippingCost(decimal shippingCost)
-        {
-            ShippingCost = new Money(shippingCost);
         }
         public void SetTrackingCode(string trackingCode)
         {

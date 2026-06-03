@@ -13,23 +13,23 @@ namespace E_commerce_API.src.Domain.Entities
         public Quantity Quantity { get; private set; } = null!;
 
         private CartItem() { }
-        public CartItem(int productId, decimal unitPrice, int quantity)
+        public CartItem(int productId, Money unitPrice, Quantity quantity)
         {
             ProductId = productId;
-            UnitPrice = new Money(unitPrice);
-            Quantity = new Quantity(quantity);
+            UnitPrice = unitPrice;
+            Quantity = quantity;
         }
-        public CartItem(Product product, decimal unitPrice, int quantity) : this(product.Id, unitPrice, quantity)
+        public CartItem(Product product, Money unitPrice, Quantity quantity) : this(product.Id, unitPrice, quantity)
         {
             Product = product;
         }
-        public void IncreaseQuantity(int quantity)
+        public void IncreaseQuantity(Quantity quantity)
         {
-            Quantity = Quantity.Add(quantity);
+            Quantity = Quantity.Add(quantity.Value);
         }
-        public void DecreaseQuantity(int quantity)
+        public void DecreaseQuantity(Quantity quantity)
         {
-            Quantity = Quantity.Remove(quantity);
+            Quantity = Quantity.Remove(quantity.Value);
         }
     }
 }

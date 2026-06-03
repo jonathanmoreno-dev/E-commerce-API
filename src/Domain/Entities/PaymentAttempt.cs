@@ -14,9 +14,9 @@ namespace E_commerce_API.src.Domain.Entities
         public PaymentStatus Status { get; private set; }
 
         private PaymentAttempt() { }
-        public PaymentAttempt(decimal amount, PaymentMethod method)
+        public PaymentAttempt(Money amount, PaymentMethod method)
         {
-            Amount = new Money(amount);
+            Amount = amount;
             Status = PaymentStatus.Pending;
             Method = method;
             PaymentDate = DateTime.UtcNow;

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using E_commerce_API.src.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace E_commerce_API.src.Domain.Entities
@@ -25,7 +26,7 @@ namespace E_commerce_API.src.Domain.Entities
         {
             User = user;
         }
-        public void AddItem(int productId, decimal unitPrice, int quantity)
+        public void AddItem(int productId, Money unitPrice, Quantity quantity)
         {
             var existingItem = _cartItems.FirstOrDefault(x => x.ProductId == productId);
             if (existingItem is null)

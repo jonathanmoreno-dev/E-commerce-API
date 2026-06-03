@@ -25,29 +25,29 @@ namespace E_commerce_API.src.Domain.Entities
         public IReadOnlyCollection<OrderItem> OrderItems => _orderItems;
 
         private Product() { }
-        public Product(string name, string shortDescription, string longDescription, decimal price, int stock)
+        public Product(ProductName name, ProductShortDescription shortDescription, ProductLongDescription longDescription, Money price, Quantity stock)
         {
             ChangeName(name);
             ChangeShortDescription(shortDescription);
             ChangeLongDescription(longDescription);
             ChangePrice(price);
-            Stock = new Quantity(stock);
+            Stock = stock;
         }
-        public void ChangeName(string name)
+        public void ChangeName(ProductName name)
         {
-            Name = new ProductName(name);
+            Name = name;
         }
-        public void ChangeShortDescription(string shortDescription)
+        public void ChangeShortDescription(ProductShortDescription shortDescription)
         {
-            ShortDescription = new ProductShortDescription(shortDescription);
+            ShortDescription = shortDescription;
         }
-        public void ChangeLongDescription(string longDescription)
+        public void ChangeLongDescription(ProductLongDescription longDescription)
         {
-            LongDescription = new ProductLongDescription(longDescription);
+            LongDescription = longDescription;
         }
-        public void ChangePrice(decimal price)
+        public void ChangePrice(Money price)
         {
-            Price = new Money(price);
+            Price = price;
         }
         public void AddProductImage(string url, int order)
         {

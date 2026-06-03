@@ -11,6 +11,8 @@ namespace E_commerce_API.src.Domain.Entities
         public OrderStatus Status { get; private set; }
         public int UserId { get; private set; }
         public User User { get; private set; } = null!;
+        public ShippingAddress ShippingAddress { get; private set; } = null!;
+        public Money ShippingCost { get; private set; } = null!;
         public Shipping? Shipping { get; private set; }
 
         private List<PaymentAttempt> _paymentAttempts = new();
@@ -20,13 +22,15 @@ namespace E_commerce_API.src.Domain.Entities
         public IReadOnlyCollection<OrderItem> OrderItems => _orderItems;
 
         private Order() { }
-        public Order(int userId)
+        public Order(int userId, ShippingAddress shippingAddress, Money shippingCost)
         {
             UserId = userId;
+            ShippingAddress = shippingAddress;
+            ShippingCost = shippingCost;
             Status = OrderStatus.PendingPayment;
             CreatedAt = DateTime.UtcNow;
         }
-        public Order(User user) : this(user.Id)
+        public Order(User user, ShippingAddress shippingAddress, Money shippingCost) : this(user.Id, shippingAddress, shippingCost)
         {
             User = user;
         }
@@ -35,7 +39,7 @@ namespace E_commerce_API.src.Domain.Entities
         //          ORDER
         // =========================
 
-        public void AddItem(int productId, decimal unitPrice, int quantity)
+        public void AddItem(int productId, Money unitPrice, Quantity quantity)
         {
             if (Status != OrderStatus.PendingPayment)
                 throw new InvalidOperationException("Cannot modify an order in progress");
@@ -81,12 +85,12 @@ namespace E_commerce_API.src.Domain.Entities
         //          SHIPPING
         // =========================
 
-        public void CreateShipping(string recipientName, string phoneNumber, string neighborhood, string street, string number, string state, string city, string zipCode, decimal shippingCost)
+        public void CreateShipping()
         {
             if (Shipping is not null)
                 throw new InvalidOperationException("Shipping already exists");
 
-            Shipping = new Shipping(recipientName, phoneNumber, neighborhood, street, number, state, city, zipCode, shippingCost);
+            Shipping = new Shipping(ShippingAddress, ShippingCost);
         }
         public void MarkAsProcessing()
         {
@@ -141,7 +145,7 @@ namespace E_commerce_API.src.Domain.Entities
         //          PAYMENT
         // =========================
 
-        public void CreatePayment(decimal amount, PaymentMethod paymentMethod)
+        public void CreatePayment(Money amount, PaymentMethod paymentMethod)
         {
             if (Status != OrderStatus.PendingPayment)
                 throw new InvalidOperationException("Order is not in a payable state");

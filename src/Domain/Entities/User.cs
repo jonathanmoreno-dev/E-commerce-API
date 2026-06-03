@@ -16,7 +16,7 @@ namespace E_commerce_API.src.Domain.Entities
         public bool IsAdmin { get; private set; }
         public AvatarImage? AvatarImage { get; private set; }
         private User() { }
-        public User(string fullName, string email, string phoneNumber, string passwordHash, int cartId)
+        public User(PersonName fullName, Email email, PhoneNumber phoneNumber, string passwordHash, int cartId)
         {
             CartId = cartId;
             ChangeName(fullName);
@@ -24,21 +24,21 @@ namespace E_commerce_API.src.Domain.Entities
             ChangePhoneNumber(phoneNumber);
             ChangePasswordHash(passwordHash);
         }
-        public User(string fullName, string email, string phoneNumber, string passwordHash, Cart cart) : this(fullName, email, phoneNumber, passwordHash, cart.Id)
+        public User(PersonName fullName, Email email, PhoneNumber phoneNumber, string passwordHash, Cart cart) : this(fullName, email, phoneNumber, passwordHash, cart.Id)
         {
             Cart = cart;
         }
-        public void ChangeName(string fullName)
+        public void ChangeName(PersonName fullName)
         {
-            FullName = new PersonName(fullName);
+            FullName = fullName;
         }
-        public void ChangeEmail(string email)
+        public void ChangeEmail(Email email)
         {
-            Email = new Email(email);
+            Email = email;
         }
-        public void ChangePhoneNumber(string phoneNumber)
+        public void ChangePhoneNumber(PhoneNumber phoneNumber)
         {
-            PhoneNumber = new PhoneNumber(phoneNumber);
+            PhoneNumber = phoneNumber;
         }
         public void ChangePasswordHash(string passwordHash)
         {

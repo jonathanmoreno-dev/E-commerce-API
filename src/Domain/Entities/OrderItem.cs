@@ -17,23 +17,23 @@ namespace E_commerce_API.src.Domain.Entities
         public IReadOnlyCollection<Refund> Refunds => _refunds;
 
         private OrderItem() { }
-        public OrderItem(int productId, decimal unitPrice, int quantity)
+        public OrderItem(int productId, Money unitPrice, Quantity quantity)
         {
             ProductId = productId;
-            UnitPrice = new Money(unitPrice);
-            Quantity = new Quantity(quantity);
+            UnitPrice = unitPrice;
+            Quantity = quantity;
         }
-        public OrderItem(Product product, decimal unitPrice, int quantity) : this(product.Id, unitPrice, quantity)
+        public OrderItem(Product product, Money unitPrice, Quantity quantity) : this(product.Id, unitPrice, quantity)
         {
             Product = product;
         }
-        public void IncreaseQuantity(int quantity)
+        public void IncreaseQuantity(Quantity quantity)
         {
-            Quantity = Quantity.Add(quantity);
+            Quantity = Quantity.Add(quantity.Value);
         }
-        public void DecreaseQuantity(int quantity)
+        public void DecreaseQuantity(Quantity quantity)
         {
-            Quantity = Quantity.Remove(quantity);
+            Quantity = Quantity.Remove(quantity.Value);
         }
         public void AddRefund(int quantity)
         {

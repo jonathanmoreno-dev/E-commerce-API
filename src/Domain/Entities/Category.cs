@@ -12,22 +12,22 @@ namespace E_commerce_API.src.Domain.Entities
         public IReadOnlyCollection<Product> Products => _products;
 
         private Category() { }
-        public Category(string name, string description)
+        public Category(CategoryName name, CategoryDescription description)
         {
             ChangeName(name);
             ChangeDescription(description);
         }
-        public void ChangeName(string name)
+        public void ChangeName(CategoryName name)
         {
-            Name = new CategoryName(name);
+            Name = name;
         }
-        public void ChangeDescription(string description)
+        public void ChangeDescription(CategoryDescription description)
         {
-            Description = new CategoryDescription(description);
+            Description = description;
         }
-        public void ChangeCategoryImage(string url)
+        public void ChangeCategoryImage(CategoryImage categoryImage)
         {
-            CategoryImage = new CategoryImage(url);
+            CategoryImage = categoryImage;
         }
         public void AddProduct(Product product)
         {
