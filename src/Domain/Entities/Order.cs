@@ -30,7 +30,7 @@ namespace E_commerce_API.src.Domain.Entities
             PaymentMethod = paymentMethod;
             CreatedAt = DateTime.UtcNow;
             AddItems(items);
-            CalculateTotal(totalPaid);
+            InitializeTotals(totalPaid);
         }
         public Order(User user, ShippingAddress shippingAddress, Money shippingCost, PaymentMethod paymentMethod, IEnumerable<(int productId, Money unitPrice, Quantity quantity)> items, Money totalPaid) 
             : this(user.Id, shippingAddress, shippingCost, paymentMethod, items, totalPaid)
@@ -41,7 +41,7 @@ namespace E_commerce_API.src.Domain.Entities
         // =========================
         //          ORDER
         // =========================
-        private void CalculateTotal(Money totalPaid)
+        private void InitializeTotals(Money totalPaid)
         {
             SubTotal = new Money(_orderItems.Sum(x => x.UnitPrice.Value * x.Quantity.Value));
 
