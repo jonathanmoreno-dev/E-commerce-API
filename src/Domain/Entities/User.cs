@@ -11,6 +11,8 @@ namespace E_commerce_API.src.Domain.Entities
         public string PasswordHash { get; private set; } = "";
         public int CartId { get; private set; }
         public Cart Cart { get; private set; } = null!;
+        private List<Checkout> _checkouts = new();
+        public IReadOnlyCollection<Checkout> Checkouts => _checkouts;
         private List<Order> _orders = new();
         public IReadOnlyCollection<Order> Orders => _orders;
         public bool IsAdmin { get; private set; }
