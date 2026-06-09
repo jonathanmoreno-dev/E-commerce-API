@@ -20,7 +20,8 @@ namespace E_commerce_API.src.Domain.Entities
         
         private List<CartItem> _cartItems = new();
         public IReadOnlyCollection<CartItem> CartItems => _cartItems;
-
+        private List<CheckoutItem> _checkoutItems = new();
+        public IReadOnlyCollection<CheckoutItem> CheckoutItems => _checkoutItems;
         private List<OrderItem> _orderItems = new();
         public IReadOnlyCollection<OrderItem> OrderItems => _orderItems;
 
