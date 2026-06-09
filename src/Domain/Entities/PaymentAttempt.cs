@@ -6,8 +6,8 @@ namespace E_commerce_API.src.Domain.Entities
     public class PaymentAttempt
     {
         public int Id { get; private set; }
-        public int OrderId { get; private set; }
-        public Order Order { get; private set; } = null!;
+        public int CheckoutId { get; private set; }
+        public Checkout Checkout { get; private set; } = null!;
         public Money Amount { get; private set; } = null!;
         public DateTime PaymentDate { get; private set; }
         public PaymentMethod Method { get; private set; }
