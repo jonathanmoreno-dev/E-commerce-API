@@ -9,6 +9,8 @@ namespace E_commerce_API.src.Infrastructure.Data
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Checkout> Checkouts { get; set; }
+        public DbSet<CheckoutItem> CheckoutItems { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<PaymentAttempt> PaymentAttempts { get; set; }
@@ -25,6 +27,8 @@ namespace E_commerce_API.src.Infrastructure.Data
             modelBuilder.ApplyConfiguration(new CartConfiguration());
             modelBuilder.ApplyConfiguration(new CartItemConfiguration());
             modelBuilder.ApplyConfiguration(new CategoryConfiguration());
+            modelBuilder.ApplyConfiguration(new CheckoutConfiguration());
+            modelBuilder.ApplyConfiguration(new CheckoutItemConfiguration());
             modelBuilder.ApplyConfiguration(new OrderConfiguration());
             modelBuilder.ApplyConfiguration(new OrderItemConfiguration());
             modelBuilder.ApplyConfiguration(new PaymentAttemptConfiguration());
