@@ -23,7 +23,7 @@ namespace E_commerce_API.src.Infrastructure.Configuration
                  .HasColumnName("avatar_image_url")
                  .IsRequired(false);
             });
-
+            builder.Property(x => x.CartId).HasColumnName("cart_id");
             builder.Property(x => x.PasswordHash).IsRequired().HasMaxLength(255).HasColumnName("password_hash");
             builder.Property(x => x.IsAdmin).HasColumnName("is_admin");
         }
