@@ -17,6 +17,8 @@ namespace E_commerce_API.src.Infrastructure.Configuration
             builder.HasOne(x => x.Product).WithMany(y => y.CheckoutItems).HasForeignKey(x => x.ProductId);
             builder.ComplexProperty(x => x.UnitPrice, p => p.Property(v => v.Value).HasColumnName("unit_price").HasPrecision(18, 2));
             builder.ComplexProperty(x => x.Quantity, p => p.Property(v => v.Value).HasColumnName("quantity"));
+            builder.HasIndex(x => x.CheckoutId);
+            builder.HasIndex(x => x.ProductId);
         }
     }
 }
