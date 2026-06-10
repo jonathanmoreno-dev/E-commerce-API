@@ -26,9 +26,12 @@ namespace E_commerce_API.src.Infrastructure.Configuration
             });
             builder.ComplexProperty(x => x.ShippingCost, p => p.Property(v => v.Value).HasColumnName("shipping_cost").HasPrecision(18, 2));
             builder.Property(x => x.PaymentMethod).HasConversion<string>().HasColumnName("payment_method");
-
+            builder.Ignore(x => x.SubTotal);
+            builder.Ignore(x => x.Total);
+            builder.Ignore(x => x.ExpiresAt);
             builder.Property(x => x.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP").HasColumnName("created_at");
             builder.Property(x => x.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP").HasColumnName("updated_at");
+            builder.HasIndex(x => x.UserId).IsUnique();
         }
     }
 }
