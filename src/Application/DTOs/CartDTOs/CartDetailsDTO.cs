@@ -9,5 +9,6 @@ namespace E_commerce_API.src.Application.DTOs.CartDTOs
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public List<CartItemListDTO> CartItemListDTOs { get; set; } = new();
+        public decimal Total { get; set; }
     }
 }
