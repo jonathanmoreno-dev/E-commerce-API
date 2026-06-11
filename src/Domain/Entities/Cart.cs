@@ -11,7 +11,8 @@ namespace E_commerce_API.src.Domain.Entities
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
         public User User { get; private set; } = null!;
-        
+        public Money SubTotal => new Money(_cartItems.Sum(x => x.UnitPrice.Value * x.Quantity.Value));
+
         private readonly List<CartItem> _cartItems = new();
         public IReadOnlyCollection<CartItem> CartItems => _cartItems;
 

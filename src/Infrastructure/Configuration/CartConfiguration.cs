@@ -16,6 +16,7 @@ namespace E_commerce_API.src.Infrastructure.Configuration
             builder.Property(x => x.UserId).HasColumnName("user_id");
             builder.HasOne(x => x.User).WithOne(x => x.Cart).HasForeignKey<Cart>(x => x.UserId);
             builder.HasIndex(x => x.UserId).IsUnique();
+            builder.Ignore(x => x.SubTotal);
         }
     }
 }
