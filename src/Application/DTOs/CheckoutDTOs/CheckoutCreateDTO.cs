@@ -7,12 +7,7 @@ namespace E_commerce_API.src.Application.DTOs.CheckoutDTOs
 {
     public class CheckoutCreateDTO
     {
-        [Required]
-        public int UserId { get; set; }
-        [Required]
         public ShippingAddressDTO ShippingAddressDTO { get; set; } = null!;
-        [Required]
-        public decimal ShippingCost { get; set; }
         [Required]
         public PaymentMethod PaymentMethod { get; set; }
         [Required]
