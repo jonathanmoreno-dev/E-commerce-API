@@ -11,11 +11,11 @@ namespace E_commerce_API.src.Domain.Entities
         public string PasswordHash { get; private set; } = "";
         public int CartId { get; private set; }
         public Cart Cart { get; private set; } = null!;
-        private List<ShippingAddress> _shippingAddress = new();
+        private readonly List<ShippingAddress> _shippingAddress = new();
         public IReadOnlyCollection<ShippingAddress> ShippingAddresses => _shippingAddress;
-        private List<Checkout> _checkouts = new();
+        private readonly List<Checkout> _checkouts = new();
         public IReadOnlyCollection<Checkout> Checkouts => _checkouts;
-        private List<Order> _orders = new();
+        private readonly List<Order> _orders = new();
         public IReadOnlyCollection<Order> Orders => _orders;
         public bool IsAdmin { get; private set; }
         public AvatarImage? AvatarImage { get; private set; }

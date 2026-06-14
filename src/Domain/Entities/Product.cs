@@ -13,16 +13,16 @@ namespace E_commerce_API.src.Domain.Entities
         public ProductLongDescription LongDescription { get; private set; } = null!;
         public Money Price { get; private set; } = null!;
         public Quantity Stock { get; private set; } = null!;
-        private List<ProductImage> _productImages = new();
+        private readonly List<ProductImage> _productImages = new();
         public IReadOnlyCollection<ProductImage> ProductImages => _productImages;
-        private List<Category> _categories = new();
+        private readonly List<Category> _categories = new();
         public IReadOnlyCollection<Category> Categories => _categories;
         
-        private List<CartItem> _cartItems = new();
+        private readonly List<CartItem> _cartItems = new();
         public IReadOnlyCollection<CartItem> CartItems => _cartItems;
-        private List<CheckoutItem> _checkoutItems = new();
+        private readonly List<CheckoutItem> _checkoutItems = new();
         public IReadOnlyCollection<CheckoutItem> CheckoutItems => _checkoutItems;
-        private List<OrderItem> _orderItems = new();
+        private readonly List<OrderItem> _orderItems = new();
         public IReadOnlyCollection<OrderItem> OrderItems => _orderItems;
 
         private Product() { }

@@ -1,4 +1,5 @@
-﻿using E_commerce_API.src.Domain.Enums;
+﻿using System.Collections.Generic;
+using E_commerce_API.src.Domain.Enums;
 using E_commerce_API.src.Domain.ValueObjects;
 
 namespace E_commerce_API.src.Domain.Entities
@@ -16,10 +17,10 @@ namespace E_commerce_API.src.Domain.Entities
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
         public DateTime ExpiresAt { get; private set; }
-        private List<PaymentAttempt> _paymentAttempts = new();
+        private readonly List<PaymentAttempt> _paymentAttempts = new();
         public IReadOnlyCollection<PaymentAttempt> PaymentAttempts => _paymentAttempts;
 
-        private List<CheckoutItem> _checkoutItems = new();
+        private readonly List<CheckoutItem> _checkoutItems = new();
         public IReadOnlyCollection<CheckoutItem> CheckoutItems => _checkoutItems;
         private Checkout() { }
         public Checkout(int userId, ShippingAddress shippingAddress, Money shippingCost, PaymentMethod paymentMethod, IEnumerable<(int productId, Money unitPrice, Quantity quantity)> items)

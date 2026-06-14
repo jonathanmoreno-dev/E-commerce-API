@@ -1,4 +1,5 @@
-﻿using E_commerce_API.src.Domain.Enums;
+﻿using System.Collections.Generic;
+using E_commerce_API.src.Domain.Enums;
 using E_commerce_API.src.Domain.ValueObjects;
 
 namespace E_commerce_API.src.Domain.Entities
@@ -17,7 +18,7 @@ namespace E_commerce_API.src.Domain.Entities
         public Money TotalPaid { get; private set; } = null!;
         public Shipping? Shipping { get; private set; }
 
-        private List<OrderItem> _orderItems = new();
+        private readonly List<OrderItem> _orderItems = new();
         public IReadOnlyCollection<OrderItem> OrderItems => _orderItems;
 
         private Order() { }
