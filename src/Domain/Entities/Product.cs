@@ -13,7 +13,7 @@ namespace E_commerce_API.src.Domain.Entities
         public ProductLongDescription LongDescription { get; private set; } = null!;
         public Money Price { get; private set; } = null!;
         public Quantity Stock { get; private set; } = null!;
-        public List<ProductImage> _productImages = new();
+        private List<ProductImage> _productImages = new();
         public IReadOnlyCollection<ProductImage> ProductImages => _productImages;
         private List<Category> _categories = new();
         public IReadOnlyCollection<Category> Categories => _categories;
@@ -36,40 +36,64 @@ namespace E_commerce_API.src.Domain.Entities
         }
         public void ChangeName(ProductName name)
         {
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+
             Name = name;
         }
         public void ChangeShortDescription(ProductShortDescription shortDescription)
         {
+            if (shortDescription is null)
+                throw new ArgumentNullException(nameof(shortDescription));
+
             ShortDescription = shortDescription;
         }
         public void ChangeLongDescription(ProductLongDescription longDescription)
         {
+            if (longDescription is null)
+                throw new ArgumentNullException(nameof(longDescription));
+
             LongDescription = longDescription;
         }
         public void ChangePrice(Money price)
         {
+            if (price is null)
+                throw new ArgumentNullException(nameof(price));
+
             Price = price;
         }
-        public void AddProductImage(string url, int order)
+        public void AddProductImage(ProductImage productImage)
         {
-            if (_productImages.Any(x => x.Url == url))
-                throw new InvalidOperationException($"ProductImage with Url: {url} already in product image");
-            if(_productImages.Any(x => x.Order == order))
-                throw new InvalidOperationException($"This order: {order} already in use");
+            if (productImage is null)
+                throw new ArgumentNullException(nameof(productImage));
 
-            _productImages.Add(new ProductImage(url, order));
+            _productImages.Add(productImage);
             OrganizeProductImageOrder();
         }
-        public void RemoveProductImage(string url)
+        public void RemoveProductImage(ProductImage productImage)
         {
-            var productImage = _productImages.FirstOrDefault(x => x.Url == url);
             if (productImage is null)
-                throw new KeyNotFoundException($"ProductImage with Url: {url} was not found");
+                throw new ArgumentNullException(nameof(productImage));
+            if (!_productImages.Contains(productImage))
+                throw new KeyNotFoundException($"ProductImage was not found");
 
             _productImages.Remove(productImage);
             OrganizeProductImageOrder();
         }
-        private void OrganizeProductImageOrder() 
+        public void ChangeOrderProductImage(ProductImage productImage, int order)
+        {
+            if(productImage is null)
+                throw new ArgumentNullException(nameof(productImage));
+            if (!_productImages.Contains(productImage))
+                throw new KeyNotFoundException($"ProductImage was not found");
+            if (order > _productImages.Count)
+                throw new ArgumentOutOfRangeException(nameof(order), "Order cannot be bigger than size of list");
+
+            _productImages.Remove(productImage);
+            _productImages.Insert(order - 1, new ProductImage(productImage.Url, order));
+            OrganizeProductImageOrder();
+        }
+        private void OrganizeProductImageOrder()
         {
             var ordered = _productImages.OrderBy(x => x.Order).ToList();
 
@@ -79,20 +103,6 @@ namespace E_commerce_API.src.Domain.Entities
             }
             _productImages.Clear();
             _productImages.AddRange(ordered);
-        }
-        public void ChangeOrderProcutImage(string url, int order)
-        {
-            var productImage = _productImages.FirstOrDefault(x => x.Url == url);
-            if(productImage is null)
-                throw new KeyNotFoundException($"ProductImage with Url: {url} was not found");
-            if (_productImages.Any(x => x.Order == order))
-                throw new InvalidOperationException($"This order: {order} already in use");
-            if (order > _productImages.Count)
-                throw new ArgumentOutOfRangeException(nameof(order), "Order cannot be bigger than size of list");
-
-            _productImages.Remove(productImage);
-            _productImages.Add(new ProductImage(url, order));
-            OrganizeProductImageOrder();
         }
         public void IncreaseStock(int stock)
         {
