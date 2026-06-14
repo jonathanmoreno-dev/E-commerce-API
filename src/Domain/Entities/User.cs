@@ -28,7 +28,8 @@ namespace E_commerce_API.src.Domain.Entities
             ChangePhoneNumber(phoneNumber);
             ChangePasswordHash(passwordHash);
         }
-        public User(PersonName fullName, Email email, PhoneNumber phoneNumber, string passwordHash, Cart cart) : this(fullName, email, phoneNumber, passwordHash, cart.Id)
+        public User(PersonName fullName, Email email, PhoneNumber phoneNumber, string passwordHash, Cart cart) 
+            : this(fullName, email, phoneNumber, passwordHash, cart?.Id ?? throw new ArgumentNullException(nameof(cart)))
         {
             Cart = cart;
         }
