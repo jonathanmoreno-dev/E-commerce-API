@@ -58,49 +58,9 @@ namespace E_commerce_API.src.Domain.Entities
         //          ADDRESS
         // =========================
 
-        public void ChangeRecipientName(string recipientName)
+        public void ChangeShippingAddress(ShippingAddress shippingAddress)
         {
-            ShippingAddress = ShippingAddress.WithRecipientName(new PersonName(recipientName));
-            UpdatedAt = DateTime.UtcNow;
-        }
-        public void ChangePhoneNumber(string phoneNumber)
-        {
-            ShippingAddress = ShippingAddress.WithPhoneNumber(new PhoneNumber(phoneNumber));
-            UpdatedAt = DateTime.UtcNow;
-        }
-        public void ChangeNeighborhood(string neighborhood)
-        {
-            ShippingAddress = ShippingAddress.WithNeighborhood(neighborhood);
-            UpdatedAt = DateTime.UtcNow;
-        }
-        public void ChangeStreet(string street)
-        {
-            ShippingAddress = ShippingAddress.WithStreet(street);
-            UpdatedAt = DateTime.UtcNow;
-        }
-        public void ChangeNumber(string number)
-        {
-            ShippingAddress = ShippingAddress.WithNumber(number);
-            UpdatedAt = DateTime.UtcNow;
-        }
-        public void ChangeState(string state)
-        {
-            ShippingAddress = ShippingAddress.WithState(state);
-            UpdatedAt = DateTime.UtcNow;
-        }
-        public void ChangeCity(string city)
-        {
-            ShippingAddress = ShippingAddress.WithCity(city);
-            UpdatedAt = DateTime.UtcNow;
-        }
-        public void ChangeZipCode(string zipCode)
-        {
-            ShippingAddress = ShippingAddress.WithZipCode(zipCode);
-            UpdatedAt = DateTime.UtcNow;
-        }
-        public void ChangeShippingCost(Money shippingCost)
-        {
-            ShippingCost = shippingCost;
+            ShippingAddress = shippingAddress;
             UpdatedAt = DateTime.UtcNow;
         }
 
