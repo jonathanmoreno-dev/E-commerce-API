@@ -19,26 +19,33 @@ namespace E_commerce_API.src.Domain.Entities
         private OrderItem() { }
         public OrderItem(int productId, Money unitPrice, Quantity quantity)
         {
+            ArgumentNullException.ThrowIfNull(unitPrice);
+            ArgumentNullException.ThrowIfNull(quantity);
+
             ProductId = productId;
             UnitPrice = unitPrice;
             Quantity = quantity;
         }
-        public OrderItem(Product product, Money unitPrice, Quantity quantity) : this(product.Id, unitPrice, quantity)
+        public OrderItem(Product product, Money unitPrice, Quantity quantity) : this(product?.Id ?? throw new ArgumentNullException(nameof(product)), unitPrice, quantity)
         {
             Product = product;
         }
         public void IncreaseQuantity(Quantity quantity)
         {
+            ArgumentNullException.ThrowIfNull(quantity);
+
             Quantity = Quantity.Add(quantity.Value);
         }
         public void DecreaseQuantity(Quantity quantity)
         {
+            ArgumentNullException.ThrowIfNull(quantity);
+
             Quantity = Quantity.Remove(quantity.Value);
         }
-        public void AddRefund(int quantity)
+        public void AddRefund(Quantity quantity)
         {
             var totalRefunded = _refunds.Sum(x => x.Quantity.Value);
-            if ((totalRefunded + quantity) > Quantity.Value)
+            if ((totalRefunded + quantity.Value) > Quantity.Value)
                 throw new InvalidOperationException("Refund quantity exceeds purchased quantity");
 
             _refunds.Add(new Refund(quantity));

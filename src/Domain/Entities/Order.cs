@@ -23,6 +23,9 @@ namespace E_commerce_API.src.Domain.Entities
         private Order() { }
         public Order(int userId, ShippingAddress shippingAddress, Money shippingCost, PaymentMethod paymentMethod, IEnumerable<(int productId, Money unitPrice, Quantity quantity)> items, Money totalPaid)
         {
+            ArgumentNullException.ThrowIfNull(shippingAddress);
+            ArgumentNullException.ThrowIfNull(shippingCost);
+
             UserId = userId;
             ShippingAddress = shippingAddress;
             ShippingCost = shippingCost;
@@ -33,7 +36,7 @@ namespace E_commerce_API.src.Domain.Entities
             InitializeTotals(totalPaid);
         }
         public Order(User user, ShippingAddress shippingAddress, Money shippingCost, PaymentMethod paymentMethod, IEnumerable<(int productId, Money unitPrice, Quantity quantity)> items, Money totalPaid) 
-            : this(user.Id, shippingAddress, shippingCost, paymentMethod, items, totalPaid)
+            : this(user?.Id ?? throw new ArgumentNullException(nameof(user)), shippingAddress, shippingCost, paymentMethod, items, totalPaid)
         {
             User = user;
         }
@@ -43,6 +46,8 @@ namespace E_commerce_API.src.Domain.Entities
         // =========================
         private void InitializeTotals(Money totalPaid)
         {
+            ArgumentNullException.ThrowIfNull(totalPaid);
+
             SubTotal = new Money(_orderItems.Sum(x => x.UnitPrice.Value * x.Quantity.Value));
 
             var expectedTotal = SubTotal.Value + ShippingCost.Value;
@@ -54,8 +59,8 @@ namespace E_commerce_API.src.Domain.Entities
         }
         private void AddItems(IEnumerable<(int productId, Money unitPrice, Quantity quantity)> items)
         {
-            if (items is null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
+
             if (!items.Any())
                 throw new InvalidOperationException("Order must have at least one item");
 
@@ -75,7 +80,7 @@ namespace E_commerce_API.src.Domain.Entities
 
             Status = OrderStatus.Canceled;
         }
-        public void RefundItem(int orderItemId, int quantity)
+        public void RefundItem(int orderItemId, Quantity quantity)
         {
             var item = _orderItems.FirstOrDefault(x => x.Id == orderItemId);
             if (item is null)

@@ -11,9 +11,11 @@ namespace E_commerce_API.src.Domain.Entities
         public DateTime RefundDate { get; private set; }
 
         private Refund() { }
-        public Refund(int quantity)
+        public Refund(Quantity quantity)
         {
-            Quantity = new Quantity(quantity);
+            ArgumentNullException.ThrowIfNull(quantity);
+
+            Quantity = quantity;
             RefundDate = DateTime.UtcNow;
         }
     }

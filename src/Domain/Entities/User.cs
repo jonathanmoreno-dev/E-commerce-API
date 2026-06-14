@@ -11,6 +11,8 @@ namespace E_commerce_API.src.Domain.Entities
         public string PasswordHash { get; private set; } = "";
         public int CartId { get; private set; }
         public Cart Cart { get; private set; } = null!;
+        private List<ShippingAddress> _shippingAddress = new();
+        public IReadOnlyCollection<ShippingAddress> ShippingAddresses => _shippingAddress;
         private List<Checkout> _checkouts = new();
         public IReadOnlyCollection<Checkout> Checkouts => _checkouts;
         private List<Order> _orders = new();
@@ -32,14 +34,20 @@ namespace E_commerce_API.src.Domain.Entities
         }
         public void ChangeName(PersonName fullName)
         {
+            ArgumentNullException.ThrowIfNull(fullName);
+
             FullName = fullName;
         }
         public void ChangeEmail(Email email)
         {
+            ArgumentNullException.ThrowIfNull(email);
+
             Email = email;
         }
         public void ChangePhoneNumber(PhoneNumber phoneNumber)
         {
+            ArgumentNullException.ThrowIfNull(phoneNumber);
+
             PhoneNumber = phoneNumber;
         }
         public void ChangePasswordHash(string passwordHash)
@@ -50,10 +58,28 @@ namespace E_commerce_API.src.Domain.Entities
         {
             AvatarImage = new AvatarImage(url);
         }
+        public void AddShippingAddress(ShippingAddress shippingAddress)
+        {
+            ArgumentNullException.ThrowIfNull(shippingAddress);
+
+            _shippingAddress.Add(shippingAddress);
+        }
+        public void ChangeShippingAddress(ShippingAddress shippingAddress)
+        {
+            ArgumentNullException.ThrowIfNull(shippingAddress);
+
+            _shippingAddress.Add(shippingAddress);
+        }
+        public void RemoveShippingAddress(ShippingAddress shippingAddress)
+        {
+            ArgumentNullException.ThrowIfNull(shippingAddress);
+
+            _shippingAddress.Remove(shippingAddress);
+        }
         public void AddOrder(Order order)
         {
-            if (order is null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
+
             if (_orders.Any(x => x.Id == order.Id))
                 throw new InvalidOperationException($"Order with Id: {order.Id} already in user");
 

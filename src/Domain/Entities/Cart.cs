@@ -23,7 +23,7 @@ namespace E_commerce_API.src.Domain.Entities
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = CreatedAt;
         }
-        public Cart(User user) : this(user.Id)
+        public Cart(User user) : this(user?.Id ?? throw new ArgumentNullException(nameof(user)))
         {
             User = user;
         }

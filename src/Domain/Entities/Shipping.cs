@@ -17,6 +17,9 @@ namespace E_commerce_API.src.Domain.Entities
         private Shipping() { }
         public Shipping(ShippingAddress shippingAddress, Money shippingCost)
         {
+            ArgumentNullException.ThrowIfNull(shippingAddress);
+            ArgumentNullException.ThrowIfNull(shippingCost);
+
             ShippingAddress = shippingAddress;
             ShippingCost = shippingCost;
             Status = ShippingStatus.Pending;

@@ -28,6 +28,8 @@ namespace E_commerce_API.src.Domain.Entities
         private Product() { }
         public Product(ProductName name, ProductShortDescription shortDescription, ProductLongDescription longDescription, Money price, Quantity stock)
         {
+            ArgumentNullException.ThrowIfNull(stock);
+
             ChangeName(name);
             ChangeShortDescription(shortDescription);
             ChangeLongDescription(longDescription);
@@ -36,44 +38,39 @@ namespace E_commerce_API.src.Domain.Entities
         }
         public void ChangeName(ProductName name)
         {
-            if (name is null)
-                throw new ArgumentNullException(nameof(name));
+            ArgumentNullException.ThrowIfNull(name);
 
             Name = name;
         }
         public void ChangeShortDescription(ProductShortDescription shortDescription)
         {
-            if (shortDescription is null)
-                throw new ArgumentNullException(nameof(shortDescription));
+            ArgumentNullException.ThrowIfNull(shortDescription);
 
             ShortDescription = shortDescription;
         }
         public void ChangeLongDescription(ProductLongDescription longDescription)
         {
-            if (longDescription is null)
-                throw new ArgumentNullException(nameof(longDescription));
+            ArgumentNullException.ThrowIfNull(longDescription);
 
             LongDescription = longDescription;
         }
         public void ChangePrice(Money price)
         {
-            if (price is null)
-                throw new ArgumentNullException(nameof(price));
+            ArgumentNullException.ThrowIfNull(price);
 
             Price = price;
         }
         public void AddProductImage(ProductImage productImage)
         {
-            if (productImage is null)
-                throw new ArgumentNullException(nameof(productImage));
+            ArgumentNullException.ThrowIfNull(productImage);
 
             _productImages.Add(productImage);
             OrganizeProductImageOrder();
         }
         public void RemoveProductImage(ProductImage productImage)
         {
-            if (productImage is null)
-                throw new ArgumentNullException(nameof(productImage));
+            ArgumentNullException.ThrowIfNull(productImage);
+
             if (!_productImages.Contains(productImage))
                 throw new KeyNotFoundException($"ProductImage was not found");
 
@@ -82,8 +79,8 @@ namespace E_commerce_API.src.Domain.Entities
         }
         public void ChangeOrderProductImage(ProductImage productImage, int order)
         {
-            if(productImage is null)
-                throw new ArgumentNullException(nameof(productImage));
+            ArgumentNullException.ThrowIfNull(productImage);
+
             if (!_productImages.Contains(productImage))
                 throw new KeyNotFoundException($"ProductImage was not found");
             if (order > _productImages.Count)
@@ -114,8 +111,8 @@ namespace E_commerce_API.src.Domain.Entities
         }
         public void AddCategory(Category category)
         {
-            if (category is null)
-                throw new ArgumentNullException(nameof(category));
+            ArgumentNullException.ThrowIfNull(category);
+
             if (_categories.Any(x => x.Id == category.Id))
                 throw new InvalidOperationException($"Category with Id: {category.Id} already in product");
 

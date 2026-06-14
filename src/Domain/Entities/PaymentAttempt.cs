@@ -16,6 +16,8 @@ namespace E_commerce_API.src.Domain.Entities
         private PaymentAttempt() { }
         public PaymentAttempt(Money amount, PaymentMethod method)
         {
+            ArgumentNullException.ThrowIfNull(amount);
+
             Amount = amount;
             Status = PaymentStatus.Pending;
             Method = method;

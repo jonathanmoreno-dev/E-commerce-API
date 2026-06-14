@@ -24,6 +24,10 @@ namespace E_commerce_API.src.Domain.Entities
         private Checkout() { }
         public Checkout(int userId, ShippingAddress shippingAddress, Money shippingCost, PaymentMethod paymentMethod, IEnumerable<(int productId, Money unitPrice, Quantity quantity)> items)
         {
+            ArgumentNullException.ThrowIfNull(shippingAddress);
+            ArgumentNullException.ThrowIfNull(shippingCost);
+
+            UserId = userId;
             PaymentMethod = paymentMethod;
             ShippingAddress = shippingAddress;
             ShippingCost = shippingCost;
@@ -33,14 +37,13 @@ namespace E_commerce_API.src.Domain.Entities
             ExpiresAt = CreatedAt.AddHours(3);
         }
         public Checkout(User user, ShippingAddress shippingAddress, Money shippingCost, PaymentMethod paymentMethod, IEnumerable<(int productId, Money unitPrice, Quantity quantity)> items)
-    : this(user.Id, shippingAddress, shippingCost, paymentMethod, items)
+            : this(user?.Id ?? throw new ArgumentNullException(nameof(user)), shippingAddress, shippingCost, paymentMethod, items)
         {
             User = user;
         }
         private void AddItems(IEnumerable<(int productId, Money unitPrice, Quantity quantity)> items)
         {
-            if (items is null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
             if (!items.Any())
                 throw new InvalidOperationException("Checkout must have at least one item");
 
@@ -60,6 +63,7 @@ namespace E_commerce_API.src.Domain.Entities
 
         public void ChangeShippingAddress(ShippingAddress shippingAddress)
         {
+            ArgumentNullException.ThrowIfNull(shippingAddress);
             ShippingAddress = shippingAddress;
             UpdatedAt = DateTime.UtcNow;
         }
@@ -88,7 +92,6 @@ namespace E_commerce_API.src.Domain.Entities
         {
             EnsurePaymentBelongsToChechout(paymentAttempt);
             paymentAttempt.MarkAsCompleted();
-            // Maybe I should create an order entity here, but I'm not sure about that
         }
         public void FailPayment(PaymentAttempt paymentAttempt)
         {
@@ -112,6 +115,8 @@ namespace E_commerce_API.src.Domain.Entities
 
         private void EnsurePaymentBelongsToChechout(PaymentAttempt paymentAttempt)
         {
+            ArgumentNullException.ThrowIfNull(paymentAttempt);
+
             if (!_paymentAttempts.Contains(paymentAttempt))
                 throw new InvalidOperationException("Payment does not belong to this checkout");
         }

@@ -1,4 +1,5 @@
-﻿using E_commerce_API.src.Domain.ValueObjects;
+﻿using System.Xml.Linq;
+using E_commerce_API.src.Domain.ValueObjects;
 
 namespace E_commerce_API.src.Domain.Entities
 {
@@ -19,20 +20,26 @@ namespace E_commerce_API.src.Domain.Entities
         }
         public void ChangeName(CategoryName name)
         {
+            ArgumentNullException.ThrowIfNull(name);
+
             Name = name;
         }
         public void ChangeDescription(CategoryDescription description)
         {
+            ArgumentNullException.ThrowIfNull(description);
+
             Description = description;
         }
         public void ChangeCategoryImage(CategoryImage categoryImage)
         {
+            ArgumentNullException.ThrowIfNull(categoryImage);
+
             CategoryImage = categoryImage;
         }
         public void AddProduct(Product product)
         {
-            if (product is null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
+
             if (_products.Any(x => x.Id == product.Id))
                 throw new InvalidOperationException($"Product with Id: {product.Id} already in category");
 
