@@ -86,27 +86,27 @@ namespace E_commerce_API.src.Domain.Entities
 
         public void AuthorizePayment(PaymentAttempt paymentAttempt)
         {
-            EnsurePaymentBelongsToChechout(paymentAttempt);
+            EnsurePaymentBelongsToCheckout(paymentAttempt);
             paymentAttempt.MarkAsAuthorized();
         }
         public void CompletePayment(PaymentAttempt paymentAttempt)
         {
-            EnsurePaymentBelongsToChechout(paymentAttempt);
+            EnsurePaymentBelongsToCheckout(paymentAttempt);
             paymentAttempt.MarkAsCompleted();
         }
         public void FailPayment(PaymentAttempt paymentAttempt)
         {
-            EnsurePaymentBelongsToChechout(paymentAttempt);
+            EnsurePaymentBelongsToCheckout(paymentAttempt);
             paymentAttempt.MarkAsFailed();
         }
         public void CancelPayment(PaymentAttempt paymentAttempt)
         {
-            EnsurePaymentBelongsToChechout(paymentAttempt);
+            EnsurePaymentBelongsToCheckout(paymentAttempt);
             paymentAttempt.MarkAsCanceled();
         }
         public void AbandonPayment(PaymentAttempt paymentAttempt)
         {
-            EnsurePaymentBelongsToChechout(paymentAttempt);
+            EnsurePaymentBelongsToCheckout(paymentAttempt);
             paymentAttempt.MarkAsAbandoned();
         }
 
@@ -114,7 +114,7 @@ namespace E_commerce_API.src.Domain.Entities
         //          HELPER
         // =========================
 
-        private void EnsurePaymentBelongsToChechout(PaymentAttempt paymentAttempt)
+        private void EnsurePaymentBelongsToCheckout(PaymentAttempt paymentAttempt)
         {
             ArgumentNullException.ThrowIfNull(paymentAttempt);
 
