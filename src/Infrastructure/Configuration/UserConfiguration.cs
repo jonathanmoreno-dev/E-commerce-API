@@ -23,6 +23,17 @@ namespace E_commerce_API.src.Infrastructure.Configuration
                  .HasColumnName("avatar_image_url")
                  .IsRequired(false);
             });
+            builder.OwnsMany(x => x.ShippingAddresses, p =>
+            {
+                p.OwnsOne(r => r.RecipientName, pn => pn.Property(v => v.Value).HasColumnName("recipient_name").IsRequired().HasMaxLength(100));
+                p.OwnsOne(r => r.PhoneNumber, pn => pn.Property(v => v.Value).HasColumnName("phone_number").IsRequired().HasMaxLength(20));
+                p.Property(r => r.Neighborhood).HasColumnName("neighborhood").IsRequired().HasMaxLength(100);
+                p.Property(r => r.Street).HasColumnName("street").IsRequired().HasMaxLength(50);
+                p.Property(r => r.Number).HasColumnName("number").IsRequired().HasMaxLength(50);
+                p.Property(r => r.State).HasColumnName("state").IsRequired().HasMaxLength(20);
+                p.Property(r => r.City).HasColumnName("city").IsRequired().HasMaxLength(50);
+                p.Property(r => r.ZipCode).HasColumnName("zip_code").IsRequired().HasMaxLength(20);
+            });
             builder.Property(x => x.CartId).HasColumnName("cart_id");
             builder.Property(x => x.PasswordHash).IsRequired().HasMaxLength(255).HasColumnName("password_hash");
             builder.Property(x => x.IsAdmin).HasColumnName("is_admin");
