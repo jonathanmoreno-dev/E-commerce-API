@@ -17,13 +17,6 @@ namespace E_commerce_API.src.Domain.Entities
         public IReadOnlyCollection<ProductImage> ProductImages => _productImages;
         private readonly List<Category> _categories = new();
         public IReadOnlyCollection<Category> Categories => _categories;
-        
-        private readonly List<CartItem> _cartItems = new();
-        public IReadOnlyCollection<CartItem> CartItems => _cartItems;
-        private readonly List<CheckoutItem> _checkoutItems = new();
-        public IReadOnlyCollection<CheckoutItem> CheckoutItems => _checkoutItems;
-        private readonly List<OrderItem> _orderItems = new();
-        public IReadOnlyCollection<OrderItem> OrderItems => _orderItems;
 
         private Product() { }
         public Product(ProductName name, ProductShortDescription shortDescription, ProductLongDescription longDescription, Money price, Quantity stock)
