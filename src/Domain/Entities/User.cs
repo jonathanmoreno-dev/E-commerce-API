@@ -55,17 +55,13 @@ namespace E_commerce_API.src.Domain.Entities
         {
             PasswordHash = passwordHash;
         }
-        public void ChangeAvatarImage(string url)
+        public void ChangeAvatarImage(AvatarImage avatarImage)
         {
-            AvatarImage = new AvatarImage(url);
+            ArgumentNullException.ThrowIfNull(avatarImage);
+
+            AvatarImage = avatarImage;
         }
         public void AddShippingAddress(ShippingAddress shippingAddress)
-        {
-            ArgumentNullException.ThrowIfNull(shippingAddress);
-
-            _shippingAddress.Add(shippingAddress);
-        }
-        public void ChangeShippingAddress(ShippingAddress shippingAddress)
         {
             ArgumentNullException.ThrowIfNull(shippingAddress);
 
@@ -75,24 +71,10 @@ namespace E_commerce_API.src.Domain.Entities
         {
             ArgumentNullException.ThrowIfNull(shippingAddress);
 
+            if (!_shippingAddress.Contains(shippingAddress))
+                throw new KeyNotFoundException("ShippingAddress was not found");
+
             _shippingAddress.Remove(shippingAddress);
-        }
-        public void AddOrder(Order order)
-        {
-            ArgumentNullException.ThrowIfNull(order);
-
-            if (_orders.Any(x => x.Id == order.Id))
-                throw new InvalidOperationException($"Order with Id: {order.Id} already in user");
-
-            _orders.Add(order);
-        }
-        public void RemoveOrder(int orderId)
-        {
-            var order = _orders.FirstOrDefault(x => x.Id == orderId);
-            if (order is null)
-                throw new KeyNotFoundException($"Order with Id: {orderId} was not found");
-
-            _orders.Remove(order);
         }
     }
 }
