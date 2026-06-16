@@ -16,7 +16,7 @@ namespace E_commerce_API.src.Infrastructure.Configuration
             builder.Property(x => x.CartId).HasColumnName("cart_id");
             builder.Property(x => x.ProductId).HasColumnName("product_id");
             builder.HasOne(x => x.Cart).WithMany(y => y.CartItems).HasForeignKey(x => x.CartId);
-            builder.HasOne(x => x.Product).WithMany(y => y.CartItems).HasForeignKey(x => x.ProductId);
+            builder.HasOne(x => x.Product).WithMany().HasForeignKey(x => x.ProductId);
             builder.HasIndex(x => x.CartId);
             builder.HasIndex(x => x.ProductId);
         }
