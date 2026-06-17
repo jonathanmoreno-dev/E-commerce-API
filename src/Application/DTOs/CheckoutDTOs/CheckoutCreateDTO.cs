@@ -9,7 +9,6 @@ namespace E_commerce_API.src.Application.DTOs.CheckoutDTOs
     {
         [Required]
         public ShippingAddressDTO ShippingAddressDTO { get; set; } = null!;
-        [Required]
         public PaymentMethod PaymentMethod { get; set; }
         [Required]
         public List<CheckoutItemCreateDTO> CheckoutItemCreateDTOs { get; set; } = new();
