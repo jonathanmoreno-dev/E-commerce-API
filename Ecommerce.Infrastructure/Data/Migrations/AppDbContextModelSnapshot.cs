@@ -35,7 +35,7 @@ namespace E_commerce_API.Migrations
 
                     b.HasIndex("ProductsId");
 
-                    b.ToTable("CategoryProduct");
+                    b.ToTable("CategoryProduct", (string)null);
                 });
 
             modelBuilder.Entity("E_commerce_API.src.Domain.Entities.Cart", b =>
@@ -836,7 +836,7 @@ namespace E_commerce_API.Migrations
 
             modelBuilder.Entity("E_commerce_API.src.Domain.Entities.Category", b =>
                 {
-                    b.OwnsOne("E_commerce_API.src.Domain.ValueObjects.CategoryImage", "CategoryImage", b1 =>
+                    b.OwnsOne("E_commerce_API.src.Domain.Entities.Category.CategoryImage#E_commerce_API.src.Domain.ValueObjects.CategoryImage", "CategoryImage", b1 =>
                         {
                             b1.Property<int>("CategoryId")
                                 .HasColumnType("integer");
@@ -847,7 +847,7 @@ namespace E_commerce_API.Migrations
 
                             b1.HasKey("CategoryId");
 
-                            b1.ToTable("categories");
+                            b1.ToTable("categories", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("CategoryId");
@@ -929,7 +929,7 @@ namespace E_commerce_API.Migrations
 
             modelBuilder.Entity("E_commerce_API.src.Domain.Entities.Product", b =>
                 {
-                    b.OwnsMany("E_commerce_API.src.Domain.ValueObjects.ProductImage", "ProductImages", b1 =>
+                    b.OwnsMany("E_commerce_API.src.Domain.Entities.Product.ProductImages#E_commerce_API.src.Domain.ValueObjects.ProductImage", "ProductImages", b1 =>
                         {
                             b1.Property<int>("ProductId")
                                 .HasColumnType("integer");
@@ -951,7 +951,7 @@ namespace E_commerce_API.Migrations
 
                             b1.HasKey("ProductId", "Id");
 
-                            b1.ToTable("ProductImage");
+                            b1.ToTable("ProductImage", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("ProductId");
@@ -984,7 +984,7 @@ namespace E_commerce_API.Migrations
 
             modelBuilder.Entity("E_commerce_API.src.Domain.Entities.User", b =>
                 {
-                    b.OwnsOne("E_commerce_API.src.Domain.ValueObjects.AvatarImage", "AvatarImage", b1 =>
+                    b.OwnsOne("E_commerce_API.src.Domain.Entities.User.AvatarImage#E_commerce_API.src.Domain.ValueObjects.AvatarImage", "AvatarImage", b1 =>
                         {
                             b1.Property<int>("UserId")
                                 .HasColumnType("integer");
@@ -995,13 +995,13 @@ namespace E_commerce_API.Migrations
 
                             b1.HasKey("UserId");
 
-                            b1.ToTable("users");
+                            b1.ToTable("users", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("UserId");
                         });
 
-                    b.OwnsMany("E_commerce_API.src.Domain.ValueObjects.ShippingAddress", "ShippingAddresses", b1 =>
+                    b.OwnsMany("E_commerce_API.src.Domain.Entities.User.ShippingAddresses#E_commerce_API.src.Domain.ValueObjects.ShippingAddress", "ShippingAddresses", b1 =>
                         {
                             b1.Property<int>("UserId")
                                 .HasColumnType("integer");
@@ -1050,34 +1050,12 @@ namespace E_commerce_API.Migrations
 
                             b1.HasKey("UserId", "Id");
 
-                            b1.ToTable("ShippingAddress");
+                            b1.ToTable("ShippingAddress", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("UserId");
 
-                            b1.OwnsOne("E_commerce_API.src.Domain.ValueObjects.PersonName", "RecipientName", b2 =>
-                                {
-                                    b2.Property<int>("ShippingAddressUserId")
-                                        .HasColumnType("integer");
-
-                                    b2.Property<int>("ShippingAddressId")
-                                        .HasColumnType("integer");
-
-                                    b2.Property<string>("Value")
-                                        .IsRequired()
-                                        .HasMaxLength(100)
-                                        .HasColumnType("character varying(100)")
-                                        .HasColumnName("recipient_name");
-
-                                    b2.HasKey("ShippingAddressUserId", "ShippingAddressId");
-
-                                    b2.ToTable("ShippingAddress");
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("ShippingAddressUserId", "ShippingAddressId");
-                                });
-
-                            b1.OwnsOne("E_commerce_API.src.Domain.ValueObjects.PhoneNumber", "PhoneNumber", b2 =>
+                            b1.OwnsOne("E_commerce_API.src.Domain.Entities.User.ShippingAddresses#E_commerce_API.src.Domain.ValueObjects.ShippingAddress.PhoneNumber#E_commerce_API.src.Domain.ValueObjects.PhoneNumber", "PhoneNumber", b2 =>
                                 {
                                     b2.Property<int>("ShippingAddressUserId")
                                         .HasColumnType("integer");
@@ -1093,7 +1071,29 @@ namespace E_commerce_API.Migrations
 
                                     b2.HasKey("ShippingAddressUserId", "ShippingAddressId");
 
-                                    b2.ToTable("ShippingAddress");
+                                    b2.ToTable("ShippingAddress", (string)null);
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("ShippingAddressUserId", "ShippingAddressId");
+                                });
+
+                            b1.OwnsOne("E_commerce_API.src.Domain.Entities.User.ShippingAddresses#E_commerce_API.src.Domain.ValueObjects.ShippingAddress.RecipientName#E_commerce_API.src.Domain.ValueObjects.PersonName", "RecipientName", b2 =>
+                                {
+                                    b2.Property<int>("ShippingAddressUserId")
+                                        .HasColumnType("integer");
+
+                                    b2.Property<int>("ShippingAddressId")
+                                        .HasColumnType("integer");
+
+                                    b2.Property<string>("Value")
+                                        .IsRequired()
+                                        .HasMaxLength(100)
+                                        .HasColumnType("character varying(100)")
+                                        .HasColumnName("recipient_name");
+
+                                    b2.HasKey("ShippingAddressUserId", "ShippingAddressId");
+
+                                    b2.ToTable("ShippingAddress", (string)null);
 
                                     b2.WithOwner()
                                         .HasForeignKey("ShippingAddressUserId", "ShippingAddressId");
