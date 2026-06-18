@@ -36,12 +36,6 @@ namespace E_commerce_API.src.Domain.Entities
 
             Quantity = Quantity.Add(quantity.Value);
         }
-        public void DecreaseQuantity(Quantity quantity)
-        {
-            ArgumentNullException.ThrowIfNull(quantity);
-
-            Quantity = Quantity.Remove(quantity.Value);
-        }
         public void AddRefund(Quantity quantity)
         {
             var totalRefunded = _refunds.Sum(x => x.Quantity.Value);
