@@ -27,17 +27,11 @@ namespace E_commerce_API.src.Domain.Entities
         {
             Product = product;
         }
-        public void IncreaseQuantity(Quantity quantity)
+        public void ChangeQuantity(Quantity quantity)
         {
             ArgumentNullException.ThrowIfNull(quantity);
 
-            Quantity = Quantity.Add(quantity.Value);
-        }
-        public void DecreaseQuantity(Quantity quantity)
-        {
-            ArgumentNullException.ThrowIfNull(quantity);
-
-            Quantity = Quantity.Remove(quantity.Value);
+            Quantity = quantity;
         }
     }
 }

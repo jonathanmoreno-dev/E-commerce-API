@@ -33,7 +33,19 @@ namespace E_commerce_API.src.Domain.Entities
             if (existingItem is null)
                 _cartItems.Add(new CartItem(productId, unitPrice, quantity));
             else
-                existingItem.IncreaseQuantity(quantity);
+                existingItem.ChangeQuantity(quantity);
+            UpdatedAt = DateTime.UtcNow;
+        }
+        public void ChangeItemQuantity(int productId, Quantity quantity)
+        {
+            var item = _cartItems.FirstOrDefault(x => x.ProductId == productId);
+            if (item is null)
+                throw new KeyNotFoundException($"CartItem with Product Id: {productId} was not found");
+
+            if (quantity.Value == 0)
+                _cartItems.Remove(item);
+            else
+                item.ChangeQuantity(quantity);
             UpdatedAt = DateTime.UtcNow;
         }
         public void RemoveItem(int productId)
