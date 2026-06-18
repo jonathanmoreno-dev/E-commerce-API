@@ -11,7 +11,7 @@ namespace E_commerce_API.src.Application.Interfaces.Services
         public Task<CartDetailsDTO> CreateCartAsync();
         public Task<CartDetailsDTO> AddItemAsync(CartItemCreateDTO item);
         public Task<CartDetailsDTO> RemoveItemAsync(int productId);
-        public Task<CartDetailsDTO> UpdateItemQuantityAsync(int productId, int quantity);
+        public Task<CartDetailsDTO> UpdateItemQuantityAsync(CartItemUpdateDTO itemUpdate);
         public Task<CartDetailsDTO> ClearAsync(int id);
     }
 }
