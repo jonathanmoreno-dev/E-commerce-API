@@ -1,0 +1,19 @@
+﻿using System.Xml.Linq;
+
+namespace Ecommerce.Domain.ValueObjects
+{
+    public record ProductName
+    {
+        public string Value { get; } = null!;
+        private ProductName() { }
+        public ProductName(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                throw new ArgumentException("Product name cannot be empty", nameof(value));
+            if (value.Length > 255)
+                throw new ArgumentException("Product name cannot exceed 255 characters", nameof(value));
+
+            Value = value;
+        }
+    }
+}

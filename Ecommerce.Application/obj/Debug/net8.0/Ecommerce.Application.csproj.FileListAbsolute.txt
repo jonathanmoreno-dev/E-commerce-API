@@ -1,0 +1,16 @@
+C:\Users\USER\Estudo\E-commerce API Solution\Ecommerce.Application\bin\Debug\net8.0\Ecommerce.Application.deps.json
+C:\Users\USER\Estudo\E-commerce API Solution\Ecommerce.Application\bin\Debug\net8.0\Ecommerce.Application.dll
+C:\Users\USER\Estudo\E-commerce API Solution\Ecommerce.Application\bin\Debug\net8.0\Ecommerce.Application.pdb
+C:\Users\USER\Estudo\E-commerce API Solution\Ecommerce.Application\bin\Debug\net8.0\Ecommerce.Domain.dll
+C:\Users\USER\Estudo\E-commerce API Solution\Ecommerce.Application\bin\Debug\net8.0\Ecommerce.Domain.pdb
+C:\Users\USER\Estudo\E-commerce API Solution\Ecommerce.Application\obj\Debug\net8.0\Ecommerce.Application.csproj.AssemblyReference.cache
+C:\Users\USER\Estudo\E-commerce API Solution\Ecommerce.Application\obj\Debug\net8.0\Ecommerce.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\USER\Estudo\E-commerce API Solution\Ecommerce.Application\obj\Debug\net8.0\Ecommerce.Application.AssemblyInfoInputs.cache
+C:\Users\USER\Estudo\E-commerce API Solution\Ecommerce.Application\obj\Debug\net8.0\Ecommerce.Application.AssemblyInfo.cs
+C:\Users\USER\Estudo\E-commerce API Solution\Ecommerce.Application\obj\Debug\net8.0\Ecommerce.Application.csproj.CoreCompileInputs.cache
+C:\Users\USER\Estudo\E-commerce API Solution\Ecommerce.Application\obj\Debug\net8.0\Ecommerce.Application.sourcelink.json
+C:\Users\USER\Estudo\E-commerce API Solution\Ecommerce.Application\obj\Debug\net8.0\Ecommerc.C5F54E74.Up2Date
+C:\Users\USER\Estudo\E-commerce API Solution\Ecommerce.Application\obj\Debug\net8.0\Ecommerce.Application.dll
+C:\Users\USER\Estudo\E-commerce API Solution\Ecommerce.Application\obj\Debug\net8.0\refint\Ecommerce.Application.dll
+C:\Users\USER\Estudo\E-commerce API Solution\Ecommerce.Application\obj\Debug\net8.0\Ecommerce.Application.pdb
+C:\Users\USER\Estudo\E-commerce API Solution\Ecommerce.Application\obj\Debug\net8.0\ref\Ecommerce.Application.dll
