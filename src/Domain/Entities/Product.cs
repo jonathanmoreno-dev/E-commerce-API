@@ -102,6 +102,10 @@ namespace E_commerce_API.src.Domain.Entities
         {
             Stock = Stock.Remove(stock);
         }
+        public void ChangeStock(Quantity stock)
+        {
+            Stock = stock;
+        }
         public void AddCategory(Category category)
         {
             ArgumentNullException.ThrowIfNull(category);
