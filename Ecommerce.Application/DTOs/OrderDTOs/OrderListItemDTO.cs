@@ -3,7 +3,7 @@ using Ecommerce.Application.DTOs.OrderItemDTOs;
 
 namespace Ecommerce.Application.DTOs.OrderDTOs
 {
-    public class OrderSummaryDTO
+    public class OrderListItemDTO
     {
         public int OrderId { get; set; }
         public DateTime CreatedAt { get; set; }
