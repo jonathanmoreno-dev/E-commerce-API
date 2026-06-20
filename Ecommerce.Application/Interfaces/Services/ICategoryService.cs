@@ -7,6 +7,7 @@ namespace Ecommerce.Application.Interfaces.Services
         public Task<IEnumerable<CategoryListDTO>> GetAllCategories();
         public Task<CategoryDetailsDTO> GetCategoryById(int id);
         public Task<CategoryDetailsDTO> CreateCategory(CategoryCreateDTO categoryCreate);
-        public Task<CategoryDetailsDTO> UpdateCategory();
+        public Task<CategoryDetailsDTO> UpdateCategory(CategoryUpdateDTO categoryUpdate);
+        public Task RemoveCategory(int id);
     }
 }
