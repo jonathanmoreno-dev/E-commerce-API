@@ -36,7 +36,7 @@ namespace Ecommerce.Domain.Entities
 
             CategoryImage = categoryImage;
         }
-        public void AddProduct(Product product)
+        internal void AddProduct(Product product)
         {
             ArgumentNullException.ThrowIfNull(product);
 
@@ -45,7 +45,7 @@ namespace Ecommerce.Domain.Entities
 
             _products.Add(product);
         }
-        public void RemoveProduct(int productId)
+        internal void RemoveProduct(int productId)
         {
             var product = _products.FirstOrDefault(x => x.Id == productId);
             if(product is null)
