@@ -2,7 +2,7 @@
 
 namespace Ecommerce.Application.DTOs.CheckoutItemDTOs
 {
-    public class CheckoutItemListDTO
+    public class CheckoutItemSummaryDTO
     {
         public int Id { get; set; }
         public ProductSummaryDTO ProductSummaryDTO { get; set; } = null!;

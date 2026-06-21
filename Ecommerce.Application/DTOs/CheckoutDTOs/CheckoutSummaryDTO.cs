@@ -16,6 +16,6 @@ namespace Ecommerce.Application.DTOs.CheckoutDTOs
         public DateTime ExpiresAt { get; set; }
         public decimal Total { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
-        public List<CheckoutItemListDTO> CheckoutItemListDTOs { get; set; } = new();
+        public List<CheckoutItemSummaryDTO> CheckoutItemListDTOs { get; set; } = new();
     }
 }

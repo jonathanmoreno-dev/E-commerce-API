@@ -11,6 +11,6 @@ namespace Ecommerce.Application.DTOs.CheckoutDTOs
         public decimal Total { get; set; }
         public decimal ShippingCost { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
-        public List<CheckoutItemListDTO> CheckoutItems { get; set; } = new();
+        public List<CheckoutItemSummaryDTO> CheckoutItems { get; set; } = new();
     }
 }
