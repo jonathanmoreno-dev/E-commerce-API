@@ -8,6 +8,6 @@ namespace Ecommerce.Application.Interfaces.Services
         public Task<CategoryDetailsDTO> GetCategoryByIdAsync(int id);
         public Task<CategoryDetailsDTO> CreateCategoryAsync(CategoryCreateDTO categoryCreate);
         public Task<CategoryDetailsDTO> UpdateCategoryAsync(int categoryId, CategoryUpdateDTO categoryUpdate);
-        public Task RemoveCategoryAsync(int id);
+        public Task DeleteCategoryAsync(int id);
     }
 }
