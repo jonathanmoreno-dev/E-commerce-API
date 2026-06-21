@@ -73,53 +73,48 @@ namespace Ecommerce.Domain.Entities
         //          PAYMENT
         // =========================
 
-        public void CreatePayment(Money amount)
+        public void CreatePayment()
         {
             if (_paymentAttempts.Any(p => p.Status == PaymentStatus.Pending))
                 throw new InvalidOperationException("There is already a pending payment");
             if(_paymentAttempts.Any(p => p.Status == PaymentStatus.Authorized) || _paymentAttempts.Any(p => p.Status == PaymentStatus.Completed))
                 throw new InvalidOperationException("There is already a authorized payment");
 
-            _paymentAttempts.Add(new PaymentAttempt(amount, PaymentMethod));
+            _paymentAttempts.Add(new PaymentAttempt(Total, PaymentMethod));
             UpdatedAt = DateTime.UtcNow;
         }
 
-        public void AuthorizePayment(PaymentAttempt paymentAttempt)
+        public void AuthorizePayment()
         {
-            EnsurePaymentBelongsToCheckout(paymentAttempt);
-            paymentAttempt.MarkAsAuthorized();
+            GetCurrentPayment().MarkAsAuthorized();
         }
-        public void CompletePayment(PaymentAttempt paymentAttempt)
+        public void CompletePayment()
         {
-            EnsurePaymentBelongsToCheckout(paymentAttempt);
-            paymentAttempt.MarkAsCompleted();
+            GetCurrentPayment().MarkAsCompleted();
         }
-        public void FailPayment(PaymentAttempt paymentAttempt)
+        public void FailPayment()
         {
-            EnsurePaymentBelongsToCheckout(paymentAttempt);
-            paymentAttempt.MarkAsFailed();
+            GetCurrentPayment().MarkAsFailed();
         }
-        public void CancelPayment(PaymentAttempt paymentAttempt)
+        public void CancelPayment()
         {
-            EnsurePaymentBelongsToCheckout(paymentAttempt);
-            paymentAttempt.MarkAsCanceled();
+            GetCurrentPayment().MarkAsCanceled();
         }
-        public void AbandonPayment(PaymentAttempt paymentAttempt)
+        public void AbandonPayment()
         {
-            EnsurePaymentBelongsToCheckout(paymentAttempt);
-            paymentAttempt.MarkAsAbandoned();
+            GetCurrentPayment().MarkAsAbandoned();
         }
 
         // =========================
         //          HELPER
         // =========================
 
-        private void EnsurePaymentBelongsToCheckout(PaymentAttempt paymentAttempt)
+        private PaymentAttempt GetCurrentPayment()
         {
-            ArgumentNullException.ThrowIfNull(paymentAttempt);
-
-            if (!_paymentAttempts.Contains(paymentAttempt))
-                throw new InvalidOperationException("Payment does not belong to this checkout");
+            return _paymentAttempts.LastOrDefault(p =>
+                p.Status == PaymentStatus.Pending ||
+                p.Status == PaymentStatus.Authorized)
+                ?? throw new InvalidOperationException("There is no active payment");
         }
     }
 }
