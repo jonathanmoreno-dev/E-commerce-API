@@ -5,17 +5,18 @@ namespace Ecommerce.Application.Interfaces.Services
 {
     public interface ICheckoutService
     {
-        public Task<IEnumerable<CheckoutSummaryDTO>> GetAllCheckoutActivesAsync();
-        public Task<CheckoutDetailsDTO> GetCheckoutActiveByUserIdAsync(int userId);
-        public Task<CheckoutDetailsDTO> GetCheckoutByIdAsync(int id);
-        public Task<CheckoutDetailsDTO> CreateCheckoutAsync(CheckoutCreateDTO checkoutCreate);
-        public Task<CheckoutDetailsDTO> UpdateCheckoutAsync(int checkoutId, CheckoutUpdateDTO checkoutUpdate);
-        public Task CreatePayment(int checkoutId);
+        public Task<IEnumerable<CheckoutSummaryDTO>> GetAllActiveAsync();
+        public Task<IEnumerable<CheckoutSummaryDTO>> GetCurrentUserActiveAsync();
+        public Task<IEnumerable<CheckoutSummaryDTO>> GetActiveByUserIdAsync(int userId);
+        public Task<CheckoutDetailsDTO> GetByIdAsync(int id);
+        public Task<CheckoutDetailsDTO> CreateAsync(CheckoutCreateDTO checkoutCreate);
+        public Task<CheckoutDetailsDTO> UpdateAsync(int checkoutId, CheckoutUpdateDTO checkoutUpdate);
+        public Task CreatePaymentAsync(int checkoutId);
         public Task AuthorizePaymentAsync(int checkoutId);
         public Task CompletePaymentAsync(int checkoutId);
         public Task FailPaymentAsync(int checkoutId);
         public Task CancelPaymentAsync(int checkoutId);
         public Task AbandonPaymentAsync(int checkoutId);
-        public Task DeleteCheckoutAsync(int id);
+        public Task DeleteAsync(int id);
     }
 }
