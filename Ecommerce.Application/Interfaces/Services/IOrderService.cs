@@ -6,18 +6,18 @@ namespace Ecommerce.Application.Interfaces.Services
 {
     public interface IOrderService
     {
-        public Task<IEnumerable<OrderListItemDTO>> GetAllCurrentAsync();
+        public Task<IEnumerable<OrderListItemDTO>> GetAllCurrentUserOrdersAsync();
         public Task<IEnumerable<OrderListItemDTO>> GetAllByUserIdAsync(int userId);
         public Task<IEnumerable<OrderListItemDTO>> GetAllByStatusAsync(OrderStatus status);
         public Task<OrderDetailsDTO> GetByIdAsync(int id);
         public Task<OrderDetailsDTO> CreateFromCheckoutAsync(int checkoutId);
         public Task<OrderDetailsDTO> RefundItemAsync(RefundCreateDTO refundCreate);
         public Task SetTrackingCodeAsync(int orderId, string trackingCode);
-        public Task CancelOrderAsync(int orderId);
+        public Task CancelAsync(int orderId);
         public Task ProcessShippingAsync(int orderId);
-        public Task ShipShippingAsync(int orderId);
-        public Task ShippingInTransitAsync(int orderId);
-        public Task DeliverShippingAsync(int orderId);
-        public Task ReturnShippingAsync(int orderId);
+        public Task MarkAsShippedAsync(int orderId);
+        public Task MarkAsInTransitAsync(int orderId);
+        public Task MarkAsDeliveredAsync(int orderId);
+        public Task MarkAsReturnedAsync(int orderId);
     }
 }

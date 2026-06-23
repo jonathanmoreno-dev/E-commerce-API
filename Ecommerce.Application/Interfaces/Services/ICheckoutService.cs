@@ -6,7 +6,7 @@ namespace Ecommerce.Application.Interfaces.Services
     public interface ICheckoutService
     {
         public Task<IEnumerable<CheckoutSummaryDTO>> GetAllActiveAsync();
-        public Task<IEnumerable<CheckoutSummaryDTO>> GetAllCurrentActiveAsync();
+        public Task<IEnumerable<CheckoutSummaryDTO>> GetAllCurrentUserCheckoutsActiveAsync();
         public Task<IEnumerable<CheckoutSummaryDTO>> GetAllActiveByUserIdAsync(int userId);
         public Task<CheckoutDetailsDTO> GetByIdAsync(int id);
         public Task<CheckoutDetailsDTO> CreateAsync(CheckoutCreateDTO checkoutCreate);
