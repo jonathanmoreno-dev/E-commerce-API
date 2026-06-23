@@ -1,5 +1,6 @@
 ﻿using Ecommerce.Application.DTOs.CartDTOs;
 using Ecommerce.Application.DTOs.OrderDTOs;
+using Ecommerce.Application.DTOs.ShippingDTOs;
 
 namespace Ecommerce.Application.DTOs.UserDTOs
 {
@@ -11,7 +12,6 @@ namespace Ecommerce.Application.DTOs.UserDTOs
         public string PhoneNumber { get; set; } = "";
         public bool IsAdmin { get; set; }
         public string AvatarImageUrl { get; set; } = "";
-        public CartDetailsDTO CartDetailsDTO { get; set; } = null!;
-        public List<OrderListDTO> OrderListDTOs { get; set; } = new();
+        public List<ShippingAddressDTO> ShippingAddressDTOs { get; set; } = new();
     }
 }
