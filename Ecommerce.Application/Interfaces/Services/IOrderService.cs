@@ -12,6 +12,7 @@ namespace Ecommerce.Application.Interfaces.Services
         public Task<OrderDetailsDTO> GetByIdAsync(int id);
         public Task<OrderDetailsDTO> CreateFromCheckoutAsync(int checkoutId);
         public Task<OrderDetailsDTO> RefundItemAsync(RefundCreateDTO refundCreate);
+        public Task SetTrackingCodeAsync(int orderId, string trackingCode);
         public Task CancelOrderAsync(int orderId);
         public Task ProcessShippingAsync(int orderId);
         public Task ShipShippingAsync(int orderId);
