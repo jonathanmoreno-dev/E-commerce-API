@@ -16,7 +16,7 @@ namespace Ecommerce.Domain.Entities
         public Money ShippingCost { get; private set; } = null!;
         public PaymentMethod PaymentMethod { get; private set; }
         public Money TotalPaid { get; private set; } = null!;
-        public Shipping? Shipping { get; private set; }
+        public Shipping Shipping { get; private set; } = null!;
 
         private readonly List<OrderItem> _orderItems = new();
         public IReadOnlyCollection<OrderItem> OrderItems => _orderItems;
@@ -35,6 +35,7 @@ namespace Ecommerce.Domain.Entities
             CreatedAt = DateTime.UtcNow;
             AddItems(items);
             InitializeTotals(totalPaid);
+            Shipping = new Shipping(ShippingAddress, ShippingCost);
         }
         public Order(User user, ShippingAddress shippingAddress, Money shippingCost, PaymentMethod paymentMethod, IEnumerable<(int productId, Money unitPrice, Quantity quantity)> items, Money totalPaid) 
             : this(user?.Id ?? throw new ArgumentNullException(nameof(user)), shippingAddress, shippingCost, paymentMethod, items, totalPaid)
@@ -94,13 +95,6 @@ namespace Ecommerce.Domain.Entities
         //          SHIPPING
         // =========================
 
-        public void CreateShipping()
-        {
-            if (Shipping is not null)
-                throw new InvalidOperationException("Shipping already exists");
-
-            Shipping = new Shipping(ShippingAddress, ShippingCost);
-        }
         public void MarkAsProcessing()
         {
             if (Shipping is null)
