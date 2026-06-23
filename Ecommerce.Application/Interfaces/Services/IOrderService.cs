@@ -13,7 +13,6 @@ namespace Ecommerce.Application.Interfaces.Services
         public Task<OrderDetailsDTO> CreateFromCheckoutAsync(int checkoutId);
         public Task<OrderDetailsDTO> RefundItemAsync(RefundCreateDTO refundCreate);
         public Task CancelOrderAsync(int orderId);
-        public Task CreateShippingAsync(int orderId);
         public Task ProcessShippingAsync(int orderId);
         public Task ShipShippingAsync(int orderId);
         public Task ShippingInTransitAsync(int orderId);
