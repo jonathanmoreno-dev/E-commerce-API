@@ -69,17 +69,17 @@ namespace Ecommerce.Domain.Entities
             _productImages.Remove(productImage);
             OrganizeProductImageOrder();
         }
-        public void ChangeOrderProductImage(ProductImage productImage, int order)
+        public void ChangeOrderProductImage(ProductImage productImage, int newOrder)
         {
             ArgumentNullException.ThrowIfNull(productImage);
 
             if (!_productImages.Contains(productImage))
                 throw new KeyNotFoundException($"ProductImage was not found");
-            if (order > _productImages.Count)
-                throw new ArgumentOutOfRangeException(nameof(order), "Order cannot be bigger than size of list");
+            if (newOrder > _productImages.Count)
+                throw new ArgumentOutOfRangeException(nameof(newOrder), "Order cannot be bigger than size of list");
 
             _productImages.Remove(productImage);
-            _productImages.Insert(order - 1, new ProductImage(productImage.Url, order));
+            _productImages.Insert(newOrder - 1, new ProductImage(productImage.Url, newOrder));
             OrganizeProductImageOrder();
         }
         private void OrganizeProductImageOrder()
