@@ -93,17 +93,17 @@ namespace Ecommerce.Domain.Entities
             _productImages.Clear();
             _productImages.AddRange(ordered);
         }
-        public void IncreaseStock(int stock)
+        public void IncreaseStock(int quantity)
         {
-            Stock = Stock.Add(stock);
+            Stock = Stock.Add(quantity);
         }
-        public void DecreaseStock(int stock)
+        public void DecreaseStock(int quantity)
         {
-            Stock = Stock.Remove(stock);
+            Stock = Stock.Remove(quantity);
         }
-        public void ChangeStock(Quantity stock)
+        public void ChangeStock(Quantity quantity)
         {
-            Stock = stock;
+            Stock = quantity;
         }
         public void AddCategory(Category category)
         {
