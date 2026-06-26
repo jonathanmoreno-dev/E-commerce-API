@@ -19,6 +19,10 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         {
             return await _appDbContext.Carts.FirstOrDefaultAsync(x => x.Id == id);
         }
+        public async Task<Cart?> GetByUserIdAsync(int userId)
+        {
+            return await _appDbContext.Carts.FirstOrDefaultAsync(x => x.UserId == userId);
+        }
         public void Add(Cart cart)
         {
             _appDbContext.Carts.Add(cart);
