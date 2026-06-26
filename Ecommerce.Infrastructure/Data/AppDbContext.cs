@@ -1,10 +1,11 @@
-﻿using Ecommerce.Domain.Entities;
+﻿using Ecommerce.Application.Interfaces.Repositories;
+using Ecommerce.Domain.Entities;
 using Ecommerce.Infrastructure.Configuration;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ecommerce.Infrastructure.Data
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : DbContext, IUnitOfWork
     {
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }

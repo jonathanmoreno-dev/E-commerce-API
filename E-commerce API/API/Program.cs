@@ -1,3 +1,4 @@
+using Ecommerce.Application.Interfaces.Repositories;
 using Ecommerce.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,7 +14,7 @@ builder.Services.AddSwaggerGen();
 
 string? postgreSQLStringConnectionString = builder.Configuration.GetConnectionString("Default");
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(postgreSQLStringConnectionString));
-
+builder.Services.AddScoped<IUnitOfWork, AppDbContext>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
