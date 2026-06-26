@@ -95,6 +95,13 @@ namespace Ecommerce.Domain.Entities
         //          SHIPPING
         // =========================
 
+        public void SetTrackingCode(string trackingCode)
+        {
+            if (Shipping is null)
+                throw new InvalidOperationException("Shipping doesn't exist");
+
+            Shipping.SetTrackingCode(trackingCode);
+        }
         public void MarkAsProcessing()
         {
             if (Shipping is null)
