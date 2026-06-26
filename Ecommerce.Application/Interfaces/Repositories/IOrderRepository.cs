@@ -11,6 +11,5 @@ namespace Ecommerce.Application.Interfaces.Repositories
         public Task<Order?> GetByIdAsync(int id);
         public void Add(Order order);
         public void Update(Order order);
-        public void Remove(Order order);
     }
 }
