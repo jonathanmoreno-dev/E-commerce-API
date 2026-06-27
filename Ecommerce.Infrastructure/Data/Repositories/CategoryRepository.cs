@@ -1,4 +1,5 @@
-﻿using Ecommerce.Application.Interfaces.Repositories;
+﻿using System.Xml.Schema;
+using Ecommerce.Application.Interfaces.Repositories;
 using Ecommerce.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +15,10 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         public async Task<IEnumerable<Category>> GetAllAsync()
         {
             return await _appDbContext.Categories.AsNoTracking().ToListAsync();
+        }
+        public async Task<IEnumerable<Category>> GetAllByProductIdAsync(int productId)
+        {
+            return await _appDbContext.Categories.Where(x => x.Products.Any(x => x.Id == productId)).AsNoTracking().ToListAsync();
         }
         public async Task<Category?> GetByIdAsync(int id)
         {
