@@ -1,5 +1,6 @@
 ﻿using Ecommerce.Application.Interfaces.Repositories;
 using Ecommerce.Domain.Entities;
+using Ecommerce.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ecommerce.Infrastructure.Data.Repositories
@@ -15,6 +16,14 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         {
             return await _appDbContext.Orders.AsNoTracking().ToListAsync();
         }
+        public async Task<IEnumerable<Order>> GetAllByUserIdAsync(int userId)
+        {
+            return await _appDbContext.Orders.Where(x => x.UserId == userId).AsNoTracking().ToListAsync();
+        }
+        public async Task<IEnumerable<Order>> GetAllByStatusAsync(OrderStatus status)
+        {
+            return await _appDbContext.Orders.Where(x => x.Status == status).AsNoTracking().ToListAsync();
+        }
         public async Task<Order?> GetByIdAsync(int id)
         {
             return await _appDbContext.Orders.FirstOrDefaultAsync(x => x.Id == id);
@@ -26,10 +35,6 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         public void Update(Order order)
         {
             _appDbContext.Orders.Update(order);
-        }
-        public void Remove(Order order)
-        {
-            _appDbContext.Orders.Remove(order);
         }
     }
 }
