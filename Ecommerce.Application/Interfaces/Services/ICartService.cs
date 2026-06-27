@@ -11,7 +11,7 @@ namespace Ecommerce.Application.Interfaces.Services
         public Task<CartDetailsDTO> GetCurrentUserCartAsync();
         public Task<CartDetailsDTO> AddItemAsync(CartItemCreateDTO item);
         public Task<CartDetailsDTO> RemoveItemAsync(int productId);
-        public Task<CartDetailsDTO> UpdateItemAsync(int cartId, CartItemUpdateDTO itemUpdate);
-        public Task<CartDetailsDTO> ClearAsync(int id);
+        public Task<CartDetailsDTO> UpdateItemAsync(CartItemUpdateDTO itemUpdate);
+        public Task<CartDetailsDTO> ClearAsync();
     }
 }
