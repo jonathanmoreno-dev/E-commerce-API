@@ -9,7 +9,6 @@ namespace Ecommerce.Application.Interfaces.Services
         public Task<CartDetailsDTO> GetByIdAsync(int id);
         public Task<CartDetailsDTO> GetByUserIdAsync(int userId);
         public Task<CartDetailsDTO> GetCurrentUserCartAsync();
-        public Task<CartDetailsDTO> CreateAsync();
         public Task<CartDetailsDTO> AddItemAsync(CartItemCreateDTO item);
         public Task<CartDetailsDTO> RemoveItemAsync(int productId);
         public Task<CartDetailsDTO> UpdateItemAsync(int cartId, CartItemUpdateDTO itemUpdate);
