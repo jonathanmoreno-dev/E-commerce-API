@@ -27,10 +27,6 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         {
             _appDbContext.Checkouts.Add(checkout);
         }
-        public void Update(Checkout checkout)
-        {
-            _appDbContext.Checkouts.Update(checkout);
-        }
         public void Remove(Checkout checkout)
         {
             _appDbContext.Checkouts.Remove(checkout);

@@ -27,10 +27,6 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         {
             _appDbContext.Products.Add(product);
         }
-        public void Update(Product product)
-        {
-            _appDbContext.Products.Update(product);
-        }
         public void Remove(Product product)
         {
             _appDbContext.Products.Remove(product);

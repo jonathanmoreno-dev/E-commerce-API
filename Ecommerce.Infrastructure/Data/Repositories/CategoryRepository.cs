@@ -28,10 +28,6 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         {
             _appDbContext.Categories.Add(category);
         }
-        public void Update(Category category)
-        {
-            _appDbContext.Categories.Update(category);
-        }
         public void Remove(Category category)
         {
             _appDbContext.Categories.Remove(category);

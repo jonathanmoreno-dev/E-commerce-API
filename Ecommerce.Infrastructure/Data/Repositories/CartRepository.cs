@@ -27,10 +27,6 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         {
             _appDbContext.Carts.Add(cart);
         }
-        public void Update(Cart cart)
-        {
-            _appDbContext.Carts.Update(cart);
-        }
         public void Remove(Cart cart)
         {
             _appDbContext.Carts.Remove(cart);

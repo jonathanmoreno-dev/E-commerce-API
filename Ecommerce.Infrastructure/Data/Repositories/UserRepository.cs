@@ -31,10 +31,6 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         {
             _appDbContext.Users.Add(user);
         }
-        public void Update(User user)
-        {
-            _appDbContext.Users.Update(user);
-        }
         public void Remove(User user)
         {
             _appDbContext.Users.Remove(user);

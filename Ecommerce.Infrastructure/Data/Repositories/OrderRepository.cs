@@ -32,9 +32,5 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         {
             _appDbContext.Orders.Add(order);
         }
-        public void Update(Order order)
-        {
-            _appDbContext.Orders.Update(order);
-        }
     }
 }

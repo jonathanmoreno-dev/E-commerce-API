@@ -8,7 +8,6 @@ namespace Ecommerce.Application.Interfaces.Repositories
         public Task<IEnumerable<Product>> GetAllByCategoryIdAsync(int categoryId);
         public Task<Product?> GetByIdAsync(int id);
         public void Add(Product product);
-        public void Update(Product product);
         public void Remove(Product product);
     }
 }
