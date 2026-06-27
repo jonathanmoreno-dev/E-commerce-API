@@ -56,5 +56,9 @@ namespace Ecommerce.Domain.Entities
             _cartItems.Remove(item);
             UpdatedAt = DateTime.UtcNow;
         }
+        public void ClearItems()
+        {
+            _cartItems.Clear();
+        }
     }
 }
