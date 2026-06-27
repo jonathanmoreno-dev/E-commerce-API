@@ -15,6 +15,10 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         {
             return await _appDbContext.Checkouts.AsNoTracking().ToListAsync();
         }
+        public async Task<IEnumerable<Checkout>> GetAllByUserIdAsync(int userId)
+        {
+            return await _appDbContext.Checkouts.Where(x => x.UserId == userId).AsNoTracking().ToListAsync();
+        }
         public async Task<Checkout?> GetByIdAsync(int id)
         {
             return await _appDbContext.Checkouts.FirstOrDefaultAsync(x => x.Id == id);
