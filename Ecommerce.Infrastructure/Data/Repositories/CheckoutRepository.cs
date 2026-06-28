@@ -11,13 +11,13 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         {
             _appDbContext = appDbContext;
         }
-        public async Task<IEnumerable<Checkout>> GetAllAsync()
+        public async Task<IEnumerable<Checkout>> GetAllActiveAsync()
         {
-            return await _appDbContext.Checkouts.AsNoTracking().ToListAsync();
+            return await _appDbContext.Checkouts.Where(x => x.IsActive).AsNoTracking().ToListAsync();
         }
-        public async Task<IEnumerable<Checkout>> GetAllByUserIdAsync(int userId)
+        public async Task<IEnumerable<Checkout>> GetAllActiveByUserIdAsync(int userId)
         {
-            return await _appDbContext.Checkouts.Where(x => x.UserId == userId).AsNoTracking().ToListAsync();
+            return await _appDbContext.Checkouts.Where(x => x.UserId == userId).Where(x => x.IsActive).AsNoTracking().ToListAsync();
         }
         public async Task<Checkout?> GetByIdAsync(int id)
         {
