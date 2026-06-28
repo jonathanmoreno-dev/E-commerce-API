@@ -23,7 +23,7 @@ namespace Ecommerce.Application.Mappers
                 CreatedAt = cart.CreatedAt,
                 UpdatedAt = cart.UpdatedAt,
                 CartItems = cart.CartItems.Select(x => CartItemToListDTO(x)).ToList(),
-                Total = cart.SubTotal.Value
+                SubTotal = cart.SubTotal.Value
             };
             return cartDetailsDTO;
         }
