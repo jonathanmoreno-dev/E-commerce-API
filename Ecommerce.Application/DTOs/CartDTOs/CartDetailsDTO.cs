@@ -8,7 +8,7 @@ namespace Ecommerce.Application.DTOs.CartDTOs
         public int Id { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-        public List<CartItemListDTO> CartItemListDTOs { get; set; } = new();
+        public List<CartItemListDTO> CartItems { get; set; } = new();
         public decimal Total { get; set; }
     }
 }

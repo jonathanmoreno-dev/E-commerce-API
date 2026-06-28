@@ -12,6 +12,6 @@ namespace Ecommerce.Application.DTOs.UserDTOs
         public string PhoneNumber { get; set; } = "";
         public bool IsAdmin { get; set; }
         public string AvatarImageUrl { get; set; } = "";
-        public List<ShippingAddressDTO> ShippingAddressDTOs { get; set; } = new();
+        public List<ShippingAddressDTO> ShippingAddresses { get; set; } = new();
     }
 }

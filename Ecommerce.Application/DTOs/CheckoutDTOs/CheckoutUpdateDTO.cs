@@ -5,7 +5,7 @@ namespace Ecommerce.Application.DTOs.CheckoutDTOs
 {
     public class CheckoutUpdateDTO
     {
-        public ShippingAddressDTO? ShippingAddressDTO { get; set; } 
+        public ShippingAddressDTO? ShippingAddress { get; set; } 
         public PaymentMethod? PaymentMethod { get; set; }
     }
 }

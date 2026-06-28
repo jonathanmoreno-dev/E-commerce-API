@@ -23,7 +23,7 @@ namespace Ecommerce.Application.Mappers
                 Name = category.Name.Value,
                 Description = category.Description.Value,
                 CategoryImageUrl = category.CategoryImage?.Url ?? "",
-                ProductListDTOs = category.Products.Select(x => ProductMapper.ToListDTO(x)).ToList()
+                Products = category.Products.Select(x => ProductMapper.ToListDTO(x)).ToList()
             };
             return categoryDetailsDTO;
         }

@@ -11,7 +11,7 @@ namespace Ecommerce.Application.Mappers
             var cartListDTO = new CartListDTO()
             {
                 Id = cart.Id,
-                UserListDTO = UserMapper.ToListDTO(cart.User)
+                User = UserMapper.ToListDTO(cart.User)
             };
             return cartListDTO;
         }
@@ -22,7 +22,7 @@ namespace Ecommerce.Application.Mappers
                 Id = cart.Id,
                 CreatedAt = cart.CreatedAt,
                 UpdatedAt = cart.UpdatedAt,
-                CartItemListDTOs = cart.CartItems.Select(x => CartItemToListDTO(x)).ToList(),
+                CartItems = cart.CartItems.Select(x => CartItemToListDTO(x)).ToList(),
                 Total = cart.SubTotal.Value
             };
             return cartDetailsDTO;
@@ -32,7 +32,7 @@ namespace Ecommerce.Application.Mappers
             var cartItemListDTO = new CartItemListDTO()
             {
                 Id = cartItem.Id,
-                ProductSummaryDTO = ProductMapper.ToSummaryDTO(cartItem.Product),
+                Product = ProductMapper.ToSummaryDTO(cartItem.Product),
                 UnitPrice = cartItem.UnitPrice.Value,
                 Quantity = cartItem.Quantity.Value,
                 SubTotal = cartItem.Quantity.Value * cartItem.UnitPrice.Value

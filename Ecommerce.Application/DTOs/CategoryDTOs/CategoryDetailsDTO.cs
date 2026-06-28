@@ -8,6 +8,6 @@ namespace Ecommerce.Application.DTOs.CategoryDTOs
         public string Name { get; set; } = "";
         public string Description { get; set; } = "";
         public string CategoryImageUrl { get; set; } = "";
-        public List<ProductListDTO> ProductListDTOs { get; set; } = null!;
+        public List<ProductListDTO> Products { get; set; } = null!;
     }
 }

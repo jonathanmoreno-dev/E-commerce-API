@@ -11,6 +11,6 @@ namespace Ecommerce.Application.DTOs.CheckoutDTOs
         public ShippingAddressDTO ShippingAddressDTO { get; set; } = null!;
         public PaymentMethod PaymentMethod { get; set; }
         [Required]
-        public List<CheckoutItemCreateDTO> CheckoutItemCreateDTOs { get; set; } = new();
+        public List<CheckoutItemCreateDTO> CheckoutItemsToCreate { get; set; } = new();
     }
 }

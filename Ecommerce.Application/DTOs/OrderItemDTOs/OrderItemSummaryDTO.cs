@@ -5,7 +5,7 @@ namespace Ecommerce.Application.DTOs.OrderItemDTOs
     public class OrderItemSummaryDTO
     {
         public int Id { get; set; }
-        public ProductSummaryDTO ProductSummaryDTO { get; set; } = null!;
+        public ProductSummaryDTO Product { get; set; } = null!;
         public decimal UnitPrice { get; set; }
         public int Quantity { get; set; }
         public decimal Total { get; set; }
