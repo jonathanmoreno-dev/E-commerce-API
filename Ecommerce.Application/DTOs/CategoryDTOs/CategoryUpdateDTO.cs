@@ -8,5 +8,6 @@ namespace Ecommerce.Application.DTOs.CategoryDTOs
         public string? Name { get; set; }
         [MaxLength(400)]
         public string? Description { get; set; }
+        public string? CategoryImageUrl { get; set; }
     }
 }
