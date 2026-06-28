@@ -37,11 +37,6 @@ namespace Ecommerce.Domain.Entities
             InitializeTotals(totalPaid);
             Shipping = new Shipping(ShippingAddress, ShippingCost);
         }
-        public Order(User user, ShippingAddress shippingAddress, Money shippingCost, PaymentMethod paymentMethod, IEnumerable<(int productId, Money unitPrice, Quantity quantity)> items, Money totalPaid) 
-            : this(user?.Id ?? throw new ArgumentNullException(nameof(user)), shippingAddress, shippingCost, paymentMethod, items, totalPaid)
-        {
-            User = user;
-        }
 
         // =========================
         //          ORDER

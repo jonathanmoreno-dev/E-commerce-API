@@ -28,11 +28,6 @@ namespace Ecommerce.Domain.Entities
             ChangePhoneNumber(phoneNumber);
             ChangePasswordHash(passwordHash);
         }
-        public User(PersonName fullName, Email email, PhoneNumber phoneNumber, string passwordHash, Cart cart) 
-            : this(fullName, email, phoneNumber, passwordHash, cart?.Id ?? throw new ArgumentNullException(nameof(cart)))
-        {
-            Cart = cart;
-        }
         public void ChangeName(PersonName fullName)
         {
             ArgumentNullException.ThrowIfNull(fullName);

@@ -35,11 +35,6 @@ namespace Ecommerce.Domain.Entities
             UpdatedAt = CreatedAt;
             ExpiresAt = CreatedAt.AddHours(3);
         }
-        public Checkout(User user, ShippingAddress shippingAddress, Money shippingCost, PaymentMethod paymentMethod, IEnumerable<(int productId, Money unitPrice, Quantity quantity)> items)
-            : this(user?.Id ?? throw new ArgumentNullException(nameof(user)), shippingAddress, shippingCost, paymentMethod, items)
-        {
-            User = user;
-        }
         private void AddItems(IEnumerable<(int productId, Money unitPrice, Quantity quantity)> items)
         {
             ArgumentNullException.ThrowIfNull(items);

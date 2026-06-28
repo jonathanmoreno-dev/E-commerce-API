@@ -26,10 +26,6 @@ namespace Ecommerce.Domain.Entities
             UnitPrice = unitPrice;
             Quantity = quantity;
         }
-        public OrderItem(Product product, Money unitPrice, Quantity quantity) : this(product?.Id ?? throw new ArgumentNullException(nameof(product)), unitPrice, quantity)
-        {
-            Product = product;
-        }
         public void IncreaseQuantity(Quantity quantity)
         {
             ArgumentNullException.ThrowIfNull(quantity);

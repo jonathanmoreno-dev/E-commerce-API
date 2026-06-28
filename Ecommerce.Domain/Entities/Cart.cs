@@ -22,10 +22,6 @@ namespace Ecommerce.Domain.Entities
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = CreatedAt;
         }
-        public Cart(User user) : this(user?.Id ?? throw new ArgumentNullException(nameof(user)))
-        {
-            User = user;
-        }
         public void AddItem(int productId, Money unitPrice, Quantity quantity)
         {
             var existingItem = _cartItems.FirstOrDefault(x => x.ProductId == productId);
