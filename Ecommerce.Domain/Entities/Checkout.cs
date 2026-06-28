@@ -17,6 +17,7 @@ namespace Ecommerce.Domain.Entities
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
         public DateTime ExpiresAt { get; private set; }
+        public bool IsActive => ExpiresAt > DateTime.UtcNow;
         private readonly List<PaymentAttempt> _paymentAttempts = new();
         public IReadOnlyCollection<PaymentAttempt> PaymentAttempts => _paymentAttempts;
 
@@ -25,13 +26,10 @@ namespace Ecommerce.Domain.Entities
         private Checkout() { }
         public Checkout(int userId, ShippingAddress shippingAddress, Money shippingCost, PaymentMethod paymentMethod, IEnumerable<(int productId, Money unitPrice, Quantity quantity)> items)
         {
-            ArgumentNullException.ThrowIfNull(shippingAddress);
-            ArgumentNullException.ThrowIfNull(shippingCost);
-
             UserId = userId;
-            PaymentMethod = paymentMethod;
-            ShippingAddress = shippingAddress;
-            ShippingCost = shippingCost;
+            ChangePaymentMethod(paymentMethod);
+            ChangeShippingAddress(shippingAddress);
+            ChangeShippingCost(shippingCost);
             AddItems(items);
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = CreatedAt;
@@ -68,11 +66,25 @@ namespace Ecommerce.Domain.Entities
             ShippingAddress = shippingAddress;
             UpdatedAt = DateTime.UtcNow;
         }
+        public void ChangeShippingCost(Money shippingCost)
+        {
+            ArgumentNullException.ThrowIfNull(shippingCost);
+            ShippingCost = shippingCost;
+            UpdatedAt = DateTime.UtcNow;
+        }
 
         // =========================
         //          PAYMENT
         // =========================
 
+        public void ChangePaymentMethod(PaymentMethod paymentMethod)
+        {
+            if(_paymentAttempts.Any(x => x.Status == PaymentStatus.Pending || x.Status == PaymentStatus.Authorized))
+                throw new InvalidOperationException("Cannot change payment method while payment is in progress.");
+
+            PaymentMethod = paymentMethod;
+            UpdatedAt = DateTime.UtcNow;
+        }
         public void CreatePayment()
         {
             if (_paymentAttempts.Any(p => p.Status == PaymentStatus.Pending))
@@ -83,7 +95,6 @@ namespace Ecommerce.Domain.Entities
             _paymentAttempts.Add(new PaymentAttempt(Total, PaymentMethod));
             UpdatedAt = DateTime.UtcNow;
         }
-
         public void AuthorizePayment()
         {
             GetCurrentPayment().MarkAsAuthorized();
