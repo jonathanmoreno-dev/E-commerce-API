@@ -1,6 +1,7 @@
 ﻿using Ecommerce.Application.DTOs.CheckoutDTOs;
 using Ecommerce.Application.DTOs.CheckoutItemDTOs;
 using Ecommerce.Domain.Entities;
+using Ecommerce.Domain.ValueObjects;
 
 namespace Ecommerce.Application.Mappers
 {
@@ -24,7 +25,7 @@ namespace Ecommerce.Application.Mappers
             var checkoutDetailsDTO = new CheckoutDetailsDTO()
             {
                 Id = checkout.Id,
-                FullAddress = checkout.ShippingAddress.ToString(),
+                FullAddress = BuildFullAddress(checkout.ShippingAddress),
                 SubTotal = checkout.SubTotal.Value,
                 Total = checkout.Total.Value,
                 ShippingCost = checkout.ShippingCost.Value,
@@ -43,6 +44,12 @@ namespace Ecommerce.Application.Mappers
                 UnitPrice = checkoutItem.UnitPrice.Value
             };
             return checkoutItemSummaryDTO;
+        }
+        private static string BuildFullAddress(ShippingAddress address)
+        {
+            return  $"{address.RecipientName.Value} | {address.PhoneNumber.Value} | " +
+                    $"{address.Neighborhood}, {address.Street}, {address.Number}, " +
+                    $"{address.City} - {address.State}, {address.ZipCode}";
         }
     }
 }
