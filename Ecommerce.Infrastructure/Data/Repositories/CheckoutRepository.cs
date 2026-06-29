@@ -13,15 +13,19 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         }
         public async Task<IEnumerable<Checkout>> GetAllActiveAsync()
         {
-            return await _appDbContext.Checkouts.Where(x => x.IsActive).AsNoTracking().ToListAsync();
+            return await _appDbContext.Checkouts.Include(x => x.CheckoutItems).ThenInclude(y => y.Product).Where(x => x.IsActive && x.HasStartedPayment).AsNoTracking().ToListAsync();
         }
         public async Task<IEnumerable<Checkout>> GetAllActiveByUserIdAsync(int userId)
         {
-            return await _appDbContext.Checkouts.Where(x => x.UserId == userId).Where(x => x.IsActive).AsNoTracking().ToListAsync();
+            return await _appDbContext.Checkouts.Include(x => x.CheckoutItems).ThenInclude(y => y.Product).Where(x => x.UserId == userId).Where(x => x.IsActive && x.HasStartedPayment).AsNoTracking().ToListAsync();
         }
         public async Task<Checkout?> GetByIdAsync(int id)
         {
-            return await _appDbContext.Checkouts.FirstOrDefaultAsync(x => x.Id == id);
+            return await _appDbContext.Checkouts.Include(x => x.CheckoutItems).ThenInclude(y => y.Product).FirstOrDefaultAsync(x => x.Id == id);
+        }
+        public async Task<Checkout?> GetByIdWithPaymentAttemptsAsync(int id)
+        {
+            return await _appDbContext.Checkouts.Include(x => x.PaymentAttempts).Include(x => x.CheckoutItems).ThenInclude(y => y.Product).FirstOrDefaultAsync(x => x.Id == id);
         }
         public void Add(Checkout checkout)
         {
