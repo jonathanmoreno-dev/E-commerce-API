@@ -1,63 +1,150 @@
 ﻿using Ecommerce.Application.DTOs.OrderDTOs;
 using Ecommerce.Application.DTOs.RefundDTOs;
+using Ecommerce.Application.Interfaces.Repositories;
 using Ecommerce.Application.Interfaces.Services;
+using Ecommerce.Application.Mappers;
+using Ecommerce.Domain.Entities;
 using Ecommerce.Domain.Enums;
+using Ecommerce.Domain.ValueObjects;
 
 namespace Ecommerce.Application.Services
 {
     public class OrderService : IOrderService
     {
-        public Task<IEnumerable<OrderListItemDTO>> GetAllCurrentUserOrdersAsync()
+        private readonly IOrderRepository _orderRepository;
+        private readonly ICheckoutRepository _checkoutRepository;
+        private readonly IUserService _userService;
+        private readonly IUnitOfWork _unitOfWork;
+        public OrderService(IOrderRepository orderRepository, ICheckoutRepository checkoutRepository, IUserService userService, IUnitOfWork unitOfWork)
         {
-            throw new NotImplementedException();
+            _orderRepository = orderRepository;
+            _checkoutRepository = checkoutRepository;
+            _userService = userService;
+            _unitOfWork = unitOfWork;
         }
-        public Task<IEnumerable<OrderListItemDTO>> GetAllByUserIdAsync(int userId)
+        public async Task<IEnumerable<OrderListItemDTO>> GetAllByUserIdAsync(int userId)
         {
-            throw new NotImplementedException();
+            var currentOrders = await _orderRepository.GetAllByUserIdAsync(userId);
+            
+            var currentOrderListItemDTOs = currentOrders.Select(x => OrderMapper.ToListItemDTO(x));
+            return currentOrderListItemDTOs;
         }
-        public Task<IEnumerable<OrderListItemDTO>> GetAllByStatusAsync(OrderStatus status)
+        public async Task<IEnumerable<OrderListItemDTO>> GetAllCurrentUserOrdersAsync()
         {
-            throw new NotImplementedException();
+            var currentUser = await _userService.GetCurrentAsync();
+            var currentOrders = await _orderRepository.GetAllByUserIdAsync(currentUser.Id);
+
+            var currentOrderListItemDTOs = currentOrders.Select(x => OrderMapper.ToListItemDTO(x));
+            return currentOrderListItemDTOs;
         }
-        public Task<OrderDetailsDTO> GetByIdAsync(int id)
+        public async Task<IEnumerable<OrderListItemDTO>> GetAllCurrentUserOrdersByStatusAsync(OrderStatus status)
         {
-            throw new NotImplementedException();
+            var currentUser = await _userService.GetCurrentAsync();
+            var orders = await _orderRepository.GetAllByUserIdAndStatusAsync(currentUser.Id, status);
+
+            var currentOrderListItemDTOs = orders.Select(x => OrderMapper.ToListItemDTO(x));
+            return currentOrderListItemDTOs;
         }
-        public Task<OrderDetailsDTO> CreateFromCheckoutAsync(int checkoutId)
+        public async Task<OrderDetailsDTO> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var order = await _orderRepository.GetByIdAsync(id);
+            if(order is null)
+                throw new KeyNotFoundException($"Order with Id: {id} was not found");
+
+            var orderDetailsDTO = OrderMapper.ToDetailsDTO(order);
+            return orderDetailsDTO;
         }
-        public Task<OrderDetailsDTO> RefundItemAsync(RefundCreateDTO refundCreate)
+        public async Task<OrderDetailsDTO> CreateFromCheckoutAsync(int checkoutId)
         {
-            throw new NotImplementedException();
+            var checkout = await _checkoutRepository.GetByIdAsync(checkoutId);
+            if(checkout is null)
+                throw new KeyNotFoundException($"Checkout with Id: {checkoutId} was not found");
+            if (checkout.CompletedPayment is null)
+                throw new InvalidOperationException("Checkout payment must be completed before creating an order");
+
+            var items = checkout.CheckoutItems.Select(x => (x.ProductId, x.UnitPrice, x.Quantity));
+            var order = new Order(checkout.UserId, checkout.ShippingAddress, checkout.ShippingCost, checkout.PaymentMethod, items, checkout.CompletedPayment.Amount);
+
+            _orderRepository.Add(order);
+            await _unitOfWork.SaveChangesAsync();
+
+            var orderDetailsDTO = OrderMapper.ToDetailsDTO(order);
+            return orderDetailsDTO;
         }
-        public Task SetTrackingCodeAsync(int orderId, string trackingCode)
+        public async Task<OrderDetailsDTO> RefundItemAsync(RefundCreateDTO refundCreate)
         {
-            throw new NotImplementedException();
+            var order = await _orderRepository.GetByIdAsync(refundCreate.OrderId);
+            if (order is null)
+                throw new KeyNotFoundException($"Order with Id: {refundCreate.OrderId} was not found");
+
+            order.RefundItem(refundCreate.OrderItemId, new Quantity(refundCreate.Quantity));
+            await _unitOfWork.SaveChangesAsync();
+
+            var orderDetailsDTO = OrderMapper.ToDetailsDTO(order);
+            return orderDetailsDTO;
         }
-        public Task CancelAsync(int orderId)
+        public async Task SetTrackingCodeAsync(int orderId, string trackingCode)
         {
-            throw new NotImplementedException();
+            var order = await _orderRepository.GetByIdAsync(orderId);
+            if (order is null)
+                throw new KeyNotFoundException($"Order with Id: {orderId} was not found");
+
+            order.SetTrackingCode(trackingCode);
+            await _unitOfWork.SaveChangesAsync();
         }
-        public Task ProcessShippingAsync(int orderId)
+        public async Task CancelAsync(int orderId)
         {
-            throw new NotImplementedException();
+            var order = await _orderRepository.GetByIdAsync(orderId);
+            if (order is null)
+                throw new KeyNotFoundException($"Order with Id: {orderId} was not found");
+
+            order.Cancel();
+            await _unitOfWork.SaveChangesAsync();
         }
-        public Task MarkAsShippedAsync(int orderId)
+        public async Task ProcessShippingAsync(int orderId)
         {
-            throw new NotImplementedException();
+            var order = await _orderRepository.GetByIdAsync(orderId);
+            if (order is null)
+                throw new KeyNotFoundException($"Order with Id: {orderId} was not found");
+
+            order.MarkAsProcessing();
+            await _unitOfWork.SaveChangesAsync();
         }
-        public Task MarkAsInTransitAsync(int orderId)
+        public async Task MarkAsShippedAsync(int orderId)
         {
-            throw new NotImplementedException();
+            var order = await _orderRepository.GetByIdAsync(orderId);
+            if (order is null)
+                throw new KeyNotFoundException($"Order with Id: {orderId} was not found");
+
+            order.MarkAsShipped();
+            await _unitOfWork.SaveChangesAsync();
         }
-        public Task MarkAsDeliveredAsync(int orderId)
+        public async Task MarkAsInTransitAsync(int orderId)
         {
-            throw new NotImplementedException();
+            var order = await _orderRepository.GetByIdAsync(orderId);
+            if (order is null)
+                throw new KeyNotFoundException($"Order with Id: {orderId} was not found");
+
+            order.MarkAsInTransit();
+            await _unitOfWork.SaveChangesAsync();
         }
-        public Task MarkAsReturnedAsync(int orderId)
+        public async Task MarkAsDeliveredAsync(int orderId)
         {
-            throw new NotImplementedException();
+            var order = await _orderRepository.GetByIdAsync(orderId);
+            if (order is null)
+                throw new KeyNotFoundException($"Order with Id: {orderId} was not found");
+
+            order.MarkAsDelivered();
+            await _unitOfWork.SaveChangesAsync();
+        }
+        public async Task MarkAsReturnedAsync(int orderId)
+        {
+            var order = await _orderRepository.GetByIdAsync(orderId);
+            if (order is null)
+                throw new KeyNotFoundException($"Order with Id: {orderId} was not found");
+
+            order.MarkAsReturned();
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }
