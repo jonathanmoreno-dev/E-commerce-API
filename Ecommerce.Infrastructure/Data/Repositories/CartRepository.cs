@@ -13,15 +13,15 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         }
         public async Task<IEnumerable<Cart>> GetAllAsync()
         {
-            return await _appDbContext.Carts.AsNoTracking().ToListAsync();
+            return await _appDbContext.Carts.Include(x => x.User).AsNoTracking().ToListAsync();
         }
         public async Task<Cart?> GetByIdAsync(int id)
         {
-            return await _appDbContext.Carts.FirstOrDefaultAsync(x => x.Id == id);
+            return await _appDbContext.Carts.Include(x => x.CartItems).ThenInclude(y => y.Product).FirstOrDefaultAsync(x => x.Id == id);
         }
         public async Task<Cart?> GetByUserIdAsync(int userId)
         {
-            return await _appDbContext.Carts.FirstOrDefaultAsync(x => x.UserId == userId);
+            return await _appDbContext.Carts.Include(x => x.CartItems).ThenInclude(y => y.Product).FirstOrDefaultAsync(x => x.UserId == userId);
         }
         public void Add(Cart cart)
         {

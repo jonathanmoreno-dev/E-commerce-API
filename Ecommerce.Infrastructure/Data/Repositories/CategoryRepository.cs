@@ -22,7 +22,7 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         }
         public async Task<Category?> GetByIdAsync(int id)
         {
-            return await _appDbContext.Categories.FirstOrDefaultAsync(x => x.Id == id);
+            return await _appDbContext.Categories.Include(x => x.Products).FirstOrDefaultAsync(x => x.Id == id);
         }
         public void Add(Category category)
         {

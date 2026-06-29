@@ -18,15 +18,15 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         }
         public async Task<IEnumerable<Order>> GetAllByUserIdAsync(int userId)
         {
-            return await _appDbContext.Orders.Where(x => x.UserId == userId).AsNoTracking().ToListAsync();
+            return await _appDbContext.Orders.Include(x => x.OrderItems).ThenInclude(y => y.Product).Where(x => x.UserId == userId).AsNoTracking().ToListAsync();
         }
         public async Task<IEnumerable<Order>> GetAllByStatusAsync(OrderStatus status)
         {
-            return await _appDbContext.Orders.Where(x => x.Status == status).AsNoTracking().ToListAsync();
+            return await _appDbContext.Orders.Include(x => x.OrderItems).ThenInclude(y => y.Product).Where(x => x.Status == status).AsNoTracking().ToListAsync();
         }
         public async Task<Order?> GetByIdAsync(int id)
         {
-            return await _appDbContext.Orders.FirstOrDefaultAsync(x => x.Id == id);
+            return await _appDbContext.Orders.Include(x => x.Shipping).Include(x => x.OrderItems).ThenInclude(y => y.Product).FirstOrDefaultAsync(x => x.Id == id);
         }
         public void Add(Order order)
         {
