@@ -6,9 +6,9 @@ namespace Ecommerce.Application.Interfaces.Services
 {
     public interface IOrderService
     {
-        public Task<IEnumerable<OrderListItemDTO>> GetAllCurrentUserOrdersAsync();
         public Task<IEnumerable<OrderListItemDTO>> GetAllByUserIdAsync(int userId);
-        public Task<IEnumerable<OrderListItemDTO>> GetAllByStatusAsync(OrderStatus status);
+        public Task<IEnumerable<OrderListItemDTO>> GetAllCurrentUserOrdersAsync();
+        public Task<IEnumerable<OrderListItemDTO>> GetAllCurrentUserOrdersByStatusAsync(OrderStatus status);
         public Task<OrderDetailsDTO> GetByIdAsync(int id);
         public Task<OrderDetailsDTO> CreateFromCheckoutAsync(int checkoutId);
         public Task<OrderDetailsDTO> RefundItemAsync(RefundCreateDTO refundCreate);
