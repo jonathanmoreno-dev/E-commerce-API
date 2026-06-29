@@ -18,6 +18,7 @@ namespace Ecommerce.Domain.Entities
         public DateTime UpdatedAt { get; private set; }
         public DateTime ExpiresAt { get; private set; }
         public bool IsActive => ExpiresAt > DateTime.UtcNow;
+        public bool HasStartedPayment => _paymentAttempts.Any();
         private readonly List<PaymentAttempt> _paymentAttempts = new();
         public IReadOnlyCollection<PaymentAttempt> PaymentAttempts => _paymentAttempts;
 
