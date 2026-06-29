@@ -29,6 +29,8 @@ namespace Ecommerce.Infrastructure.Configuration
             builder.Ignore(x => x.SubTotal);
             builder.Ignore(x => x.Total);
             builder.Ignore(x => x.ExpiresAt);
+            builder.Ignore(x => x.IsActive);
+            builder.Ignore(x => x.HasStartedPayment);
             builder.Property(x => x.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP").HasColumnName("created_at");
             builder.Property(x => x.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP").HasColumnName("updated_at");
             builder.HasIndex(x => x.UserId).IsUnique();
