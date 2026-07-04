@@ -1,4 +1,5 @@
-﻿using Ecommerce.Application.DTOs.ShippingDTOs;
+﻿using Ecommerce.Application.DTOs.Authentication;
+using Ecommerce.Application.DTOs.ShippingDTOs;
 using Ecommerce.Application.DTOs.UserDTOs;
 
 namespace Ecommerce.Application.Interfaces.Services
@@ -10,7 +11,8 @@ namespace Ecommerce.Application.Interfaces.Services
         public Task<IEnumerable<UserSummaryDTO>> GetAllStandardUsersAsync();
         public Task<UserDetailsDTO> GetByIdAsync(int id);
         public Task<UserDetailsDTO> GetCurrentAsync();
-        public Task<UserDetailsDTO> CreateAsync(UserCreateDTO userCreate);
+        public Task<UserDetailsDTO> RegisterAsync(RegisterRequestDTO userRegister);
+        public Task<UserDetailsDTO> LoginAsync(LoginRequestDTO userLogin);
         public Task<UserDetailsDTO> UpdateAsync(int userId, UserUpdateDTO userUpdate);
         public Task<UserDetailsDTO> ChangePasswordAsync(int userId, ChangePasswordDTO password);
         public Task<UserDetailsDTO> AddShippingAddressAsync(int userId, ShippingAddressDTO shippingAddress);
