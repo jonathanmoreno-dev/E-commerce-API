@@ -1,14 +1,13 @@
-﻿using System.Reflection.Metadata;
-using Ecommerce.Domain.ValueObjects;
+﻿using Ecommerce.Domain.ValueObjects;
 
 namespace Ecommerce.Domain.Entities
 {
     public class OrderItem
     {
-        public int Id { get; private set; }
-        public int OrderId { get; private set; }
+        public Guid Id { get; private set; }
+        public Guid OrderId { get; private set; }
         public Order Order { get; private set; } = null!;
-        public int ProductId { get; private set; }
+        public Guid ProductId { get; private set; }
         public Product Product { get; private set; } = null!;
         public Money UnitPrice { get; private set; } = null!;
         public Quantity Quantity { get; private set; } = null!;
@@ -17,8 +16,10 @@ namespace Ecommerce.Domain.Entities
         public IReadOnlyCollection<Refund> Refunds => _refunds;
 
         private OrderItem() { }
-        public OrderItem(int productId, Money unitPrice, Quantity quantity)
+        public OrderItem(Guid productId, Money unitPrice, Quantity quantity)
         {
+            Id = Guid.NewGuid();
+
             ArgumentNullException.ThrowIfNull(unitPrice);
             ArgumentNullException.ThrowIfNull(quantity);
 

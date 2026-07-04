@@ -28,7 +28,7 @@ namespace Ecommerce.Application.Services
             var checkoutSummaryDTOs = checkouts.Select(x => CheckoutMapper.ToSummaryDTO(x));
             return checkoutSummaryDTOs;
         }
-        public async Task<IEnumerable<CheckoutSummaryDTO>> GetAllActiveByUserIdAsync(int userId)
+        public async Task<IEnumerable<CheckoutSummaryDTO>> GetAllActiveByUserIdAsync(Guid userId)
         {
             var checkouts = await _checkoutRepository.GetAllActiveByUserIdAsync(userId);
 
@@ -43,7 +43,7 @@ namespace Ecommerce.Application.Services
             var currentCheckoutSummaryDTOs = currentCheckouts.Select(x => CheckoutMapper.ToSummaryDTO(x));
             return currentCheckoutSummaryDTOs;
         }
-        public async Task<CheckoutDetailsDTO> GetByIdAsync(int id)
+        public async Task<CheckoutDetailsDTO> GetByIdAsync(Guid id)
         {
             var checkout = await _checkoutRepository.GetByIdAsync(id);
             if(checkout is null)
@@ -68,7 +68,7 @@ namespace Ecommerce.Application.Services
             var shippingCost = new Money(30); // Fixed Value
             var paymentMethod = checkoutCreate.PaymentMethod;
             
-            var items = new List<(int, Money, Quantity)>();
+            var items = new List<(Guid, Money, Quantity)>();
             foreach (var itemDTO in checkoutCreate.CheckoutItemsToCreate)
             {
                 var product = await _productRepository.GetByIdAsync(itemDTO.ProductId);
@@ -85,7 +85,7 @@ namespace Ecommerce.Application.Services
             var checkoutDetailsDTO = CheckoutMapper.ToDetailsDTO(checkout);
             return checkoutDetailsDTO;
         }
-        public async Task<CheckoutDetailsDTO> UpdateAsync(int checkoutId, CheckoutUpdateDTO checkoutUpdate)
+        public async Task<CheckoutDetailsDTO> UpdateAsync(Guid checkoutId, CheckoutUpdateDTO checkoutUpdate)
         {
             var checkout = await _checkoutRepository.GetByIdAsync(checkoutId);
             if (checkout is null)
@@ -109,7 +109,7 @@ namespace Ecommerce.Application.Services
             var checkoutDetailsDTO = CheckoutMapper.ToDetailsDTO(checkout);
             return checkoutDetailsDTO;
         }
-        public async Task CreatePaymentAsync(int checkoutId)
+        public async Task CreatePaymentAsync(Guid checkoutId)
         {
             var checkout = await _checkoutRepository.GetByIdWithPaymentAttemptsAsync(checkoutId);
             if (checkout is null)
@@ -118,7 +118,7 @@ namespace Ecommerce.Application.Services
             checkout.CreatePayment();
             await _unitOfWork.SaveChangesAsync();
         }
-        public async Task AuthorizePaymentAsync(int checkoutId)
+        public async Task AuthorizePaymentAsync(Guid checkoutId)
         {
             var checkout = await _checkoutRepository.GetByIdAsync(checkoutId);
             if (checkout is null)
@@ -127,7 +127,7 @@ namespace Ecommerce.Application.Services
             checkout.AuthorizePayment();
             await _unitOfWork.SaveChangesAsync();
         }
-        public async Task CompletePaymentAsync(int checkoutId)
+        public async Task CompletePaymentAsync(Guid checkoutId)
         {
             var checkout = await _checkoutRepository.GetByIdAsync(checkoutId);
             if (checkout is null)
@@ -136,7 +136,7 @@ namespace Ecommerce.Application.Services
             checkout.CompletePayment();
             await _unitOfWork.SaveChangesAsync();
         }
-        public async Task FailPaymentAsync(int checkoutId)
+        public async Task FailPaymentAsync(Guid checkoutId)
         {
             var checkout = await _checkoutRepository.GetByIdAsync(checkoutId);
             if (checkout is null)
@@ -145,7 +145,7 @@ namespace Ecommerce.Application.Services
             checkout.FailPayment();
             await _unitOfWork.SaveChangesAsync();
         }
-        public async Task CancelPaymentAsync(int checkoutId)
+        public async Task CancelPaymentAsync(Guid checkoutId)
         {
             var checkout = await _checkoutRepository.GetByIdAsync(checkoutId);
             if (checkout is null)
@@ -154,7 +154,7 @@ namespace Ecommerce.Application.Services
             checkout.CancelPayment();
             await _unitOfWork.SaveChangesAsync();
         }
-        public async Task AbandonPaymentAsync(int checkoutId)
+        public async Task AbandonPaymentAsync(Guid checkoutId)
         {
             var checkout = await _checkoutRepository.GetByIdAsync(checkoutId);
             if (checkout is null)
@@ -163,7 +163,7 @@ namespace Ecommerce.Application.Services
             checkout.AbandonPayment();
             await _unitOfWork.SaveChangesAsync();
         }
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(Guid id)
         {
             var checkout = await _checkoutRepository.GetByIdAsync(id);
             if (checkout is null)

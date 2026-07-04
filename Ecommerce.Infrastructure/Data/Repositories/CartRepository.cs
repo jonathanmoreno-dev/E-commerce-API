@@ -15,11 +15,11 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         {
             return await _appDbContext.Carts.Include(x => x.User).AsNoTracking().ToListAsync();
         }
-        public async Task<Cart?> GetByIdAsync(int id)
+        public async Task<Cart?> GetByIdAsync(Guid id)
         {
             return await _appDbContext.Carts.Include(x => x.CartItems).ThenInclude(y => y.Product).FirstOrDefaultAsync(x => x.Id == id);
         }
-        public async Task<Cart?> GetByUserIdAsync(int userId)
+        public async Task<Cart?> GetByUserIdAsync(Guid userId)
         {
             return await _appDbContext.Carts.Include(x => x.CartItems).ThenInclude(y => y.Product).FirstOrDefaultAsync(x => x.UserId == userId);
         }

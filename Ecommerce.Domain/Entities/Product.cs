@@ -6,7 +6,7 @@ namespace Ecommerce.Domain.Entities
 {
     public class Product
     {
-        public int Id { get; private set; }
+        public Guid Id { get; private set; }
         public ProductName Name { get; private set; } = null!;
         public ProductShortDescription ShortDescription { get; private set; } = null!;
         public ProductLongDescription LongDescription { get; private set; } = null!;
@@ -20,6 +20,8 @@ namespace Ecommerce.Domain.Entities
         private Product() { }
         public Product(ProductName name, ProductShortDescription shortDescription, ProductLongDescription longDescription, Money price, Quantity stock)
         {
+            Id = Guid.NewGuid();
+
             ArgumentNullException.ThrowIfNull(stock);
 
             ChangeName(name);
@@ -115,7 +117,7 @@ namespace Ecommerce.Domain.Entities
             _categories.Add(category);
             category.AddProduct(this);
         }
-        public void RemoveCategory(int categoryId)
+        public void RemoveCategory(Guid categoryId)
         {
             var category = _categories.FirstOrDefault(x => x.Id == categoryId);
             if (category is null)

@@ -5,7 +5,7 @@ namespace Ecommerce.Application.DTOs.CheckoutDTOs
 {
     public class CheckoutDetailsDTO
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string FullAddress { get; set; } = "";
         public decimal SubTotal { get; set; }
         public decimal Total { get; set; }

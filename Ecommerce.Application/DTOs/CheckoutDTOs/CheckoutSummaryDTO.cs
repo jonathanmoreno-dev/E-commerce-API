@@ -11,7 +11,7 @@ namespace Ecommerce.Application.DTOs.CheckoutDTOs
 {
     public class CheckoutSummaryDTO
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime ExpiresAt { get; set; }
         public decimal Total { get; set; }

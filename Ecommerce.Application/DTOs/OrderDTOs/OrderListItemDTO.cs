@@ -5,7 +5,7 @@ namespace Ecommerce.Application.DTOs.OrderDTOs
 {
     public class OrderListItemDTO
     {
-        public int OrderId { get; set; }
+        public Guid OrderId { get; set; }
         public DateTime CreatedAt { get; set; }
         public OrderStatus Status { get; set; }
         public List<OrderItemSummaryDTO> OrderItems { get; set; } = null!;

@@ -6,17 +6,17 @@ namespace Ecommerce.Application.Interfaces.Services
     public interface ICheckoutService
     {
         public Task<IEnumerable<CheckoutSummaryDTO>> GetAllActiveAsync();
-        public Task<IEnumerable<CheckoutSummaryDTO>> GetAllActiveByUserIdAsync(int userId);
+        public Task<IEnumerable<CheckoutSummaryDTO>> GetAllActiveByUserIdAsync(Guid userId);
         public Task<IEnumerable<CheckoutSummaryDTO>> GetAllCurrentUserCheckoutsActiveAsync();
-        public Task<CheckoutDetailsDTO> GetByIdAsync(int id);
+        public Task<CheckoutDetailsDTO> GetByIdAsync(Guid id);
         public Task<CheckoutDetailsDTO> CreateAsync(CheckoutCreateDTO checkoutCreate);
-        public Task<CheckoutDetailsDTO> UpdateAsync(int checkoutId, CheckoutUpdateDTO checkoutUpdate);
-        public Task CreatePaymentAsync(int checkoutId);
-        public Task AuthorizePaymentAsync(int checkoutId);
-        public Task CompletePaymentAsync(int checkoutId);
-        public Task FailPaymentAsync(int checkoutId);
-        public Task CancelPaymentAsync(int checkoutId);
-        public Task AbandonPaymentAsync(int checkoutId);
-        public Task DeleteAsync(int id);
+        public Task<CheckoutDetailsDTO> UpdateAsync(Guid checkoutId, CheckoutUpdateDTO checkoutUpdate);
+        public Task CreatePaymentAsync(Guid checkoutId);
+        public Task AuthorizePaymentAsync(Guid checkoutId);
+        public Task CompletePaymentAsync(Guid checkoutId);
+        public Task FailPaymentAsync(Guid checkoutId);
+        public Task CancelPaymentAsync(Guid checkoutId);
+        public Task AbandonPaymentAsync(Guid checkoutId);
+        public Task DeleteAsync(Guid id);
     }
 }

@@ -5,8 +5,8 @@ namespace Ecommerce.Domain.Entities
 {
     public class Shipping
     {
-        public int Id { get; private set; }
-        public int OrderId { get; private set; }
+        public Guid Id { get; private set; }
+        public Guid OrderId { get; private set; }
         public Order Order { get; private set; } = null!;
         public ShippingAddress ShippingAddress { get; private set; } = null!;
         public Money ShippingCost { get; private set; } = null!;
@@ -17,6 +17,8 @@ namespace Ecommerce.Domain.Entities
         private Shipping() { }
         public Shipping(ShippingAddress shippingAddress, Money shippingCost)
         {
+            Id = Guid.NewGuid();
+
             ArgumentNullException.ThrowIfNull(shippingAddress);
             ArgumentNullException.ThrowIfNull(shippingCost);
 

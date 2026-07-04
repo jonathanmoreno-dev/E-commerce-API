@@ -22,7 +22,7 @@ namespace Ecommerce.Application.Services
             _userService = userService;
             _unitOfWork = unitOfWork;
         }
-        public async Task<IEnumerable<OrderListItemDTO>> GetAllByUserIdAsync(int userId)
+        public async Task<IEnumerable<OrderListItemDTO>> GetAllByUserIdAsync(Guid userId)
         {
             var currentOrders = await _orderRepository.GetAllByUserIdAsync(userId);
             
@@ -45,7 +45,7 @@ namespace Ecommerce.Application.Services
             var currentOrderListItemDTOs = orders.Select(x => OrderMapper.ToListItemDTO(x));
             return currentOrderListItemDTOs;
         }
-        public async Task<OrderDetailsDTO> GetByIdAsync(int id)
+        public async Task<OrderDetailsDTO> GetByIdAsync(Guid id)
         {
             var order = await _orderRepository.GetByIdAsync(id);
             if(order is null)
@@ -54,7 +54,7 @@ namespace Ecommerce.Application.Services
             var orderDetailsDTO = OrderMapper.ToDetailsDTO(order);
             return orderDetailsDTO;
         }
-        public async Task<OrderDetailsDTO> CreateFromCheckoutAsync(int checkoutId)
+        public async Task<OrderDetailsDTO> CreateFromCheckoutAsync(Guid checkoutId)
         {
             var checkout = await _checkoutRepository.GetByIdAsync(checkoutId);
             if(checkout is null)
@@ -83,7 +83,7 @@ namespace Ecommerce.Application.Services
             var orderDetailsDTO = OrderMapper.ToDetailsDTO(order);
             return orderDetailsDTO;
         }
-        public async Task SetTrackingCodeAsync(int orderId, string trackingCode)
+        public async Task SetTrackingCodeAsync(Guid orderId, string trackingCode)
         {
             var order = await _orderRepository.GetByIdAsync(orderId);
             if (order is null)
@@ -92,7 +92,7 @@ namespace Ecommerce.Application.Services
             order.SetTrackingCode(trackingCode);
             await _unitOfWork.SaveChangesAsync();
         }
-        public async Task CancelAsync(int orderId)
+        public async Task CancelAsync(Guid orderId)
         {
             var order = await _orderRepository.GetByIdAsync(orderId);
             if (order is null)
@@ -101,7 +101,7 @@ namespace Ecommerce.Application.Services
             order.Cancel();
             await _unitOfWork.SaveChangesAsync();
         }
-        public async Task ProcessShippingAsync(int orderId)
+        public async Task ProcessShippingAsync(Guid orderId)
         {
             var order = await _orderRepository.GetByIdAsync(orderId);
             if (order is null)
@@ -110,7 +110,7 @@ namespace Ecommerce.Application.Services
             order.MarkAsProcessing();
             await _unitOfWork.SaveChangesAsync();
         }
-        public async Task MarkAsShippedAsync(int orderId)
+        public async Task MarkAsShippedAsync(Guid orderId)
         {
             var order = await _orderRepository.GetByIdAsync(orderId);
             if (order is null)
@@ -119,7 +119,7 @@ namespace Ecommerce.Application.Services
             order.MarkAsShipped();
             await _unitOfWork.SaveChangesAsync();
         }
-        public async Task MarkAsInTransitAsync(int orderId)
+        public async Task MarkAsInTransitAsync(Guid orderId)
         {
             var order = await _orderRepository.GetByIdAsync(orderId);
             if (order is null)
@@ -128,7 +128,7 @@ namespace Ecommerce.Application.Services
             order.MarkAsInTransit();
             await _unitOfWork.SaveChangesAsync();
         }
-        public async Task MarkAsDeliveredAsync(int orderId)
+        public async Task MarkAsDeliveredAsync(Guid orderId)
         {
             var order = await _orderRepository.GetByIdAsync(orderId);
             if (order is null)
@@ -137,7 +137,7 @@ namespace Ecommerce.Application.Services
             order.MarkAsDelivered();
             await _unitOfWork.SaveChangesAsync();
         }
-        public async Task MarkAsReturnedAsync(int orderId)
+        public async Task MarkAsReturnedAsync(Guid orderId)
         {
             var order = await _orderRepository.GetByIdAsync(orderId);
             if (order is null)

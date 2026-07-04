@@ -5,8 +5,8 @@ namespace Ecommerce.Domain.Entities
 {
     public class PaymentAttempt
     {
-        public int Id { get; private set; }
-        public int CheckoutId { get; private set; }
+        public Guid Id { get; private set; }
+        public Guid CheckoutId { get; private set; }
         public Checkout Checkout { get; private set; } = null!;
         public Money Amount { get; private set; } = null!;
         public DateTime PaymentDate { get; private set; }
@@ -16,6 +16,8 @@ namespace Ecommerce.Domain.Entities
         private PaymentAttempt() { }
         public PaymentAttempt(Money amount, PaymentMethod method)
         {
+            Id = Guid.NewGuid();
+
             ArgumentNullException.ThrowIfNull(amount);
 
             Amount = amount;

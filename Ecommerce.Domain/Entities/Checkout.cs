@@ -6,8 +6,8 @@ namespace Ecommerce.Domain.Entities
 {
     public class Checkout
     {
-        public int Id { get; private set; }
-        public int UserId { get; private set; }
+        public Guid Id { get; private set; }
+        public Guid UserId { get; private set; }
         public User User { get; private set; } = null!;
         public ShippingAddress ShippingAddress { get; private set; } = null!;
         public Money ShippingCost { get; private set; } = null!;
@@ -26,8 +26,10 @@ namespace Ecommerce.Domain.Entities
         private readonly List<CheckoutItem> _checkoutItems = new();
         public IReadOnlyCollection<CheckoutItem> CheckoutItems => _checkoutItems;
         private Checkout() { }
-        public Checkout(int userId, ShippingAddress shippingAddress, Money shippingCost, PaymentMethod paymentMethod, IEnumerable<(int productId, Money unitPrice, Quantity quantity)> items)
+        public Checkout(Guid userId, ShippingAddress shippingAddress, Money shippingCost, PaymentMethod paymentMethod, IEnumerable<(Guid productId, Money unitPrice, Quantity quantity)> items)
         {
+            Id = Guid.NewGuid();
+
             UserId = userId;
             ChangePaymentMethod(paymentMethod);
             ChangeShippingAddress(shippingAddress);
@@ -37,7 +39,7 @@ namespace Ecommerce.Domain.Entities
             UpdatedAt = CreatedAt;
             ExpiresAt = CreatedAt.AddHours(3);
         }
-        private void AddItems(IEnumerable<(int productId, Money unitPrice, Quantity quantity)> items)
+        private void AddItems(IEnumerable<(Guid productId, Money unitPrice, Quantity quantity)> items)
         {
             ArgumentNullException.ThrowIfNull(items);
             if (!items.Any())

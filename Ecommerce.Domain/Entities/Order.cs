@@ -1,16 +1,15 @@
-﻿using System.Collections.Generic;
-using Ecommerce.Domain.Enums;
+﻿using Ecommerce.Domain.Enums;
 using Ecommerce.Domain.ValueObjects;
 
 namespace Ecommerce.Domain.Entities
 {
     public class Order
     {
-        public int Id { get; private set; }
+        public Guid Id { get; private set; }
         public Money SubTotal { get; private set; } = null!;
         public DateTime CreatedAt { get; private set; }
         public OrderStatus Status { get; private set; }
-        public int UserId { get; private set; }
+        public Guid UserId { get; private set; }
         public User User { get; private set; } = null!;
         public ShippingAddress ShippingAddress { get; private set; } = null!;
         public Money ShippingCost { get; private set; } = null!;
@@ -22,8 +21,10 @@ namespace Ecommerce.Domain.Entities
         public IReadOnlyCollection<OrderItem> OrderItems => _orderItems;
 
         private Order() { }
-        public Order(int userId, ShippingAddress shippingAddress, Money shippingCost, PaymentMethod paymentMethod, IEnumerable<(int productId, Money unitPrice, Quantity quantity)> items, Money totalPaid)
+        public Order(Guid userId, ShippingAddress shippingAddress, Money shippingCost, PaymentMethod paymentMethod, IEnumerable<(Guid productId, Money unitPrice, Quantity quantity)> items, Money totalPaid)
         {
+            Id = Guid.NewGuid();
+
             ArgumentNullException.ThrowIfNull(shippingAddress);
             ArgumentNullException.ThrowIfNull(shippingCost);
 
@@ -54,7 +55,7 @@ namespace Ecommerce.Domain.Entities
 
             TotalPaid = totalPaid;
         }
-        private void AddItems(IEnumerable<(int productId, Money unitPrice, Quantity quantity)> items)
+        private void AddItems(IEnumerable<(Guid productId, Money unitPrice, Quantity quantity)> items)
         {
             ArgumentNullException.ThrowIfNull(items);
 
@@ -77,7 +78,7 @@ namespace Ecommerce.Domain.Entities
 
             Status = OrderStatus.Canceled;
         }
-        public void RefundItem(int orderItemId, Quantity quantity)
+        public void RefundItem(Guid orderItemId, Quantity quantity)
         {
             var item = _orderItems.FirstOrDefault(x => x.Id == orderItemId);
             if (item is null)

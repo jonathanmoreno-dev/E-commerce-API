@@ -28,7 +28,7 @@ namespace Ecommerce.Application.Services
             var cartListDTOs = carts.Select(x => CartMapper.ToListDTO(x)).ToList();
             return cartListDTOs;
         }
-        public async Task<CartDetailsDTO> GetByIdAsync(int id)
+        public async Task<CartDetailsDTO> GetByIdAsync(Guid id)
         {
             var cart = await _cartRepository.GetByIdAsync(id);
             if (cart is null)
@@ -37,7 +37,7 @@ namespace Ecommerce.Application.Services
             var cartDetailsDTO = CartMapper.ToDetailsDTO(cart);
             return cartDetailsDTO;
         }
-        public async Task<CartDetailsDTO> GetByUserIdAsync(int userId)
+        public async Task<CartDetailsDTO> GetByUserIdAsync(Guid userId)
         {
             var cart = await _cartRepository.GetByUserIdAsync(userId);
             if(cart is null)
@@ -67,7 +67,7 @@ namespace Ecommerce.Application.Services
             var currentCartDetailsDTO = CartMapper.ToDetailsDTO(currentCart);
             return currentCartDetailsDTO;
         }
-        public async Task<CartDetailsDTO> RemoveItemAsync(int productId)
+        public async Task<CartDetailsDTO> RemoveItemAsync(Guid productId)
         {
             var currentCart = await GetCurrentCartAsync();
 

@@ -16,15 +16,15 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         {
             return await _appDbContext.Orders.AsNoTracking().ToListAsync();
         }
-        public async Task<IEnumerable<Order>> GetAllByUserIdAsync(int userId)
+        public async Task<IEnumerable<Order>> GetAllByUserIdAsync(Guid userId)
         {
             return await _appDbContext.Orders.Include(x => x.OrderItems).ThenInclude(y => y.Product).Where(x => x.UserId == userId).AsNoTracking().ToListAsync();
         }
-        public async Task<IEnumerable<Order>> GetAllByUserIdAndStatusAsync(int userId, OrderStatus status)
+        public async Task<IEnumerable<Order>> GetAllByUserIdAndStatusAsync(Guid userId, OrderStatus status)
         {
             return await _appDbContext.Orders.Include(x => x.OrderItems).ThenInclude(y => y.Product).Where(x => x.Status == status && x.UserId == userId).AsNoTracking().ToListAsync();
         }
-        public async Task<Order?> GetByIdAsync(int id)
+        public async Task<Order?> GetByIdAsync(Guid id)
         {
             return await _appDbContext.Orders.Include(x => x.Shipping).Include(x => x.OrderItems).ThenInclude(y => y.Product).FirstOrDefaultAsync(x => x.Id == id);
         }

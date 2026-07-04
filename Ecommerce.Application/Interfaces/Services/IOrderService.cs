@@ -6,18 +6,18 @@ namespace Ecommerce.Application.Interfaces.Services
 {
     public interface IOrderService
     {
-        public Task<IEnumerable<OrderListItemDTO>> GetAllByUserIdAsync(int userId);
+        public Task<IEnumerable<OrderListItemDTO>> GetAllByUserIdAsync(Guid userId);
         public Task<IEnumerable<OrderListItemDTO>> GetAllCurrentUserOrdersAsync();
         public Task<IEnumerable<OrderListItemDTO>> GetAllCurrentUserOrdersByStatusAsync(OrderStatus status);
-        public Task<OrderDetailsDTO> GetByIdAsync(int id);
-        public Task<OrderDetailsDTO> CreateFromCheckoutAsync(int checkoutId);
+        public Task<OrderDetailsDTO> GetByIdAsync(Guid id);
+        public Task<OrderDetailsDTO> CreateFromCheckoutAsync(Guid checkoutId);
         public Task<OrderDetailsDTO> RefundItemAsync(RefundCreateDTO refundCreate);
-        public Task SetTrackingCodeAsync(int orderId, string trackingCode);
-        public Task CancelAsync(int orderId);
-        public Task ProcessShippingAsync(int orderId);
-        public Task MarkAsShippedAsync(int orderId);
-        public Task MarkAsInTransitAsync(int orderId);
-        public Task MarkAsDeliveredAsync(int orderId);
-        public Task MarkAsReturnedAsync(int orderId);
+        public Task SetTrackingCodeAsync(Guid orderId, string trackingCode);
+        public Task CancelAsync(Guid orderId);
+        public Task ProcessShippingAsync(Guid orderId);
+        public Task MarkAsShippedAsync(Guid orderId);
+        public Task MarkAsInTransitAsync(Guid orderId);
+        public Task MarkAsDeliveredAsync(Guid orderId);
+        public Task MarkAsReturnedAsync(Guid orderId);
     }
 }

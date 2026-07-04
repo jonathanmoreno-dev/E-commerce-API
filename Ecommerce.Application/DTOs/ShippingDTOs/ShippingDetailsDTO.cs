@@ -4,7 +4,7 @@ namespace Ecommerce.Application.DTOs.ShippingDTOs
 {
     public class ShippingDetailsDTO
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string RecipientName { get; set; } = "";
         public string PhoneNumber { get; set; } = "";
         public string FullAddress { get; set; } = "";

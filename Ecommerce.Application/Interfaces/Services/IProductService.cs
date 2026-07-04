@@ -5,17 +5,17 @@ namespace Ecommerce.Application.Interfaces.Services
     public interface IProductService
     {
         public Task<IEnumerable<ProductListDTO>> GetAllAsync();
-        public Task<IEnumerable<ProductListDTO>> GetAllByCategoryIdAsync(int categoryId);
-        public Task<ProductDetailsDTO> GetByIdAsync(int id);
+        public Task<IEnumerable<ProductListDTO>> GetAllByCategoryIdAsync(Guid categoryId);
+        public Task<ProductDetailsDTO> GetByIdAsync(Guid id);
         public Task<ProductDetailsDTO> CreateAsync(ProductCreateDTO productCreate);
-        public Task<ProductDetailsDTO> UpdateAsync(int productId, ProductUpdateDTO productUpdate);
-        public Task<ProductDetailsDTO> AddCategoryAsync(int productId, int categoryId);
-        public Task<ProductDetailsDTO> RemoveCategoryAsync(int productId, int categoryId);
-        public Task<ProductDetailsDTO> AddImageAsync(int productId, ProductImageDTO image);
-        public Task<ProductDetailsDTO> RemoveImageAsync(int productId, ProductImageDTO image);
-        public Task<ProductDetailsDTO> ChangeImageOrderAsync(int productId, ProductImageDTO image, int newOrder);
-        public Task<ProductDetailsDTO> IncreaseStockAsync(int productId, int quantity);
-        public Task<ProductDetailsDTO> DecreaseStockAsync(int productId, int quantity);
-        public Task DeleteAsync(int id);
+        public Task<ProductDetailsDTO> UpdateAsync(Guid productId, ProductUpdateDTO productUpdate);
+        public Task<ProductDetailsDTO> AddCategoryAsync(Guid productId, Guid categoryId);
+        public Task<ProductDetailsDTO> RemoveCategoryAsync(Guid productId, Guid categoryId);
+        public Task<ProductDetailsDTO> AddImageAsync(Guid productId, ProductImageDTO image);
+        public Task<ProductDetailsDTO> RemoveImageAsync(Guid productId, ProductImageDTO image);
+        public Task<ProductDetailsDTO> ChangeImageOrderAsync(Guid productId, ProductImageDTO image, int newOrder);
+        public Task<ProductDetailsDTO> IncreaseStockAsync(Guid productId, int quantity);
+        public Task<ProductDetailsDTO> DecreaseStockAsync(Guid productId, int quantity);
+        public Task DeleteAsync(Guid id);
     }
 }

@@ -4,17 +4,19 @@ namespace Ecommerce.Domain.Entities
 {
     public class CheckoutItem
     {
-        public int Id { get; private set; }
-        public int CheckoutId { get; private set; }
+        public Guid Id { get; private set; }
+        public Guid CheckoutId { get; private set; }
         public Checkout Checkout { get; private set; } = null!;
-        public int ProductId { get; private set; }
+        public Guid ProductId { get; private set; }
         public Product Product { get; private set; } = null!;
         public Money UnitPrice { get; private set; } = null!;
         public Quantity Quantity { get; private set; } = null!;
 
         private CheckoutItem() { }
-        public CheckoutItem(int productId, Money unitPrice, Quantity quantity)
+        public CheckoutItem(Guid productId, Money unitPrice, Quantity quantity)
         {
+            Id = Guid.NewGuid();
+
             ArgumentNullException.ThrowIfNull(unitPrice);
             ArgumentNullException.ThrowIfNull(quantity);
 

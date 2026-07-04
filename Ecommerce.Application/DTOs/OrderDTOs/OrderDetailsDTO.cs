@@ -6,7 +6,7 @@ namespace Ecommerce.Application.DTOs.OrderDTOs
 {
     public class OrderDetailsDTO
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public decimal Total { get; set; } 
         public OrderStatus Status { get; set; }
         public decimal ShippingCost { get; set; }

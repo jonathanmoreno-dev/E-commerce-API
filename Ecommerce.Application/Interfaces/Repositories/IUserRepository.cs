@@ -7,7 +7,7 @@ namespace Ecommerce.Application.Interfaces.Repositories
         public Task<IEnumerable<User>> GetAllAsync();
         public Task<IEnumerable<User>> GetAllAdminsAsync();
         public Task<IEnumerable<User>> GetAllStandardUsersAsync();
-        public Task<User?> GetByIdAsync(int id);
+        public Task<User?> GetByIdAsync(Guid id);
         public void Add(User user);
         public void Remove(User user);
     }

@@ -15,15 +15,15 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         {
             return await _appDbContext.Checkouts.Include(x => x.CheckoutItems).ThenInclude(y => y.Product).Where(x => x.IsActive && x.HasStartedPayment).AsNoTracking().ToListAsync();
         }
-        public async Task<IEnumerable<Checkout>> GetAllActiveByUserIdAsync(int userId)
+        public async Task<IEnumerable<Checkout>> GetAllActiveByUserIdAsync(Guid userId)
         {
             return await _appDbContext.Checkouts.Include(x => x.CheckoutItems).ThenInclude(y => y.Product).Where(x => x.UserId == userId).Where(x => x.IsActive && x.HasStartedPayment).AsNoTracking().ToListAsync();
         }
-        public async Task<Checkout?> GetByIdAsync(int id)
+        public async Task<Checkout?> GetByIdAsync(Guid id)
         {
             return await _appDbContext.Checkouts.Include(x => x.CheckoutItems).ThenInclude(y => y.Product).FirstOrDefaultAsync(x => x.Id == id);
         }
-        public async Task<Checkout?> GetByIdWithPaymentAttemptsAsync(int id)
+        public async Task<Checkout?> GetByIdWithPaymentAttemptsAsync(Guid id)
         {
             return await _appDbContext.Checkouts.Include(x => x.PaymentAttempts).Include(x => x.CheckoutItems).ThenInclude(y => y.Product).FirstOrDefaultAsync(x => x.Id == id);
         }

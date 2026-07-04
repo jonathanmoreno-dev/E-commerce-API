@@ -4,12 +4,12 @@ namespace Ecommerce.Domain.Entities
 {
     public class User
     {
-        public int Id { get; private set; }
+        public Guid Id { get; private set; }
         public PersonName FullName { get; private set; } = null!;
         public Email Email { get; private set; } = null!;
         public PhoneNumber PhoneNumber { get; private set; } = null!;
         public string PasswordHash { get; private set; } = "";
-        public int CartId { get; private set; }
+        public Guid CartId { get; private set; }
         public Cart Cart { get; private set; } = null!;
         private readonly List<ShippingAddress> _shippingAddress = new();
         public IReadOnlyCollection<ShippingAddress> ShippingAddresses => _shippingAddress;
@@ -20,8 +20,9 @@ namespace Ecommerce.Domain.Entities
         public bool IsAdmin { get; private set; }
         public AvatarImage? AvatarImage { get; private set; }
         private User() { }
-        public User(PersonName fullName, Email email, PhoneNumber phoneNumber, string passwordHash, int cartId)
+        public User(PersonName fullName, Email email, PhoneNumber phoneNumber, string passwordHash, Guid cartId)
         {
+            Id = Guid.NewGuid();
             CartId = cartId;
             ChangeName(fullName);
             ChangeEmail(email);

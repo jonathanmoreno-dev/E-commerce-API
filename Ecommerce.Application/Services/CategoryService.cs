@@ -23,14 +23,14 @@ namespace Ecommerce.Application.Services
             var categoryListDTO = categories.Select(x => CategoryMapper.ToListDTO(x));
             return categoryListDTO;
         }
-        public async Task<IEnumerable<CategoryListDTO>> GetAllByProductIdAsync(int productId)
+        public async Task<IEnumerable<CategoryListDTO>> GetAllByProductIdAsync(Guid productId)
         {
             var categories = await _categoryRepository.GetAllByProductIdAsync(productId);
 
             var categoryListDTO = categories.Select(x => CategoryMapper.ToListDTO(x));
             return categoryListDTO;
         }
-        public async Task<CategoryDetailsDTO> GetByIdAsync(int id)
+        public async Task<CategoryDetailsDTO> GetByIdAsync(Guid id)
         {
             var category = await _categoryRepository.GetByIdAsync(id);
             if(category is null)
@@ -48,7 +48,7 @@ namespace Ecommerce.Application.Services
             var categoryDetailsDTO = CategoryMapper.ToDetailsDTO(category);
             return categoryDetailsDTO;
         }
-        public async Task<CategoryDetailsDTO> UpdateAsync(int categoryId, CategoryUpdateDTO categoryUpdate)
+        public async Task<CategoryDetailsDTO> UpdateAsync(Guid categoryId, CategoryUpdateDTO categoryUpdate)
         {
             var category = await _categoryRepository.GetByIdAsync(categoryId);
             if (category is null)
@@ -67,7 +67,7 @@ namespace Ecommerce.Application.Services
             var categoryDetailsDTO = CategoryMapper.ToDetailsDTO(category);
             return categoryDetailsDTO;
         }
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(Guid id)
         {
             var category = await _categoryRepository.GetByIdAsync(id);
             if (category is null)

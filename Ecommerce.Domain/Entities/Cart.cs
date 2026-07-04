@@ -5,8 +5,8 @@ namespace Ecommerce.Domain.Entities
 {
     public class Cart
     {
-        public int Id { get; private set; }
-        public int UserId { get; private set; }
+        public Guid Id { get; private set; }
+        public Guid UserId { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
         public User User { get; private set; } = null!;
@@ -16,13 +16,15 @@ namespace Ecommerce.Domain.Entities
         public IReadOnlyCollection<CartItem> CartItems => _cartItems;
 
         private Cart() { }
-        public Cart(int userId)
+        public Cart(Guid userId)
         {
+            Id = Guid.NewGuid();
+
             UserId = userId;
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = CreatedAt;
         }
-        public void AddItem(int productId, Money unitPrice, Quantity quantity)
+        public void AddItem(Guid productId, Money unitPrice, Quantity quantity)
         {
             var existingItem = _cartItems.FirstOrDefault(x => x.ProductId == productId);
             if (existingItem is null)
@@ -31,7 +33,7 @@ namespace Ecommerce.Domain.Entities
                 existingItem.ChangeQuantity(quantity);
             UpdatedAt = DateTime.UtcNow;
         }
-        public void ChangeItemQuantity(int productId, Quantity quantity)
+        public void ChangeItemQuantity(Guid productId, Quantity quantity)
         {
             var item = _cartItems.FirstOrDefault(x => x.ProductId == productId);
             if (item is null)
@@ -43,7 +45,7 @@ namespace Ecommerce.Domain.Entities
                 item.ChangeQuantity(quantity);
             UpdatedAt = DateTime.UtcNow;
         }
-        public void RemoveItem(int productId)
+        public void RemoveItem(Guid productId)
         {
             var item = _cartItems.FirstOrDefault(x => x.ProductId == productId);
             if (item is null)
