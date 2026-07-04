@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Ecommerce.Application.DTOs.UserDTOs
+namespace Ecommerce.Application.DTOs.Authentication
 {
-    public class UserCreateDTO
+    public class RegisterRequestDTO
     {
         [Required]
         [MaxLength(150)]
