@@ -15,6 +15,6 @@ namespace Ecommerce.Application.DTOs.ProductDTOs
         public string? ShortDescription { get; set; }
         public string? LongDescription { get; set; }
         public decimal? Price { get; set; }
-        public int? Quantity { get; set; }
+        public int? Stock { get; set; }
     }
 }
