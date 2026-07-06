@@ -1,54 +1,139 @@
-﻿using Ecommerce.Application.DTOs.ShippingDTOs;
+﻿using Ecommerce.Application.DTOs.Authentication;
+using Ecommerce.Application.DTOs.ShippingDTOs;
 using Ecommerce.Application.DTOs.UserDTOs;
+using Ecommerce.Application.Interfaces.Repositories;
 using Ecommerce.Application.Interfaces.Services;
+using Ecommerce.Application.Mappers;
+using Ecommerce.Domain.Entities;
+using Ecommerce.Domain.ValueObjects;
 
 namespace Ecommerce.Application.Services
 {
     public class UserService : IUserService
     {
-        public Task<IEnumerable<UserListDTO>> GetAllAsync()
+        private readonly IUserRepository _userRepository;
+        private readonly IUnitOfWork _unitOfWork;
+        public UserService(IUserRepository userRepository, IUnitOfWork unitOfWork)
         {
-            throw new NotImplementedException();
+            _userRepository = userRepository;
+            _unitOfWork = unitOfWork;
         }
-        public Task<IEnumerable<UserSummaryDTO>> GetAllAdminsAsync()
+        public async Task<IEnumerable<UserListDTO>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var users = await _userRepository.GetAllAsync();
+
+            var userListDTOs = users.Select(x => UserMapper.ToListDTO(x));
+            return userListDTOs;
         }
-        public Task<IEnumerable<UserSummaryDTO>> GetAllStandardUsersAsync()
+        public async Task<IEnumerable<UserSummaryDTO>> GetAllAdminsAsync()
         {
-            throw new NotImplementedException();
+            var users = await _userRepository.GetAllAdminsAsync();
+
+            var userSummaryDTOs = users.Select(x => UserMapper.ToSummaryDTO(x));
+            return userSummaryDTOs;
         }
-        public Task<UserDetailsDTO> GetByIdAsync(int id)
+        public async Task<IEnumerable<UserSummaryDTO>> GetAllStandardUsersAsync()
         {
-            throw new NotImplementedException();
+            var users = await _userRepository.GetAllStandardUsersAsync();
+
+            var userSummaryDTOs = users.Select(x => UserMapper.ToSummaryDTO(x));
+            return userSummaryDTOs;
+        }
+        public async Task<UserDetailsDTO> GetByIdAsync(Guid id)
+        {
+            var user = await _userRepository.GetByIdAsync(id);
+            if (user is null)
+                throw new KeyNotFoundException($"User with Id: {id} was not found");
+
+            var userDetailsDTO = UserMapper.ToDetailsDTO(user);
+            return userDetailsDTO;
         }
         public Task<UserDetailsDTO> GetCurrentAsync()
         {
             throw new NotImplementedException();
         }
-        public Task<UserDetailsDTO> CreateAsync(UserCreateDTO userCreate)
+        public Task<UserDetailsDTO> RegisterAsync(RegisterRequestDTO userRegister)
         {
             throw new NotImplementedException();
         }
-        public Task<UserDetailsDTO> UpdateAsync(int userId, UserUpdateDTO userUpdate)
+        public Task<UserDetailsDTO> LoginAsync(LoginRequestDTO userLogin)
         {
             throw new NotImplementedException();
         }
-        public Task<UserDetailsDTO> ChangePasswordAsync(int userId, ChangePasswordDTO password)
+        public async Task<UserDetailsDTO> UpdateAsync(Guid userId, UserUpdateDTO userUpdate)
+        {
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user is null)
+                throw new KeyNotFoundException($"User with Id: {userId} was not found");
+
+            if (userUpdate.FullName is not null)
+                user.ChangeName(new PersonName(userUpdate.FullName));
+            if (userUpdate.Email is not null)
+                user.ChangeEmail(new Email(userUpdate.Email));
+            if (userUpdate.PhoneNumber is not null)
+                user.ChangePhoneNumber(new PhoneNumber(userUpdate.PhoneNumber));
+            if (userUpdate.AvatarImageUrl is not null)
+                user.ChangeAvatarImage(new AvatarImage(userUpdate.AvatarImageUrl));
+
+            await _unitOfWork.SaveChangesAsync();
+
+            var userDetailsDTO = UserMapper.ToDetailsDTO(user);
+            return userDetailsDTO;
+        }
+        public Task<UserDetailsDTO> ChangePasswordAsync(Guid userId, ChangePasswordDTO password)
         {
             throw new NotImplementedException();
         }
-        public Task<UserDetailsDTO> AddShippingAddressAsync(int userId, ShippingAddressDTO shippingAddress)
+        public async Task<UserDetailsDTO> AddShippingAddressAsync(Guid userId, ShippingAddressDTO shippingAddress)
         {
-            throw new NotImplementedException();
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user is null)
+                throw new KeyNotFoundException($"User with Id: {userId} was not found");
+
+            user.AddShippingAddress(new ShippingAddress(
+                new PersonName(shippingAddress.RecipientName),
+                new PhoneNumber(shippingAddress.PhoneNumber),
+                shippingAddress.Neighborhood,
+                shippingAddress.Street,
+                shippingAddress.Number,
+                shippingAddress.State,
+                shippingAddress.City,
+                shippingAddress.ZipCode
+            ));
+            await _unitOfWork.SaveChangesAsync();
+
+            var userDetailsDTO = UserMapper.ToDetailsDTO(user);
+            return userDetailsDTO;
         }
-        public Task<UserDetailsDTO> RemoveShippingAddressAsync(int userId, ShippingAddressDTO shippingAddress)
+        public async Task<UserDetailsDTO> RemoveShippingAddressAsync(Guid userId, ShippingAddressDTO shippingAddress)
         {
-            throw new NotImplementedException();
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user is null)
+                throw new KeyNotFoundException($"User with Id: {userId} was not found");
+
+            user.RemoveShippingAddress(new ShippingAddress(
+                new PersonName(shippingAddress.RecipientName),
+                new PhoneNumber(shippingAddress.PhoneNumber),
+                shippingAddress.Neighborhood,
+                shippingAddress.Street,
+                shippingAddress.Number,
+                shippingAddress.State,
+                shippingAddress.City,
+                shippingAddress.ZipCode
+            ));
+            await _unitOfWork.SaveChangesAsync();
+
+            var userDetailsDTO = UserMapper.ToDetailsDTO(user);
+            return userDetailsDTO;
         }
-        public Task DeleteAsync(int id)
+        public async Task DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var user = await _userRepository.GetByIdAsync(id);
+            if (user is null)
+                throw new KeyNotFoundException($"User with Id: {id} was not found");
+
+            _userRepository.Remove(user);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }
