@@ -8,6 +8,5 @@ namespace Ecommerce.Application.Interfaces.Services
         public string GenerateAccessToken(User user);
         public string GenerateRefreshToken();
         public ClaimsPrincipal? GetPrincipalFromExpiredToken(string tokenExpired);
-        public bool ValidateToken(string token);
     }
 }

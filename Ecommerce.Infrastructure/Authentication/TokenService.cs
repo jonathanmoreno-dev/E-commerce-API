@@ -1,6 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Ecommerce.Application.Interfaces.Services;
 using Ecommerce.Domain.Entities;
@@ -47,15 +48,9 @@ namespace Ecommerce.Infrastructure.Authentication
 
         public string GenerateRefreshToken()
         {
-            throw new NotImplementedException();
+            return Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
         }
-
         public ClaimsPrincipal? GetPrincipalFromExpiredToken(string tokenExpired)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool ValidateToken(string token)
         {
             throw new NotImplementedException();
         }
