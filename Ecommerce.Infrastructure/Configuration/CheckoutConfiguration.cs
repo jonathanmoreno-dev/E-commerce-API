@@ -28,7 +28,6 @@ namespace Ecommerce.Infrastructure.Configuration
             builder.Property(x => x.PaymentMethod).HasConversion<string>().HasColumnName("payment_method");
             builder.Ignore(x => x.SubTotal);
             builder.Ignore(x => x.Total);
-            builder.Ignore(x => x.ExpiresAt);
             builder.Ignore(x => x.IsActive);
             builder.Ignore(x => x.HasStartedPayment);
             builder.Ignore(x => x.CompletedPayment);
