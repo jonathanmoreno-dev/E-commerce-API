@@ -50,9 +50,5 @@ namespace Ecommerce.Infrastructure.Authentication
         {
             return Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
         }
-        public ClaimsPrincipal? GetPrincipalFromExpiredToken(string tokenExpired)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
