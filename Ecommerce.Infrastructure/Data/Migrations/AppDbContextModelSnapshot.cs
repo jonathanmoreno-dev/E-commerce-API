@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace E_commerce_API.Migrations
+namespace Ecommerce.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     partial class AppDbContextModelSnapshot : ModelSnapshot
@@ -25,27 +25,25 @@ namespace E_commerce_API.Migrations
 
             modelBuilder.Entity("CategoryProduct", b =>
                 {
-                    b.Property<int>("CategoriesId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("CategoriesId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("ProductsId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("ProductsId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("CategoriesId", "ProductsId");
 
                     b.HasIndex("ProductsId");
 
-                    b.ToTable("CategoryProduct", (string)null);
+                    b.ToTable("CategoryProduct");
                 });
 
-            modelBuilder.Entity("E_commerce_API.src.Domain.Entities.Cart", b =>
+            modelBuilder.Entity("Ecommerce.Domain.Entities.Cart", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -59,8 +57,8 @@ namespace E_commerce_API.Migrations
                         .HasColumnName("updated_at")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer")
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
                         .HasColumnName("user_id");
 
                     b.HasKey("Id");
@@ -71,24 +69,22 @@ namespace E_commerce_API.Migrations
                     b.ToTable("carts", (string)null);
                 });
 
-            modelBuilder.Entity("E_commerce_API.src.Domain.Entities.CartItem", b =>
+            modelBuilder.Entity("Ecommerce.Domain.Entities.CartItem", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CartId")
-                        .HasColumnType("integer")
+                    b.Property<Guid>("CartId")
+                        .HasColumnType("uuid")
                         .HasColumnName("cart_id");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("integer")
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid")
                         .HasColumnName("product_id");
 
-                    b.ComplexProperty<Dictionary<string, object>>("Quantity", "E_commerce_API.src.Domain.Entities.CartItem.Quantity#Quantity", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("Quantity", "Ecommerce.Domain.Entities.CartItem.Quantity#Quantity", b1 =>
                         {
                             b1.IsRequired();
 
@@ -97,7 +93,7 @@ namespace E_commerce_API.Migrations
                                 .HasColumnName("quantity");
                         });
 
-                    b.ComplexProperty<Dictionary<string, object>>("UnitPrice", "E_commerce_API.src.Domain.Entities.CartItem.UnitPrice#Money", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("UnitPrice", "Ecommerce.Domain.Entities.CartItem.UnitPrice#Money", b1 =>
                         {
                             b1.IsRequired();
 
@@ -116,16 +112,14 @@ namespace E_commerce_API.Migrations
                     b.ToTable("cart_items", (string)null);
                 });
 
-            modelBuilder.Entity("E_commerce_API.src.Domain.Entities.Category", b =>
+            modelBuilder.Entity("Ecommerce.Domain.Entities.Category", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.ComplexProperty<Dictionary<string, object>>("Description", "E_commerce_API.src.Domain.Entities.Category.Description#CategoryDescription", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("Description", "Ecommerce.Domain.Entities.Category.Description#CategoryDescription", b1 =>
                         {
                             b1.IsRequired();
 
@@ -136,7 +130,7 @@ namespace E_commerce_API.Migrations
                                 .HasColumnName("description");
                         });
 
-                    b.ComplexProperty<Dictionary<string, object>>("Name", "E_commerce_API.src.Domain.Entities.Category.Name#CategoryName", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("Name", "Ecommerce.Domain.Entities.Category.Name#CategoryName", b1 =>
                         {
                             b1.IsRequired();
 
@@ -152,20 +146,21 @@ namespace E_commerce_API.Migrations
                     b.ToTable("categories", (string)null);
                 });
 
-            modelBuilder.Entity("E_commerce_API.src.Domain.Entities.Checkout", b =>
+            modelBuilder.Entity("Ecommerce.Domain.Entities.Checkout", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("PaymentMethod")
                         .IsRequired()
@@ -178,11 +173,11 @@ namespace E_commerce_API.Migrations
                         .HasColumnName("updated_at")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer")
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
                         .HasColumnName("user_id");
 
-                    b.ComplexProperty<Dictionary<string, object>>("ShippingAddress", "E_commerce_API.src.Domain.Entities.Checkout.ShippingAddress#ShippingAddress", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("ShippingAddress", "Ecommerce.Domain.Entities.Checkout.ShippingAddress#ShippingAddress", b1 =>
                         {
                             b1.IsRequired();
 
@@ -222,7 +217,7 @@ namespace E_commerce_API.Migrations
                                 .HasColumnType("character varying(20)")
                                 .HasColumnName("zip_code");
 
-                            b1.ComplexProperty<Dictionary<string, object>>("PhoneNumber", "E_commerce_API.src.Domain.Entities.Checkout.ShippingAddress#ShippingAddress.PhoneNumber#PhoneNumber", b2 =>
+                            b1.ComplexProperty<Dictionary<string, object>>("PhoneNumber", "Ecommerce.Domain.Entities.Checkout.ShippingAddress#ShippingAddress.PhoneNumber#PhoneNumber", b2 =>
                                 {
                                     b2.IsRequired();
 
@@ -233,7 +228,7 @@ namespace E_commerce_API.Migrations
                                         .HasColumnName("phone_number");
                                 });
 
-                            b1.ComplexProperty<Dictionary<string, object>>("RecipientName", "E_commerce_API.src.Domain.Entities.Checkout.ShippingAddress#ShippingAddress.RecipientName#PersonName", b2 =>
+                            b1.ComplexProperty<Dictionary<string, object>>("RecipientName", "Ecommerce.Domain.Entities.Checkout.ShippingAddress#ShippingAddress.RecipientName#PersonName", b2 =>
                                 {
                                     b2.IsRequired();
 
@@ -245,7 +240,7 @@ namespace E_commerce_API.Migrations
                                 });
                         });
 
-                    b.ComplexProperty<Dictionary<string, object>>("ShippingCost", "E_commerce_API.src.Domain.Entities.Checkout.ShippingCost#Money", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("ShippingCost", "Ecommerce.Domain.Entities.Checkout.ShippingCost#Money", b1 =>
                         {
                             b1.IsRequired();
 
@@ -263,24 +258,22 @@ namespace E_commerce_API.Migrations
                     b.ToTable("checkouts", (string)null);
                 });
 
-            modelBuilder.Entity("E_commerce_API.src.Domain.Entities.CheckoutItem", b =>
+            modelBuilder.Entity("Ecommerce.Domain.Entities.CheckoutItem", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CheckoutId")
-                        .HasColumnType("integer")
+                    b.Property<Guid>("CheckoutId")
+                        .HasColumnType("uuid")
                         .HasColumnName("checkout_id");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("integer")
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid")
                         .HasColumnName("product_id");
 
-                    b.ComplexProperty<Dictionary<string, object>>("Quantity", "E_commerce_API.src.Domain.Entities.CheckoutItem.Quantity#Quantity", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("Quantity", "Ecommerce.Domain.Entities.CheckoutItem.Quantity#Quantity", b1 =>
                         {
                             b1.IsRequired();
 
@@ -289,7 +282,7 @@ namespace E_commerce_API.Migrations
                                 .HasColumnName("quantity");
                         });
 
-                    b.ComplexProperty<Dictionary<string, object>>("UnitPrice", "E_commerce_API.src.Domain.Entities.CheckoutItem.UnitPrice#Money", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("UnitPrice", "Ecommerce.Domain.Entities.CheckoutItem.UnitPrice#Money", b1 =>
                         {
                             b1.IsRequired();
 
@@ -308,14 +301,12 @@ namespace E_commerce_API.Migrations
                     b.ToTable("checkout_items", (string)null);
                 });
 
-            modelBuilder.Entity("E_commerce_API.src.Domain.Entities.Order", b =>
+            modelBuilder.Entity("Ecommerce.Domain.Entities.Order", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -333,11 +324,11 @@ namespace E_commerce_API.Migrations
                         .HasColumnType("text")
                         .HasColumnName("status");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer")
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
                         .HasColumnName("user_id");
 
-                    b.ComplexProperty<Dictionary<string, object>>("ShippingAddress", "E_commerce_API.src.Domain.Entities.Order.ShippingAddress#ShippingAddress", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("ShippingAddress", "Ecommerce.Domain.Entities.Order.ShippingAddress#ShippingAddress", b1 =>
                         {
                             b1.IsRequired();
 
@@ -377,7 +368,7 @@ namespace E_commerce_API.Migrations
                                 .HasColumnType("character varying(20)")
                                 .HasColumnName("zip_code");
 
-                            b1.ComplexProperty<Dictionary<string, object>>("PhoneNumber", "E_commerce_API.src.Domain.Entities.Order.ShippingAddress#ShippingAddress.PhoneNumber#PhoneNumber", b2 =>
+                            b1.ComplexProperty<Dictionary<string, object>>("PhoneNumber", "Ecommerce.Domain.Entities.Order.ShippingAddress#ShippingAddress.PhoneNumber#PhoneNumber", b2 =>
                                 {
                                     b2.IsRequired();
 
@@ -388,7 +379,7 @@ namespace E_commerce_API.Migrations
                                         .HasColumnName("phone_number");
                                 });
 
-                            b1.ComplexProperty<Dictionary<string, object>>("RecipientName", "E_commerce_API.src.Domain.Entities.Order.ShippingAddress#ShippingAddress.RecipientName#PersonName", b2 =>
+                            b1.ComplexProperty<Dictionary<string, object>>("RecipientName", "Ecommerce.Domain.Entities.Order.ShippingAddress#ShippingAddress.RecipientName#PersonName", b2 =>
                                 {
                                     b2.IsRequired();
 
@@ -400,7 +391,7 @@ namespace E_commerce_API.Migrations
                                 });
                         });
 
-                    b.ComplexProperty<Dictionary<string, object>>("ShippingCost", "E_commerce_API.src.Domain.Entities.Order.ShippingCost#Money", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("ShippingCost", "Ecommerce.Domain.Entities.Order.ShippingCost#Money", b1 =>
                         {
                             b1.IsRequired();
 
@@ -410,7 +401,7 @@ namespace E_commerce_API.Migrations
                                 .HasColumnName("shipping_cost");
                         });
 
-                    b.ComplexProperty<Dictionary<string, object>>("TotalPaid", "E_commerce_API.src.Domain.Entities.Order.TotalPaid#Money", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("TotalPaid", "Ecommerce.Domain.Entities.Order.TotalPaid#Money", b1 =>
                         {
                             b1.IsRequired();
 
@@ -427,24 +418,22 @@ namespace E_commerce_API.Migrations
                     b.ToTable("orders", (string)null);
                 });
 
-            modelBuilder.Entity("E_commerce_API.src.Domain.Entities.OrderItem", b =>
+            modelBuilder.Entity("Ecommerce.Domain.Entities.OrderItem", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("integer")
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uuid")
                         .HasColumnName("order_id");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("integer")
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid")
                         .HasColumnName("product_id");
 
-                    b.ComplexProperty<Dictionary<string, object>>("Quantity", "E_commerce_API.src.Domain.Entities.OrderItem.Quantity#Quantity", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("Quantity", "Ecommerce.Domain.Entities.OrderItem.Quantity#Quantity", b1 =>
                         {
                             b1.IsRequired();
 
@@ -453,7 +442,7 @@ namespace E_commerce_API.Migrations
                                 .HasColumnName("quantity");
                         });
 
-                    b.ComplexProperty<Dictionary<string, object>>("UnitPrice", "E_commerce_API.src.Domain.Entities.OrderItem.UnitPrice#Money", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("UnitPrice", "Ecommerce.Domain.Entities.OrderItem.UnitPrice#Money", b1 =>
                         {
                             b1.IsRequired();
 
@@ -472,17 +461,15 @@ namespace E_commerce_API.Migrations
                     b.ToTable("order_items", (string)null);
                 });
 
-            modelBuilder.Entity("E_commerce_API.src.Domain.Entities.PaymentAttempt", b =>
+            modelBuilder.Entity("Ecommerce.Domain.Entities.PaymentAttempt", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CheckoutId")
-                        .HasColumnType("integer")
+                    b.Property<Guid>("CheckoutId")
+                        .HasColumnType("uuid")
                         .HasColumnName("checkout_id");
 
                     b.Property<string>("Method")
@@ -501,7 +488,7 @@ namespace E_commerce_API.Migrations
                         .HasColumnType("text")
                         .HasColumnName("status");
 
-                    b.ComplexProperty<Dictionary<string, object>>("Amount", "E_commerce_API.src.Domain.Entities.PaymentAttempt.Amount#Money", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("Amount", "Ecommerce.Domain.Entities.PaymentAttempt.Amount#Money", b1 =>
                         {
                             b1.IsRequired();
 
@@ -518,16 +505,14 @@ namespace E_commerce_API.Migrations
                     b.ToTable("payment_attempts", (string)null);
                 });
 
-            modelBuilder.Entity("E_commerce_API.src.Domain.Entities.Product", b =>
+            modelBuilder.Entity("Ecommerce.Domain.Entities.Product", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.ComplexProperty<Dictionary<string, object>>("LongDescription", "E_commerce_API.src.Domain.Entities.Product.LongDescription#ProductLongDescription", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("LongDescription", "Ecommerce.Domain.Entities.Product.LongDescription#ProductLongDescription", b1 =>
                         {
                             b1.IsRequired();
 
@@ -537,7 +522,7 @@ namespace E_commerce_API.Migrations
                                 .HasColumnName("long_description");
                         });
 
-                    b.ComplexProperty<Dictionary<string, object>>("Name", "E_commerce_API.src.Domain.Entities.Product.Name#ProductName", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("Name", "Ecommerce.Domain.Entities.Product.Name#ProductName", b1 =>
                         {
                             b1.IsRequired();
 
@@ -548,7 +533,7 @@ namespace E_commerce_API.Migrations
                                 .HasColumnName("name");
                         });
 
-                    b.ComplexProperty<Dictionary<string, object>>("Price", "E_commerce_API.src.Domain.Entities.Product.Price#Money", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("Price", "Ecommerce.Domain.Entities.Product.Price#Money", b1 =>
                         {
                             b1.IsRequired();
 
@@ -558,7 +543,7 @@ namespace E_commerce_API.Migrations
                                 .HasColumnName("price");
                         });
 
-                    b.ComplexProperty<Dictionary<string, object>>("ShortDescription", "E_commerce_API.src.Domain.Entities.Product.ShortDescription#ProductShortDescription", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("ShortDescription", "Ecommerce.Domain.Entities.Product.ShortDescription#ProductShortDescription", b1 =>
                         {
                             b1.IsRequired();
 
@@ -569,7 +554,7 @@ namespace E_commerce_API.Migrations
                                 .HasColumnName("short_description");
                         });
 
-                    b.ComplexProperty<Dictionary<string, object>>("Stock", "E_commerce_API.src.Domain.Entities.Product.Stock#Quantity", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("Stock", "Ecommerce.Domain.Entities.Product.Stock#Quantity", b1 =>
                         {
                             b1.IsRequired();
 
@@ -583,17 +568,56 @@ namespace E_commerce_API.Migrations
                     b.ToTable("products", (string)null);
                 });
 
-            modelBuilder.Entity("E_commerce_API.src.Domain.Entities.Refund", b =>
+            modelBuilder.Entity("Ecommerce.Domain.Entities.RefreshToken", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<int>("OrderItemId")
-                        .HasColumnType("integer")
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expires_at");
+
+                    b.Property<DateTime?>("RevokedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("revoked_at");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("token");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Token")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("refresh_tokens", (string)null);
+                });
+
+            modelBuilder.Entity("Ecommerce.Domain.Entities.Refund", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("OrderItemId")
+                        .HasColumnType("uuid")
                         .HasColumnName("order_item_id");
 
                     b.Property<DateTime>("RefundDate")
@@ -602,7 +626,7 @@ namespace E_commerce_API.Migrations
                         .HasColumnName("refund_date")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.ComplexProperty<Dictionary<string, object>>("Quantity", "E_commerce_API.src.Domain.Entities.Refund.Quantity#Quantity", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("Quantity", "Ecommerce.Domain.Entities.Refund.Quantity#Quantity", b1 =>
                         {
                             b1.IsRequired();
 
@@ -618,21 +642,19 @@ namespace E_commerce_API.Migrations
                     b.ToTable("refunds", (string)null);
                 });
 
-            modelBuilder.Entity("E_commerce_API.src.Domain.Entities.Shipping", b =>
+            modelBuilder.Entity("Ecommerce.Domain.Entities.Shipping", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime?>("DeliveredDate")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("delivered_date");
 
-                    b.Property<int>("OrderId")
-                        .HasColumnType("integer")
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uuid")
                         .HasColumnName("order_id");
 
                     b.Property<DateTime?>("ShippedDate")
@@ -649,7 +671,7 @@ namespace E_commerce_API.Migrations
                         .HasColumnType("character varying(100)")
                         .HasColumnName("tracking_code");
 
-                    b.ComplexProperty<Dictionary<string, object>>("ShippingAddress", "E_commerce_API.src.Domain.Entities.Shipping.ShippingAddress#ShippingAddress", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("ShippingAddress", "Ecommerce.Domain.Entities.Shipping.ShippingAddress#ShippingAddress", b1 =>
                         {
                             b1.IsRequired();
 
@@ -689,7 +711,7 @@ namespace E_commerce_API.Migrations
                                 .HasColumnType("character varying(20)")
                                 .HasColumnName("zip_code");
 
-                            b1.ComplexProperty<Dictionary<string, object>>("PhoneNumber", "E_commerce_API.src.Domain.Entities.Shipping.ShippingAddress#ShippingAddress.PhoneNumber#PhoneNumber", b2 =>
+                            b1.ComplexProperty<Dictionary<string, object>>("PhoneNumber", "Ecommerce.Domain.Entities.Shipping.ShippingAddress#ShippingAddress.PhoneNumber#PhoneNumber", b2 =>
                                 {
                                     b2.IsRequired();
 
@@ -700,7 +722,7 @@ namespace E_commerce_API.Migrations
                                         .HasColumnName("phone_number");
                                 });
 
-                            b1.ComplexProperty<Dictionary<string, object>>("RecipientName", "E_commerce_API.src.Domain.Entities.Shipping.ShippingAddress#ShippingAddress.RecipientName#PersonName", b2 =>
+                            b1.ComplexProperty<Dictionary<string, object>>("RecipientName", "Ecommerce.Domain.Entities.Shipping.ShippingAddress#ShippingAddress.RecipientName#PersonName", b2 =>
                                 {
                                     b2.IsRequired();
 
@@ -712,7 +734,7 @@ namespace E_commerce_API.Migrations
                                 });
                         });
 
-                    b.ComplexProperty<Dictionary<string, object>>("ShippingCost", "E_commerce_API.src.Domain.Entities.Shipping.ShippingCost#Money", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("ShippingCost", "Ecommerce.Domain.Entities.Shipping.ShippingCost#Money", b1 =>
                         {
                             b1.IsRequired();
 
@@ -730,18 +752,12 @@ namespace E_commerce_API.Migrations
                     b.ToTable("shippings", (string)null);
                 });
 
-            modelBuilder.Entity("E_commerce_API.src.Domain.Entities.User", b =>
+            modelBuilder.Entity("Ecommerce.Domain.Entities.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CartId")
-                        .HasColumnType("integer")
-                        .HasColumnName("cart_id");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -759,7 +775,7 @@ namespace E_commerce_API.Migrations
                         .HasColumnType("character varying(255)")
                         .HasColumnName("password_hash");
 
-                    b.ComplexProperty<Dictionary<string, object>>("FullName", "E_commerce_API.src.Domain.Entities.User.FullName#PersonName", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("FullName", "Ecommerce.Domain.Entities.User.FullName#PersonName", b1 =>
                         {
                             b1.IsRequired();
 
@@ -770,7 +786,7 @@ namespace E_commerce_API.Migrations
                                 .HasColumnName("full_name");
                         });
 
-                    b.ComplexProperty<Dictionary<string, object>>("PhoneNumber", "E_commerce_API.src.Domain.Entities.User.PhoneNumber#PhoneNumber", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("PhoneNumber", "Ecommerce.Domain.Entities.User.PhoneNumber#PhoneNumber", b1 =>
                         {
                             b1.IsRequired();
 
@@ -791,39 +807,39 @@ namespace E_commerce_API.Migrations
 
             modelBuilder.Entity("CategoryProduct", b =>
                 {
-                    b.HasOne("E_commerce_API.src.Domain.Entities.Category", null)
+                    b.HasOne("Ecommerce.Domain.Entities.Category", null)
                         .WithMany()
                         .HasForeignKey("CategoriesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("E_commerce_API.src.Domain.Entities.Product", null)
+                    b.HasOne("Ecommerce.Domain.Entities.Product", null)
                         .WithMany()
                         .HasForeignKey("ProductsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("E_commerce_API.src.Domain.Entities.Cart", b =>
+            modelBuilder.Entity("Ecommerce.Domain.Entities.Cart", b =>
                 {
-                    b.HasOne("E_commerce_API.src.Domain.Entities.User", "User")
+                    b.HasOne("Ecommerce.Domain.Entities.User", "User")
                         .WithOne("Cart")
-                        .HasForeignKey("E_commerce_API.src.Domain.Entities.Cart", "UserId")
+                        .HasForeignKey("Ecommerce.Domain.Entities.Cart", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("E_commerce_API.src.Domain.Entities.CartItem", b =>
+            modelBuilder.Entity("Ecommerce.Domain.Entities.CartItem", b =>
                 {
-                    b.HasOne("E_commerce_API.src.Domain.Entities.Cart", "Cart")
+                    b.HasOne("Ecommerce.Domain.Entities.Cart", "Cart")
                         .WithMany("CartItems")
                         .HasForeignKey("CartId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("E_commerce_API.src.Domain.Entities.Product", "Product")
+                    b.HasOne("Ecommerce.Domain.Entities.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -834,12 +850,12 @@ namespace E_commerce_API.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("E_commerce_API.src.Domain.Entities.Category", b =>
+            modelBuilder.Entity("Ecommerce.Domain.Entities.Category", b =>
                 {
-                    b.OwnsOne("E_commerce_API.src.Domain.Entities.Category.CategoryImage#E_commerce_API.src.Domain.ValueObjects.CategoryImage", "CategoryImage", b1 =>
+                    b.OwnsOne("Ecommerce.Domain.ValueObjects.CategoryImage", "CategoryImage", b1 =>
                         {
-                            b1.Property<int>("CategoryId")
-                                .HasColumnType("integer");
+                            b1.Property<Guid>("CategoryId")
+                                .HasColumnType("uuid");
 
                             b1.Property<string>("Url")
                                 .HasColumnType("text")
@@ -847,7 +863,7 @@ namespace E_commerce_API.Migrations
 
                             b1.HasKey("CategoryId");
 
-                            b1.ToTable("categories", (string)null);
+                            b1.ToTable("categories");
 
                             b1.WithOwner()
                                 .HasForeignKey("CategoryId");
@@ -856,9 +872,9 @@ namespace E_commerce_API.Migrations
                     b.Navigation("CategoryImage");
                 });
 
-            modelBuilder.Entity("E_commerce_API.src.Domain.Entities.Checkout", b =>
+            modelBuilder.Entity("Ecommerce.Domain.Entities.Checkout", b =>
                 {
-                    b.HasOne("E_commerce_API.src.Domain.Entities.User", "User")
+                    b.HasOne("Ecommerce.Domain.Entities.User", "User")
                         .WithMany("Checkouts")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -867,15 +883,15 @@ namespace E_commerce_API.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("E_commerce_API.src.Domain.Entities.CheckoutItem", b =>
+            modelBuilder.Entity("Ecommerce.Domain.Entities.CheckoutItem", b =>
                 {
-                    b.HasOne("E_commerce_API.src.Domain.Entities.Checkout", "Checkout")
+                    b.HasOne("Ecommerce.Domain.Entities.Checkout", "Checkout")
                         .WithMany("CheckoutItems")
                         .HasForeignKey("CheckoutId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("E_commerce_API.src.Domain.Entities.Product", "Product")
+                    b.HasOne("Ecommerce.Domain.Entities.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -886,9 +902,9 @@ namespace E_commerce_API.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("E_commerce_API.src.Domain.Entities.Order", b =>
+            modelBuilder.Entity("Ecommerce.Domain.Entities.Order", b =>
                 {
-                    b.HasOne("E_commerce_API.src.Domain.Entities.User", "User")
+                    b.HasOne("Ecommerce.Domain.Entities.User", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -897,15 +913,15 @@ namespace E_commerce_API.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("E_commerce_API.src.Domain.Entities.OrderItem", b =>
+            modelBuilder.Entity("Ecommerce.Domain.Entities.OrderItem", b =>
                 {
-                    b.HasOne("E_commerce_API.src.Domain.Entities.Order", "Order")
+                    b.HasOne("Ecommerce.Domain.Entities.Order", "Order")
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("E_commerce_API.src.Domain.Entities.Product", "Product")
+                    b.HasOne("Ecommerce.Domain.Entities.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -916,9 +932,9 @@ namespace E_commerce_API.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("E_commerce_API.src.Domain.Entities.PaymentAttempt", b =>
+            modelBuilder.Entity("Ecommerce.Domain.Entities.PaymentAttempt", b =>
                 {
-                    b.HasOne("E_commerce_API.src.Domain.Entities.Checkout", "Checkout")
+                    b.HasOne("Ecommerce.Domain.Entities.Checkout", "Checkout")
                         .WithMany("PaymentAttempts")
                         .HasForeignKey("CheckoutId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -927,12 +943,12 @@ namespace E_commerce_API.Migrations
                     b.Navigation("Checkout");
                 });
 
-            modelBuilder.Entity("E_commerce_API.src.Domain.Entities.Product", b =>
+            modelBuilder.Entity("Ecommerce.Domain.Entities.Product", b =>
                 {
-                    b.OwnsMany("E_commerce_API.src.Domain.Entities.Product.ProductImages#E_commerce_API.src.Domain.ValueObjects.ProductImage", "ProductImages", b1 =>
+                    b.OwnsMany("Ecommerce.Domain.ValueObjects.ProductImage", "ProductImages", b1 =>
                         {
-                            b1.Property<int>("ProductId")
-                                .HasColumnType("integer");
+                            b1.Property<Guid>("ProductId")
+                                .HasColumnType("uuid");
 
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
@@ -951,7 +967,7 @@ namespace E_commerce_API.Migrations
 
                             b1.HasKey("ProductId", "Id");
 
-                            b1.ToTable("ProductImage", (string)null);
+                            b1.ToTable("ProductImage");
 
                             b1.WithOwner()
                                 .HasForeignKey("ProductId");
@@ -960,9 +976,20 @@ namespace E_commerce_API.Migrations
                     b.Navigation("ProductImages");
                 });
 
-            modelBuilder.Entity("E_commerce_API.src.Domain.Entities.Refund", b =>
+            modelBuilder.Entity("Ecommerce.Domain.Entities.RefreshToken", b =>
                 {
-                    b.HasOne("E_commerce_API.src.Domain.Entities.OrderItem", "OrderItem")
+                    b.HasOne("Ecommerce.Domain.Entities.User", "User")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Ecommerce.Domain.Entities.Refund", b =>
+                {
+                    b.HasOne("Ecommerce.Domain.Entities.OrderItem", "OrderItem")
                         .WithMany("Refunds")
                         .HasForeignKey("OrderItemId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -971,23 +998,23 @@ namespace E_commerce_API.Migrations
                     b.Navigation("OrderItem");
                 });
 
-            modelBuilder.Entity("E_commerce_API.src.Domain.Entities.Shipping", b =>
+            modelBuilder.Entity("Ecommerce.Domain.Entities.Shipping", b =>
                 {
-                    b.HasOne("E_commerce_API.src.Domain.Entities.Order", "Order")
+                    b.HasOne("Ecommerce.Domain.Entities.Order", "Order")
                         .WithOne("Shipping")
-                        .HasForeignKey("E_commerce_API.src.Domain.Entities.Shipping", "OrderId")
+                        .HasForeignKey("Ecommerce.Domain.Entities.Shipping", "OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("E_commerce_API.src.Domain.Entities.User", b =>
+            modelBuilder.Entity("Ecommerce.Domain.Entities.User", b =>
                 {
-                    b.OwnsOne("E_commerce_API.src.Domain.Entities.User.AvatarImage#E_commerce_API.src.Domain.ValueObjects.AvatarImage", "AvatarImage", b1 =>
+                    b.OwnsOne("Ecommerce.Domain.ValueObjects.AvatarImage", "AvatarImage", b1 =>
                         {
-                            b1.Property<int>("UserId")
-                                .HasColumnType("integer");
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uuid");
 
                             b1.Property<string>("Url")
                                 .HasColumnType("text")
@@ -995,16 +1022,16 @@ namespace E_commerce_API.Migrations
 
                             b1.HasKey("UserId");
 
-                            b1.ToTable("users", (string)null);
+                            b1.ToTable("users");
 
                             b1.WithOwner()
                                 .HasForeignKey("UserId");
                         });
 
-                    b.OwnsMany("E_commerce_API.src.Domain.Entities.User.ShippingAddresses#E_commerce_API.src.Domain.ValueObjects.ShippingAddress", "ShippingAddresses", b1 =>
+                    b.OwnsMany("Ecommerce.Domain.ValueObjects.ShippingAddress", "ShippingAddresses", b1 =>
                         {
-                            b1.Property<int>("UserId")
-                                .HasColumnType("integer");
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uuid");
 
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
@@ -1050,37 +1077,15 @@ namespace E_commerce_API.Migrations
 
                             b1.HasKey("UserId", "Id");
 
-                            b1.ToTable("ShippingAddress", (string)null);
+                            b1.ToTable("ShippingAddress");
 
                             b1.WithOwner()
                                 .HasForeignKey("UserId");
 
-                            b1.OwnsOne("E_commerce_API.src.Domain.Entities.User.ShippingAddresses#E_commerce_API.src.Domain.ValueObjects.ShippingAddress.PhoneNumber#E_commerce_API.src.Domain.ValueObjects.PhoneNumber", "PhoneNumber", b2 =>
+                            b1.OwnsOne("Ecommerce.Domain.ValueObjects.PersonName", "RecipientName", b2 =>
                                 {
-                                    b2.Property<int>("ShippingAddressUserId")
-                                        .HasColumnType("integer");
-
-                                    b2.Property<int>("ShippingAddressId")
-                                        .HasColumnType("integer");
-
-                                    b2.Property<string>("Value")
-                                        .IsRequired()
-                                        .HasMaxLength(20)
-                                        .HasColumnType("character varying(20)")
-                                        .HasColumnName("phone_number");
-
-                                    b2.HasKey("ShippingAddressUserId", "ShippingAddressId");
-
-                                    b2.ToTable("ShippingAddress", (string)null);
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("ShippingAddressUserId", "ShippingAddressId");
-                                });
-
-                            b1.OwnsOne("E_commerce_API.src.Domain.Entities.User.ShippingAddresses#E_commerce_API.src.Domain.ValueObjects.ShippingAddress.RecipientName#E_commerce_API.src.Domain.ValueObjects.PersonName", "RecipientName", b2 =>
-                                {
-                                    b2.Property<int>("ShippingAddressUserId")
-                                        .HasColumnType("integer");
+                                    b2.Property<Guid>("ShippingAddressUserId")
+                                        .HasColumnType("uuid");
 
                                     b2.Property<int>("ShippingAddressId")
                                         .HasColumnType("integer");
@@ -1093,7 +1098,29 @@ namespace E_commerce_API.Migrations
 
                                     b2.HasKey("ShippingAddressUserId", "ShippingAddressId");
 
-                                    b2.ToTable("ShippingAddress", (string)null);
+                                    b2.ToTable("ShippingAddress");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("ShippingAddressUserId", "ShippingAddressId");
+                                });
+
+                            b1.OwnsOne("Ecommerce.Domain.ValueObjects.PhoneNumber", "PhoneNumber", b2 =>
+                                {
+                                    b2.Property<Guid>("ShippingAddressUserId")
+                                        .HasColumnType("uuid");
+
+                                    b2.Property<int>("ShippingAddressId")
+                                        .HasColumnType("integer");
+
+                                    b2.Property<string>("Value")
+                                        .IsRequired()
+                                        .HasMaxLength(20)
+                                        .HasColumnType("character varying(20)")
+                                        .HasColumnName("phone_number");
+
+                                    b2.HasKey("ShippingAddressUserId", "ShippingAddressId");
+
+                                    b2.ToTable("ShippingAddress");
 
                                     b2.WithOwner()
                                         .HasForeignKey("ShippingAddressUserId", "ShippingAddressId");
@@ -1111,31 +1138,32 @@ namespace E_commerce_API.Migrations
                     b.Navigation("ShippingAddresses");
                 });
 
-            modelBuilder.Entity("E_commerce_API.src.Domain.Entities.Cart", b =>
+            modelBuilder.Entity("Ecommerce.Domain.Entities.Cart", b =>
                 {
                     b.Navigation("CartItems");
                 });
 
-            modelBuilder.Entity("E_commerce_API.src.Domain.Entities.Checkout", b =>
+            modelBuilder.Entity("Ecommerce.Domain.Entities.Checkout", b =>
                 {
                     b.Navigation("CheckoutItems");
 
                     b.Navigation("PaymentAttempts");
                 });
 
-            modelBuilder.Entity("E_commerce_API.src.Domain.Entities.Order", b =>
+            modelBuilder.Entity("Ecommerce.Domain.Entities.Order", b =>
                 {
                     b.Navigation("OrderItems");
 
-                    b.Navigation("Shipping");
+                    b.Navigation("Shipping")
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("E_commerce_API.src.Domain.Entities.OrderItem", b =>
+            modelBuilder.Entity("Ecommerce.Domain.Entities.OrderItem", b =>
                 {
                     b.Navigation("Refunds");
                 });
 
-            modelBuilder.Entity("E_commerce_API.src.Domain.Entities.User", b =>
+            modelBuilder.Entity("Ecommerce.Domain.Entities.User", b =>
                 {
                     b.Navigation("Cart")
                         .IsRequired();
@@ -1143,6 +1171,8 @@ namespace E_commerce_API.Migrations
                     b.Navigation("Checkouts");
 
                     b.Navigation("Orders");
+
+                    b.Navigation("RefreshTokens");
                 });
 #pragma warning restore 612, 618
         }
