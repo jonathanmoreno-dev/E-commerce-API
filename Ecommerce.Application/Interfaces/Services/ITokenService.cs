@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using Ecommerce.Domain.Entities;
+﻿using Ecommerce.Domain.Entities;
 
 namespace Ecommerce.Application.Interfaces.Services
 {
@@ -7,5 +6,6 @@ namespace Ecommerce.Application.Interfaces.Services
     {
         public string GenerateAccessToken(User user);
         public string GenerateRefreshToken();
+        public DateTime GetRefreshTokenExpiration();
     }
 }

@@ -1,11 +1,9 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Ecommerce.Application.Interfaces.Services;
 using Ecommerce.Domain.Entities;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 namespace Ecommerce.Infrastructure.Authentication
@@ -49,6 +47,10 @@ namespace Ecommerce.Infrastructure.Authentication
         public string GenerateRefreshToken()
         {
             return Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
+        }
+        public DateTime GetRefreshTokenExpiration()
+        {
+            return DateTime.UtcNow.AddDays(_jwtOptions.RefreshTokenExpirationDays);
         }
     }
 }
