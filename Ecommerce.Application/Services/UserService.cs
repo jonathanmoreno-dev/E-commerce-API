@@ -12,10 +12,12 @@ namespace Ecommerce.Application.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly ICurrentUserService _currentUserService;
         private readonly IUnitOfWork _unitOfWork;
-        public UserService(IUserRepository userRepository, IUnitOfWork unitOfWork)
+        public UserService(IUserRepository userRepository, ICurrentUserService currentUserService, IUnitOfWork unitOfWork)
         {
             _userRepository = userRepository;
+            _currentUserService = currentUserService;
             _unitOfWork = unitOfWork;
         }
         public async Task<IEnumerable<UserListDTO>> GetAllAsync()
@@ -48,9 +50,14 @@ namespace Ecommerce.Application.Services
             var userDetailsDTO = UserMapper.ToDetailsDTO(user);
             return userDetailsDTO;
         }
-        public Task<UserDetailsDTO> GetCurrentAsync()
+        public async Task<UserDetailsDTO> GetCurrentAsync()
         {
-            throw new NotImplementedException();
+            var user = await _userRepository.GetByIdAsync(_currentUserService.UserId);
+            if (user is null)
+                throw new KeyNotFoundException($"User with Id: {_currentUserService.UserId} was not found");
+
+            var userDetailsDTO = UserMapper.ToDetailsDTO(user);
+            return userDetailsDTO;
         }
         public async Task<UserDetailsDTO> UpdateAsync(Guid userId, UserUpdateDTO userUpdate)
         {

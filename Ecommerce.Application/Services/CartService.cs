@@ -12,13 +12,13 @@ namespace Ecommerce.Application.Services
     {
         private readonly ICartRepository _cartRepository;
         private readonly IProductRepository _productRepository;
-        private readonly IUserService _userService;
+        private readonly ICurrentUserService _currentUserService;
         private readonly IUnitOfWork _unitOfWork;
-        public CartService(ICartRepository cartRepository, IProductRepository productRepository, IUserService userService, IUnitOfWork unitOfWork)
+        public CartService(ICartRepository cartRepository, IProductRepository productRepository, ICurrentUserService currentUserService, IUnitOfWork unitOfWork)
         {
             _cartRepository = cartRepository;
             _productRepository = productRepository;
-            _userService = userService;
+            _currentUserService = currentUserService;
             _unitOfWork = unitOfWork;
         }
         public async Task<IEnumerable<CartListDTO>> GetAllAsync()
@@ -99,10 +99,9 @@ namespace Ecommerce.Application.Services
         }
         private async Task<Cart> GetCurrentCartAsync()
         {
-            var currentUser = await _userService.GetCurrentAsync();
-            var currentCart = await _cartRepository.GetByUserIdAsync(currentUser.Id);
+            var currentCart = await _cartRepository.GetByUserIdAsync(_currentUserService.UserId);
             if (currentCart is null)
-                throw new KeyNotFoundException($"Cart with User Id: {currentUser.Id} was not found");
+                throw new KeyNotFoundException($"Cart with User Id: {_currentUserService.UserId} was not found");
 
             return currentCart;
         }

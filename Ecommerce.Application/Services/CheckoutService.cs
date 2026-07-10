@@ -12,13 +12,13 @@ namespace Ecommerce.Application.Services
     {
         private readonly ICheckoutRepository _checkoutRepository;
         private readonly IProductRepository _productRepository;
-        private readonly IUserService _userService;
+        private readonly ICurrentUserService _currentUserService;
         private readonly IUnitOfWork _unitOfWork;
-        public CheckoutService(ICheckoutRepository checkoutRepository, IProductRepository productRepository, IUserService userService, IUnitOfWork unitOfWork)
+        public CheckoutService(ICheckoutRepository checkoutRepository, IProductRepository productRepository, ICurrentUserService currentUserService, IUnitOfWork unitOfWork)
         {
             _checkoutRepository = checkoutRepository;
             _productRepository = productRepository;
-            _userService = userService;
+            _currentUserService = currentUserService;
             _unitOfWork = unitOfWork;
         }
         public async Task<IEnumerable<CheckoutSummaryDTO>> GetAllActiveAsync()
@@ -37,8 +37,7 @@ namespace Ecommerce.Application.Services
         }
         public async Task<IEnumerable<CheckoutSummaryDTO>> GetAllCurrentUserCheckoutsActiveAsync()
         {
-            var currentUser = await _userService.GetCurrentAsync();
-            var currentCheckouts = await _checkoutRepository.GetAllActiveByUserIdAsync(currentUser.Id);
+            var currentCheckouts = await _checkoutRepository.GetAllActiveByUserIdAsync(_currentUserService.UserId);
 
             var currentCheckoutSummaryDTOs = currentCheckouts.Select(x => CheckoutMapper.ToSummaryDTO(x));
             return currentCheckoutSummaryDTOs;
@@ -54,7 +53,6 @@ namespace Ecommerce.Application.Services
         }
         public async Task<CheckoutDetailsDTO> CreateAsync(CheckoutCreateDTO checkoutCreate)
         {
-            var currentUser = await _userService.GetCurrentAsync();
             var shippingAddress = new ShippingAddress(
                 new PersonName(checkoutCreate.ShippingAddressDTO.RecipientName),
                 new PhoneNumber(checkoutCreate.ShippingAddressDTO.PhoneNumber),
@@ -78,7 +76,7 @@ namespace Ecommerce.Application.Services
                 items.Add((product.Id, product.Price, new Quantity(itemDTO.Quantity)));
             }
 
-            var checkout = new Checkout(currentUser.Id, shippingAddress, shippingCost, paymentMethod, items);
+            var checkout = new Checkout(_currentUserService.UserId, shippingAddress, shippingCost, paymentMethod, items);
             _checkoutRepository.Add(checkout);
             await _unitOfWork.SaveChangesAsync();
 
