@@ -47,7 +47,7 @@ namespace Ecommerce.Application.Services
         }
         public async Task<OrderDetailsDTO> GetByIdAsync(Guid id)
         {
-            var order = await _orderRepository.GetByIdAsync(id);
+            var order = await _orderRepository.GetByIdForDetailsAsync(id);
             if(order is null)
                 throw new KeyNotFoundException($"Order with Id: {id} was not found");
 
@@ -73,7 +73,7 @@ namespace Ecommerce.Application.Services
         }
         public async Task<OrderDetailsDTO> RefundItemAsync(RefundCreateDTO refundCreate)
         {
-            var order = await _orderRepository.GetByIdAsync(refundCreate.OrderId);
+            var order = await _orderRepository.GetByIdForDetailsAsync(refundCreate.OrderId);
             if (order is null)
                 throw new KeyNotFoundException($"Order with Id: {refundCreate.OrderId} was not found");
 
