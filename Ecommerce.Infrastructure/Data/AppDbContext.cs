@@ -16,6 +16,7 @@ namespace Ecommerce.Infrastructure.Data
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<PaymentAttempt> PaymentAttempts { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<Refund> Refunds { get; set; }
         public DbSet<Shipping> Shippings { get; set; }
         public DbSet<User> Users { get; set; }
@@ -34,6 +35,7 @@ namespace Ecommerce.Infrastructure.Data
             modelBuilder.ApplyConfiguration(new OrderItemConfiguration());
             modelBuilder.ApplyConfiguration(new PaymentAttemptConfiguration());
             modelBuilder.ApplyConfiguration(new ProductConfiguration());
+            modelBuilder.ApplyConfiguration(new RefreshTokenConfiguration());
             modelBuilder.ApplyConfiguration(new RefundConfiguration());
             modelBuilder.ApplyConfiguration(new ShippingConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());

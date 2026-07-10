@@ -52,14 +52,6 @@ namespace Ecommerce.Application.Services
         {
             throw new NotImplementedException();
         }
-        public Task<UserDetailsDTO> RegisterAsync(RegisterRequestDTO userRegister)
-        {
-            throw new NotImplementedException();
-        }
-        public Task<UserDetailsDTO> LoginAsync(LoginRequestDTO userLogin)
-        {
-            throw new NotImplementedException();
-        }
         public async Task<UserDetailsDTO> UpdateAsync(Guid userId, UserUpdateDTO userUpdate)
         {
             var user = await _userRepository.GetByIdAsync(userId);
@@ -80,7 +72,7 @@ namespace Ecommerce.Application.Services
             var userDetailsDTO = UserMapper.ToDetailsDTO(user);
             return userDetailsDTO;
         }
-        public Task<UserDetailsDTO> ChangePasswordAsync(Guid userId, ChangePasswordDTO password)
+        public Task ChangePasswordAsync(Guid userId, ChangePasswordDTO password)
         {
             throw new NotImplementedException();
         }
