@@ -16,6 +16,8 @@ namespace Ecommerce.Domain.Entities
         public IReadOnlyCollection<Checkout> Checkouts => _checkouts;
         private readonly List<Order> _orders = new();
         public IReadOnlyCollection<Order> Orders => _orders;
+        private readonly List<RefreshToken> _refreshTokens = new();
+        public IReadOnlyCollection<RefreshToken> RefreshTokens => _refreshTokens;
         public bool IsAdmin { get; private set; }
         public AvatarImage? AvatarImage { get; private set; }
         private User() { }
