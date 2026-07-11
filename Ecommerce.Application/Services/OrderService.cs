@@ -13,13 +13,13 @@ namespace Ecommerce.Application.Services
     {
         private readonly IOrderRepository _orderRepository;
         private readonly ICheckoutRepository _checkoutRepository;
-        private readonly IUserService _userService;
+        private readonly ICurrentUserService _currentUserService;
         private readonly IUnitOfWork _unitOfWork;
-        public OrderService(IOrderRepository orderRepository, ICheckoutRepository checkoutRepository, IUserService userService, IUnitOfWork unitOfWork)
+        public OrderService(IOrderRepository orderRepository, ICheckoutRepository checkoutRepository, ICurrentUserService currentUserService, IUnitOfWork unitOfWork)
         {
             _orderRepository = orderRepository;
             _checkoutRepository = checkoutRepository;
-            _userService = userService;
+            _currentUserService = currentUserService;
             _unitOfWork = unitOfWork;
         }
         public async Task<IEnumerable<OrderListItemDTO>> GetAllByUserIdAsync(Guid userId)
@@ -31,16 +31,14 @@ namespace Ecommerce.Application.Services
         }
         public async Task<IEnumerable<OrderListItemDTO>> GetAllCurrentUserOrdersAsync()
         {
-            var currentUser = await _userService.GetCurrentAsync();
-            var currentOrders = await _orderRepository.GetAllByUserIdAsync(currentUser.Id);
+            var currentOrders = await _orderRepository.GetAllByUserIdAsync(_currentUserService.UserId);
 
             var currentOrderListItemDTOs = currentOrders.Select(x => OrderMapper.ToListItemDTO(x));
             return currentOrderListItemDTOs;
         }
         public async Task<IEnumerable<OrderListItemDTO>> GetAllCurrentUserOrdersByStatusAsync(OrderStatus status)
         {
-            var currentUser = await _userService.GetCurrentAsync();
-            var orders = await _orderRepository.GetAllByUserIdAndStatusAsync(currentUser.Id, status);
+            var orders = await _orderRepository.GetAllByUserIdAndStatusAsync(_currentUserService.UserId, status);
 
             var currentOrderListItemDTOs = orders.Select(x => OrderMapper.ToListItemDTO(x));
             return currentOrderListItemDTOs;
@@ -48,17 +46,14 @@ namespace Ecommerce.Application.Services
         public async Task<OrderDetailsDTO> GetByIdAsync(Guid id)
         {
             var order = await _orderRepository.GetByIdForDetailsAsync(id);
-            if(order is null)
+            if(order is null || _currentUserService.UserId == order.UserId)
                 throw new KeyNotFoundException($"Order with Id: {id} was not found");
 
             var orderDetailsDTO = OrderMapper.ToDetailsDTO(order);
             return orderDetailsDTO;
         }
-        public async Task<OrderDetailsDTO> CreateFromCheckoutAsync(Guid checkoutId)
+        public void CreateFromCheckoutAsync(Checkout checkout)
         {
-            var checkout = await _checkoutRepository.GetByIdAsync(checkoutId);
-            if(checkout is null)
-                throw new KeyNotFoundException($"Checkout with Id: {checkoutId} was not found");
             if (checkout.CompletedPayment is null)
                 throw new InvalidOperationException("Checkout payment must be completed before creating an order");
 
@@ -66,15 +61,11 @@ namespace Ecommerce.Application.Services
             var order = new Order(checkout.UserId, checkout.ShippingAddress, checkout.ShippingCost, checkout.PaymentMethod, items, checkout.CompletedPayment.Amount);
 
             _orderRepository.Add(order);
-            await _unitOfWork.SaveChangesAsync();
-
-            var orderDetailsDTO = OrderMapper.ToDetailsDTO(order);
-            return orderDetailsDTO;
         }
         public async Task<OrderDetailsDTO> RefundItemAsync(RefundCreateDTO refundCreate)
         {
             var order = await _orderRepository.GetByIdForDetailsAsync(refundCreate.OrderId);
-            if (order is null)
+            if (order is null || _currentUserService.UserId == order.UserId)
                 throw new KeyNotFoundException($"Order with Id: {refundCreate.OrderId} was not found");
 
             order.RefundItem(refundCreate.OrderItemId, new Quantity(refundCreate.Quantity));
@@ -101,7 +92,7 @@ namespace Ecommerce.Application.Services
             order.Cancel();
             await _unitOfWork.SaveChangesAsync();
         }
-        public async Task ProcessShippingAsync(Guid orderId)
+        public async Task MarkAsProcessingAsync(Guid orderId)
         {
             var order = await _orderRepository.GetByIdAsync(orderId);
             if (order is null)
