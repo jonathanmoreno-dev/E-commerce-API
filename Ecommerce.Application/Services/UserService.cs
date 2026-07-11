@@ -4,7 +4,6 @@ using Ecommerce.Application.DTOs.UserDTOs;
 using Ecommerce.Application.Interfaces.Repositories;
 using Ecommerce.Application.Interfaces.Services;
 using Ecommerce.Application.Mappers;
-using Ecommerce.Domain.Entities;
 using Ecommerce.Domain.ValueObjects;
 
 namespace Ecommerce.Application.Services
@@ -13,11 +12,13 @@ namespace Ecommerce.Application.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly ICurrentUserService _currentUserService;
+        private readonly IPasswordHasher _passwordHasher;
         private readonly IUnitOfWork _unitOfWork;
-        public UserService(IUserRepository userRepository, ICurrentUserService currentUserService, IUnitOfWork unitOfWork)
+        public UserService(IUserRepository userRepository, ICurrentUserService currentUserService, IPasswordHasher passwordHasher, IUnitOfWork unitOfWork)
         {
             _userRepository = userRepository;
             _currentUserService = currentUserService;
+            _passwordHasher = passwordHasher;
             _unitOfWork = unitOfWork;
         }
         public async Task<IEnumerable<UserListDTO>> GetAllAsync()
@@ -59,11 +60,11 @@ namespace Ecommerce.Application.Services
             var userDetailsDTO = UserMapper.ToDetailsDTO(user);
             return userDetailsDTO;
         }
-        public async Task<UserDetailsDTO> UpdateAsync(Guid userId, UserUpdateDTO userUpdate)
+        public async Task<UserDetailsDTO> UpdateAsync(UserUpdateDTO userUpdate)
         {
-            var user = await _userRepository.GetByIdAsync(userId);
+            var user = await _userRepository.GetByIdAsync(_currentUserService.UserId);
             if (user is null)
-                throw new KeyNotFoundException($"User with Id: {userId} was not found");
+                throw new KeyNotFoundException($"User with Id: {_currentUserService.UserId} was not found");
 
             if (userUpdate.FullName is not null)
                 user.ChangeName(new PersonName(userUpdate.FullName));
@@ -79,15 +80,23 @@ namespace Ecommerce.Application.Services
             var userDetailsDTO = UserMapper.ToDetailsDTO(user);
             return userDetailsDTO;
         }
-        public Task ChangePasswordAsync(Guid userId, ChangePasswordDTO password)
+        public async Task ChangePasswordAsync(ChangePasswordDTO password)
         {
-            throw new NotImplementedException();
-        }
-        public async Task<UserDetailsDTO> AddShippingAddressAsync(Guid userId, ShippingAddressDTO shippingAddress)
-        {
-            var user = await _userRepository.GetByIdAsync(userId);
+            var user = await _userRepository.GetByIdAsync(_currentUserService.UserId);
             if (user is null)
-                throw new KeyNotFoundException($"User with Id: {userId} was not found");
+                throw new KeyNotFoundException($"User with Id: {_currentUserService.UserId} was not found");
+
+            if (!_passwordHasher.VerifyPassword(password.CurrentPassword, user.PasswordHash))
+                throw new UnauthorizedAccessException("Invalid credentials");
+
+            user.ChangePasswordHash(_passwordHasher.HashPassword(password.NewPassword));
+            await _unitOfWork.SaveChangesAsync();
+        }
+        public async Task<UserDetailsDTO> AddShippingAddressAsync(ShippingAddressDTO shippingAddress)
+        {
+            var user = await _userRepository.GetByIdAsync(_currentUserService.UserId);
+            if (user is null)
+                throw new KeyNotFoundException($"User with Id: {_currentUserService.UserId} was not found");
 
             user.AddShippingAddress(new ShippingAddress(
                 new PersonName(shippingAddress.RecipientName),
@@ -104,11 +113,11 @@ namespace Ecommerce.Application.Services
             var userDetailsDTO = UserMapper.ToDetailsDTO(user);
             return userDetailsDTO;
         }
-        public async Task<UserDetailsDTO> RemoveShippingAddressAsync(Guid userId, ShippingAddressDTO shippingAddress)
+        public async Task<UserDetailsDTO> RemoveShippingAddressAsync(ShippingAddressDTO shippingAddress)
         {
-            var user = await _userRepository.GetByIdAsync(userId);
+            var user = await _userRepository.GetByIdAsync(_currentUserService.UserId);
             if (user is null)
-                throw new KeyNotFoundException($"User with Id: {userId} was not found");
+                throw new KeyNotFoundException($"User with Id: {_currentUserService.UserId} was not found");
 
             user.RemoveShippingAddress(new ShippingAddress(
                 new PersonName(shippingAddress.RecipientName),

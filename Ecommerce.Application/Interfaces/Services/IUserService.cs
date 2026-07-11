@@ -11,10 +11,10 @@ namespace Ecommerce.Application.Interfaces.Services
         public Task<IEnumerable<UserSummaryDTO>> GetAllStandardUsersAsync();
         public Task<UserDetailsDTO> GetByIdAsync(Guid id);
         public Task<UserDetailsDTO> GetCurrentAsync();
-        public Task<UserDetailsDTO> UpdateAsync(Guid userId, UserUpdateDTO userUpdate);
-        public Task ChangePasswordAsync(Guid userId, ChangePasswordDTO password);
-        public Task<UserDetailsDTO> AddShippingAddressAsync(Guid userId, ShippingAddressDTO shippingAddress);
-        public Task<UserDetailsDTO> RemoveShippingAddressAsync(Guid userId, ShippingAddressDTO shippingAddress);
+        public Task<UserDetailsDTO> UpdateAsync(UserUpdateDTO userUpdate);
+        public Task ChangePasswordAsync(ChangePasswordDTO password);
+        public Task<UserDetailsDTO> AddShippingAddressAsync(ShippingAddressDTO shippingAddress);
+        public Task<UserDetailsDTO> RemoveShippingAddressAsync(ShippingAddressDTO shippingAddress);
         public Task DeleteAsync(Guid id);
     }
 }

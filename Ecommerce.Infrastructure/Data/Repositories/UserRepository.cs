@@ -27,6 +27,10 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         {
             return await _appDbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
         }
+        public async Task<User?> GetByEmailAsync(string email)
+        {
+            return await _appDbContext.Users.FirstOrDefaultAsync(x => x.Email.Value == email);
+        }
         public void Add(User user)
         {
             _appDbContext.Users.Add(user);
