@@ -13,7 +13,8 @@ namespace Ecommerce.Application.Interfaces.Services
         public Task<ProductDetailsDTO> RemoveCategoryAsync(Guid productId, Guid categoryId);
         public Task<ProductDetailsDTO> AddImageAsync(Guid productId, ProductImageDTO image);
         public Task<ProductDetailsDTO> RemoveImageAsync(Guid productId, ProductImageDTO image);
-        public Task<ProductDetailsDTO> ChangeImageOrderAsync(Guid productId, ProductImageDTO image, int newOrder);
+        public Task<ProductDetailsDTO> ChangeImageUrlAsync(Guid productId, ChangeImageUrlDTO changeImage);
+        public Task<ProductDetailsDTO> ChangeImageOrderAsync(Guid productId, ChangeImageOrderDTO changeImage);
         public Task<ProductDetailsDTO> IncreaseStockAsync(Guid productId, int quantity);
         public Task<ProductDetailsDTO> DecreaseStockAsync(Guid productId, int quantity);
         public Task DeleteAsync(Guid id);
