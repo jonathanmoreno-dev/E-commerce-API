@@ -130,13 +130,25 @@ namespace Ecommerce.Application.Services
             var productDetailsDTO = ProductMapper.ToDetailsDTO(product);
             return productDetailsDTO;
         }
-        public async Task<ProductDetailsDTO> ChangeImageOrderAsync(Guid productId, ProductImageDTO image, int newOrder)
+        public async Task<ProductDetailsDTO> ChangeImageUrlAsync(Guid productId, ChangeImageUrlDTO changeImage)
         {
             var product = await _productRepository.GetByIdAsync(productId);
             if (product is null)
                 throw new KeyNotFoundException($"Product with Id: {productId} was not found");
 
-            product.ChangeOrderProductImage(new ProductImage(image.Url, image.Order), newOrder);
+            product.ChangeUrlProductImage(new ProductImage(changeImage.Image.Url, changeImage.Image.Order), changeImage.NewUrl);
+            await _unitOfWork.SaveChangesAsync();
+
+            var productDetailsDTO = ProductMapper.ToDetailsDTO(product);
+            return productDetailsDTO;
+        }
+        public async Task<ProductDetailsDTO> ChangeImageOrderAsync(Guid productId, ChangeImageOrderDTO changeImage)
+        {
+            var product = await _productRepository.GetByIdAsync(productId);
+            if (product is null)
+                throw new KeyNotFoundException($"Product with Id: {productId} was not found");
+
+            product.ChangeOrderProductImage(new ProductImage(changeImage.Image.Url, changeImage.Image.Order), changeImage.NewOrder);
             await _unitOfWork.SaveChangesAsync();
 
             var productDetailsDTO = ProductMapper.ToDetailsDTO(product);
