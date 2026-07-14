@@ -1,5 +1,6 @@
 ﻿using Ecommerce.Application.Interfaces.Repositories;
 using Ecommerce.Domain.Entities;
+using Ecommerce.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ecommerce.Infrastructure.Data.Repositories
@@ -15,13 +16,9 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         {
             return await _appDbContext.Users.AsNoTracking().ToListAsync();
         }
-        public async Task<IEnumerable<User>> GetAllAdminsAsync()
+        public async Task<IEnumerable<User>> GetAllByRoleAsync(UserRole role)
         {
-            return await _appDbContext.Users.Where(x => x.IsAdmin).AsNoTracking().ToListAsync();
-        }
-        public async Task<IEnumerable<User>> GetAllStandardUsersAsync()
-        {
-            return await _appDbContext.Users.Where(x => !x.IsAdmin).AsNoTracking().ToListAsync();
+            return await _appDbContext.Users.Where(x => x.Role == role).AsNoTracking().ToListAsync();
         }
         public async Task<User?> GetByIdAsync(Guid id)
         {

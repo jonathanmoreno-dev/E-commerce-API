@@ -1,12 +1,13 @@
 ﻿using Ecommerce.Application.DTOs.OrderDTOs;
 using Ecommerce.Application.Interfaces.Services;
+using Ecommerce.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ecommerce.API.Controllers.Admins
 {
     [ApiController]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = nameof(UserRole.Admin))]
     [Route("api/admin/orders")]
     public class AdminOrdersController : ControllerBase
     {

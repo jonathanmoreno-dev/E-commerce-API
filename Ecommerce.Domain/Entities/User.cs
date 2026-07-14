@@ -1,4 +1,5 @@
-﻿using Ecommerce.Domain.ValueObjects;
+﻿using Ecommerce.Domain.Enums;
+using Ecommerce.Domain.ValueObjects;
 
 namespace Ecommerce.Domain.Entities
 {
@@ -18,7 +19,7 @@ namespace Ecommerce.Domain.Entities
         public IReadOnlyCollection<Order> Orders => _orders;
         private readonly List<RefreshToken> _refreshTokens = new();
         public IReadOnlyCollection<RefreshToken> RefreshTokens => _refreshTokens;
-        public bool IsAdmin { get; private set; }
+        public UserRole Role { get; private set; }
         public AvatarImage? AvatarImage { get; private set; }
         private User() { }
         public User(PersonName fullName, Email email, PhoneNumber phoneNumber, string passwordHash)
@@ -28,6 +29,7 @@ namespace Ecommerce.Domain.Entities
             ChangeEmail(email);
             ChangePhoneNumber(phoneNumber);
             ChangePasswordHash(passwordHash);
+            Role = UserRole.Customer;
         }
         public void ChangeName(PersonName fullName)
         {
@@ -51,10 +53,12 @@ namespace Ecommerce.Domain.Entities
         {
             PasswordHash = passwordHash;
         }
-        public void ChangeAvatarImage(AvatarImage avatarImage)
+        public void ChangeRole(UserRole role)
         {
-            ArgumentNullException.ThrowIfNull(avatarImage);
-
+            Role = role;
+        }
+        public void ChangeAvatarImage(AvatarImage? avatarImage)
+        {
             AvatarImage = avatarImage;
         }
         public void AddShippingAddress(ShippingAddress shippingAddress)

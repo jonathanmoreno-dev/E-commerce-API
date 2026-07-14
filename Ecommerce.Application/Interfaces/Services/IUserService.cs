@@ -1,18 +1,19 @@
 ﻿using Ecommerce.Application.DTOs.Authentication;
 using Ecommerce.Application.DTOs.ShippingDTOs;
 using Ecommerce.Application.DTOs.UserDTOs;
+using Ecommerce.Domain.Enums;
 
 namespace Ecommerce.Application.Interfaces.Services
 {
     public interface IUserService
     {
         public Task<IEnumerable<UserListDTO>> GetAllAsync();
-        public Task<IEnumerable<UserSummaryDTO>> GetAllAdminsAsync();
-        public Task<IEnumerable<UserSummaryDTO>> GetAllStandardUsersAsync();
+        public Task<IEnumerable<UserSummaryDTO>> GetAllByRoleAsync(UserRole role);
         public Task<UserDetailsDTO> GetByIdAsync(Guid id);
         public Task<UserDetailsDTO> GetCurrentAsync();
         public Task<UserDetailsDTO> UpdateAsync(UserUpdateDTO userUpdate);
         public Task ChangePasswordAsync(ChangePasswordDTO password);
+        public Task ChangeRoleAsync(Guid id, UserRole role);
         public Task<UserDetailsDTO> AddShippingAddressAsync(ShippingAddressDTO shippingAddress);
         public Task<UserDetailsDTO> RemoveShippingAddressAsync(ShippingAddressDTO shippingAddress);
         public Task DeleteAsync(Guid id);

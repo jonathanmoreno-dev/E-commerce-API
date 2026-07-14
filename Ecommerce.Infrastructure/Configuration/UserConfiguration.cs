@@ -35,7 +35,7 @@ namespace Ecommerce.Infrastructure.Configuration
                 p.Property(r => r.ZipCode).HasColumnName("zip_code").IsRequired().HasMaxLength(20);
             });
             builder.Property(x => x.PasswordHash).IsRequired().HasMaxLength(255).HasColumnName("password_hash");
-            builder.Property(x => x.IsAdmin).HasColumnName("is_admin");
+            builder.Property(x => x.Role).HasConversion<string>().HasColumnName("role");
         }
     }
 }
