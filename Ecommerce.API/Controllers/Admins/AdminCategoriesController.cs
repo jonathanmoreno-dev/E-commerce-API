@@ -1,12 +1,13 @@
 ﻿using Ecommerce.Application.DTOs.CategoryDTOs;
 using Ecommerce.Application.Interfaces.Services;
+using Ecommerce.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ecommerce.API.Controllers.Admins
 {
     [ApiController]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = nameof(UserRole.Admin))]
     [Route("api/admin/categories")]
     public class AdminCategoriesController : ControllerBase
     {

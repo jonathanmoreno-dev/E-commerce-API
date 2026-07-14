@@ -27,10 +27,9 @@ namespace Ecommerce.Infrastructure.Authentication
             {
                 new(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new(ClaimTypes.Name, user.FullName.Value),
-                new(ClaimTypes.Email, user.Email.Value)
+                new(ClaimTypes.Email, user.Email.Value),
+                new(ClaimTypes.Role, user.Role.ToString())
             };
-            if (user.IsAdmin)
-                claims.Add(new(ClaimTypes.Role, "Admin"));
 
             var tokenDescriptor = new SecurityTokenDescriptor()
             {

@@ -4,6 +4,7 @@ using Ecommerce.Application.DTOs.UserDTOs;
 using Ecommerce.Application.Interfaces.Repositories;
 using Ecommerce.Application.Interfaces.Services;
 using Ecommerce.Application.Mappers;
+using Ecommerce.Domain.Enums;
 using Ecommerce.Domain.ValueObjects;
 
 namespace Ecommerce.Application.Services
@@ -28,16 +29,9 @@ namespace Ecommerce.Application.Services
             var userListDTOs = users.Select(x => UserMapper.ToListDTO(x));
             return userListDTOs;
         }
-        public async Task<IEnumerable<UserSummaryDTO>> GetAllAdminsAsync()
+        public async Task<IEnumerable<UserSummaryDTO>> GetAllByRoleAsync(UserRole role)
         {
-            var users = await _userRepository.GetAllAdminsAsync();
-
-            var userSummaryDTOs = users.Select(x => UserMapper.ToSummaryDTO(x));
-            return userSummaryDTOs;
-        }
-        public async Task<IEnumerable<UserSummaryDTO>> GetAllStandardUsersAsync()
-        {
-            var users = await _userRepository.GetAllStandardUsersAsync();
+            var users = await _userRepository.GetAllByRoleAsync(role);
 
             var userSummaryDTOs = users.Select(x => UserMapper.ToSummaryDTO(x));
             return userSummaryDTOs;
@@ -90,6 +84,15 @@ namespace Ecommerce.Application.Services
                 throw new UnauthorizedAccessException("Invalid credentials");
 
             user.ChangePasswordHash(_passwordHasher.HashPassword(password.NewPassword));
+            await _unitOfWork.SaveChangesAsync();
+        }
+        public async Task ChangeRoleAsync(Guid id, UserRole role)
+        {
+            var user = await _userRepository.GetByIdAsync(id);
+            if (user is null)
+                throw new KeyNotFoundException($"User with Id: {id} was not found");
+
+            user.ChangeRole(role);
             await _unitOfWork.SaveChangesAsync();
         }
         public async Task<UserDetailsDTO> AddShippingAddressAsync(ShippingAddressDTO shippingAddress)

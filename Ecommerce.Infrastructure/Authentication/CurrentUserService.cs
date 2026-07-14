@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using Ecommerce.Application.Interfaces.Services;
+using Ecommerce.Domain.Enums;
 using Microsoft.AspNetCore.Http;
 
 namespace Ecommerce.Infrastructure.Authentication
@@ -13,6 +14,6 @@ namespace Ecommerce.Infrastructure.Authentication
         }
         public Guid UserId { get => Guid.Parse(_httpContextAccessor.HttpContext!.User.FindFirstValue(ClaimTypes.NameIdentifier)!);}
         public string Name { get => _httpContextAccessor.HttpContext!.User.FindFirstValue(ClaimTypes.Name)!; }
-        public bool IsAdmin { get => _httpContextAccessor.HttpContext!.User.IsInRole("Admin"); }
+        public UserRole Role { get => Enum.Parse<UserRole>(_httpContextAccessor.HttpContext!.User.FindFirstValue(ClaimTypes.Role)!); }
     }
 }
