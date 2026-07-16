@@ -1,4 +1,6 @@
-﻿namespace Ecommerce.Application.DTOs.UserDTOs
+﻿using Ecommerce.Domain.Enums;
+
+namespace Ecommerce.Application.DTOs.UserDTOs
 {
     public class UserSummaryDTO
     {
@@ -6,6 +8,6 @@
         public string FullName { get; set; } = "";
         public string Email { get; set; } = "";
         public string PhoneNumber { get; set; } = "";
-        public bool IsAdmin { get; set; }
+        public UserRole Role { get; set; }
     }
 }

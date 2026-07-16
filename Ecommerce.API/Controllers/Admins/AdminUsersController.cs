@@ -35,7 +35,7 @@ namespace Ecommerce.API.Controllers.Admins
             var user = await _userService.GetByIdAsync(id);
             return Ok(user);
         }
-        [HttpPatch("{id}/role")]
+        [HttpPatch("{id:guid}/role")]
         public async Task<IActionResult> ChangeRole(Guid id, UserRole request)
         {
             await _userService.ChangeRoleAsync(id, request);
