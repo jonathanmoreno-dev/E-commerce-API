@@ -13,7 +13,7 @@ namespace Ecommerce.Application.Mappers
             {
                 Id = user.Id,
                 FullName = user.FullName.Value,
-                IsAdmin = user.IsAdmin
+                Role = user.Role
             };
             return userListDTO;
         }
@@ -25,7 +25,7 @@ namespace Ecommerce.Application.Mappers
                 FullName = user.FullName.Value,
                 PhoneNumber = user.PhoneNumber.Value,
                 Email = user.Email.Value,
-                IsAdmin = user.IsAdmin
+                
             };
             return userSummaryDTO;
         }
@@ -37,7 +37,7 @@ namespace Ecommerce.Application.Mappers
                 FullName = user.FullName.Value,
                 PhoneNumber = user.PhoneNumber.Value,
                 Email = user.Email.Value,
-                IsAdmin = user.IsAdmin,
+                Role = user.Role,
                 AvatarImageUrl = user.AvatarImage?.Url ?? "",
                 ShippingAddresses = user.ShippingAddresses.Select(x => ShippingAddressToDTO(x)).ToList()
             };
