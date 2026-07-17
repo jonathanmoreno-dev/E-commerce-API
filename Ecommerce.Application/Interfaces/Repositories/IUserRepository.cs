@@ -9,6 +9,7 @@ namespace Ecommerce.Application.Interfaces.Repositories
         public Task<IEnumerable<User>> GetAllByRoleAsync(UserRole role);
         public Task<User?> GetByIdAsync(Guid id);
         public Task<User?> GetByEmailAsync(string email);
+        public Task<bool> ExistsAdminAsync();
         public void Add(User user);
         public void Remove(User user);
     }

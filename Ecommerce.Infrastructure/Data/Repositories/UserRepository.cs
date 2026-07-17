@@ -1,6 +1,7 @@
 ﻿using Ecommerce.Application.Interfaces.Repositories;
 using Ecommerce.Domain.Entities;
 using Ecommerce.Domain.Enums;
+using Ecommerce.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ecommerce.Infrastructure.Data.Repositories
@@ -26,7 +27,11 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         }
         public async Task<User?> GetByEmailAsync(string email)
         {
-            return await _appDbContext.Users.FirstOrDefaultAsync(x => x.Email.Value == email);
+            return await _appDbContext.Users.FirstOrDefaultAsync(x => x.Email == new Email(email));
+        }
+        public async Task<bool> ExistsAdminAsync()
+        {
+            return await _appDbContext.Users.AnyAsync(x => x.Role == UserRole.Admin);
         }
         public void Add(User user)
         {
