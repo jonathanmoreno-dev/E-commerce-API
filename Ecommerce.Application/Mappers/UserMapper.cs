@@ -25,7 +25,7 @@ namespace Ecommerce.Application.Mappers
                 FullName = user.FullName.Value,
                 PhoneNumber = user.PhoneNumber.Value,
                 Email = user.Email.Value,
-                
+                Role = user.Role
             };
             return userSummaryDTO;
         }
