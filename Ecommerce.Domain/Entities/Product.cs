@@ -51,6 +51,8 @@ namespace Ecommerce.Domain.Entities
         public void ChangePrice(Money price)
         {
             ArgumentNullException.ThrowIfNull(price);
+            if(price.Value <= 0)
+                throw new ArgumentOutOfRangeException(nameof(price.Value), "Money must be greater than zero");
 
             Price = price;
         }
