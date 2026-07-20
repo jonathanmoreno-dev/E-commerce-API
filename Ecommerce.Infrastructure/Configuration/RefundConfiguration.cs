@@ -10,7 +10,7 @@ namespace Ecommerce.Infrastructure.Configuration
         {
             builder.ToTable("refunds");
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.Id).HasColumnName("id");
+            builder.Property(x => x.Id).HasColumnName("id").ValueGeneratedNever();
             builder.ComplexProperty(x => x.Quantity, p => p.Property(v => v.Value).HasColumnName("quantity"));
             builder.Property(x => x.RefundDate).HasDefaultValueSql("CURRENT_TIMESTAMP").HasColumnName("refund_date");
             builder.Property(x => x.OrderItemId).HasColumnName("order_item_id");

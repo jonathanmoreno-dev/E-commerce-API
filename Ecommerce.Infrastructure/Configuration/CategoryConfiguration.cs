@@ -10,7 +10,7 @@ namespace Ecommerce.Infrastructure.Configuration
         {
             builder.ToTable("categories");
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.Id).HasColumnName("id");
+            builder.Property(x => x.Id).HasColumnName("id").ValueGeneratedNever();
             builder.ComplexProperty(x => x.Name, p => p.Property(v => v.Value).HasColumnName("name").IsRequired().HasMaxLength(100));
             builder.ComplexProperty(x => x.Description, p => p.Property(v => v.Value).HasColumnName("description").IsRequired().HasMaxLength(400));
             builder.OwnsOne(x => x.CategoryImage, p =>
