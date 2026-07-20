@@ -10,7 +10,7 @@ namespace Ecommerce.Infrastructure.Configuration
         {
             builder.ToTable("checkout_items");
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.Id).HasColumnName("id");
+            builder.Property(x => x.Id).HasColumnName("id").ValueGeneratedNever();
             builder.Property(x => x.CheckoutId).HasColumnName("checkout_id");
             builder.HasOne(x => x.Checkout).WithMany(y => y.CheckoutItems).HasForeignKey(x => x.CheckoutId);
             builder.Property(x => x.ProductId).HasColumnName("product_id");

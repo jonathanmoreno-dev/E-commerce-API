@@ -10,7 +10,7 @@ namespace Ecommerce.Infrastructure.Configuration
         {
             builder.ToTable("shippings");
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.Id).HasColumnName("id");
+            builder.Property(x => x.Id).HasColumnName("id").ValueGeneratedNever();
             builder.Property(x => x.OrderId).HasColumnName("order_id");
             builder.HasOne(x => x.Order).WithOne(y => y.Shipping).HasForeignKey<Shipping>(x => x.OrderId);
 

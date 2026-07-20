@@ -10,7 +10,7 @@ namespace Ecommerce.Infrastructure.Configuration
         {
             builder.ToTable("orders");
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.Id).HasColumnName("id");
+            builder.Property(x => x.Id).HasColumnName("id").ValueGeneratedNever();
             builder.ComplexProperty(x => x.ShippingAddress, p =>
             {
                 p.ComplexProperty(r => r.RecipientName, pn => pn.Property(v => v.Value).HasColumnName("recipient_name").IsRequired().HasMaxLength(100));

@@ -10,7 +10,7 @@ namespace Ecommerce.Infrastructure.Configuration
         {
             builder.ToTable("refresh_tokens");
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.Id).HasColumnName("id");
+            builder.Property(x => x.Id).HasColumnName("id").ValueGeneratedNever();
             builder.Property(x => x.Token).IsRequired().HasColumnName("token").HasMaxLength(500);
             builder.Property(x => x.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP").HasColumnName("created_at");
             builder.Property(x => x.ExpiresAt).HasColumnName("expires_at");

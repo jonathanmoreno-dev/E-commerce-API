@@ -11,7 +11,7 @@ namespace Ecommerce.Infrastructure.Configuration
         {
             builder.ToTable("users");
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.Id).HasColumnName("id");
+            builder.Property(x => x.Id).HasColumnName("id").ValueGeneratedNever();
             builder.HasIndex(x => x.Email).IsUnique();
 
             builder.ComplexProperty(x => x.FullName, p => p.Property(v => v.Value).HasColumnName("full_name").IsRequired().HasMaxLength(150));
