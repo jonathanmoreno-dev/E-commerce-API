@@ -52,13 +52,19 @@ namespace Ecommerce.Application.Services
             var orderDetailsDTO = OrderMapper.ToDetailsDTO(order);
             return orderDetailsDTO;
         }
-        public void CreateFromCheckoutAsync(Checkout checkout)
+        public void CreateFromCheckout(Checkout checkout)
         {
             if (checkout.CompletedPayment is null)
                 throw new InvalidOperationException("Checkout payment must be completed before creating an order");
 
             var items = checkout.CheckoutItems.Select(x => (x.ProductId, x.UnitPrice, x.Quantity));
-            var order = new Order(checkout.UserId, checkout.ShippingAddress, checkout.ShippingCost, checkout.PaymentMethod, items, checkout.CompletedPayment.Amount);
+            var order = new Order(
+                checkout.UserId, 
+                checkout.ShippingAddress, 
+                checkout.ShippingCost, 
+                checkout.PaymentMethod ?? throw new InvalidOperationException("Checkout must have a payment method"), 
+                items, 
+                checkout.CompletedPayment.Amount);
 
             _orderRepository.Add(order);
         }

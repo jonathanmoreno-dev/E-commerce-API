@@ -13,7 +13,7 @@ namespace Ecommerce.Domain.Entities
         public Money ShippingCost { get; private set; } = null!;
         public Money SubTotal => new Money(_checkoutItems.Sum(x => x.UnitPrice.Value * x.Quantity.Value));
         public Money Total => new Money(SubTotal.Value + ShippingCost.Value);
-        public PaymentMethod PaymentMethod { get; private set; }
+        public PaymentMethod? PaymentMethod { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
         public DateTime ExpiresAt { get; private set; }
@@ -26,12 +26,11 @@ namespace Ecommerce.Domain.Entities
         private readonly List<CheckoutItem> _checkoutItems = new();
         public IReadOnlyCollection<CheckoutItem> CheckoutItems => _checkoutItems;
         private Checkout() { }
-        public Checkout(Guid userId, ShippingAddress shippingAddress, Money shippingCost, PaymentMethod paymentMethod, IEnumerable<(Guid productId, Money unitPrice, Quantity quantity)> items)
+        public Checkout(Guid userId, ShippingAddress shippingAddress, Money shippingCost, IEnumerable<(Guid productId, Money unitPrice, Quantity quantity)> items)
         {
             Id = Guid.NewGuid();
 
             UserId = userId;
-            ChangePaymentMethod(paymentMethod);
             ChangeShippingAddress(shippingAddress);
             ChangeShippingCost(shippingCost);
             AddItems(items);
@@ -91,7 +90,8 @@ namespace Ecommerce.Domain.Entities
             if(_paymentAttempts.Any(p => p.Status == PaymentStatus.Authorized) || _paymentAttempts.Any(p => p.Status == PaymentStatus.Completed))
                 throw new InvalidOperationException("There is already a authorized payment");
 
-            _paymentAttempts.Add(new PaymentAttempt(Total, PaymentMethod));
+            ArgumentNullException.ThrowIfNull(PaymentMethod);
+            _paymentAttempts.Add(new PaymentAttempt(Total, PaymentMethod.Value));
             UpdatedAt = DateTime.UtcNow;
         }
         public void AuthorizePayment()

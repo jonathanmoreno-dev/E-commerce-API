@@ -9,7 +9,7 @@ namespace Ecommerce.Application.Interfaces.Services
         public Task<IEnumerable<CheckoutSummaryDTO>> GetAllActiveByUserIdAsync(Guid userId);
         public Task<IEnumerable<CheckoutSummaryDTO>> GetAllCurrentUserCheckoutsActiveAsync();
         public Task<CheckoutDetailsDTO> GetByIdAsync(Guid id);
-        public Task<CheckoutDetailsDTO> CreateAsync(CheckoutCreateDTO checkoutCreate);
+        public Task<CheckoutDetailsDTO> CreateAsync();
         public Task<CheckoutDetailsDTO> UpdateAsync(Guid checkoutId, CheckoutUpdateDTO checkoutUpdate);
         public Task CreatePaymentAsync(Guid checkoutId);
         public Task AuthorizePaymentAsync(Guid checkoutId);

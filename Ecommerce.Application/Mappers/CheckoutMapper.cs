@@ -15,7 +15,7 @@ namespace Ecommerce.Application.Mappers
                 CreatedAt = checkout.CreatedAt,
                 ExpiresAt = checkout.ExpiresAt,
                 Total = checkout.Total.Value,
-                PaymentMethod = checkout.PaymentMethod,
+                PaymentMethod = checkout.PaymentMethod ?? throw new InvalidOperationException("Checkout must have a payment method"),
                 CheckoutItems = checkout.CheckoutItems.Select(x => CheckoutItemToSummaryDTO(x)).ToList()
             };
             return checkoutSummaryDTO;
@@ -29,7 +29,7 @@ namespace Ecommerce.Application.Mappers
                 SubTotal = checkout.SubTotal.Value,
                 Total = checkout.Total.Value,
                 ShippingCost = checkout.ShippingCost.Value,
-                PaymentMethod = checkout.PaymentMethod,
+                PaymentMethod = checkout.PaymentMethod ?? throw new InvalidOperationException("Checkout must have a payment method"),
                 CheckoutItems = checkout.CheckoutItems.Select(x => CheckoutItemToSummaryDTO(x)).ToList()
             };
             return checkoutDetailsDTO;

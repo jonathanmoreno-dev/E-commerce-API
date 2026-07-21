@@ -76,5 +76,11 @@ namespace Ecommerce.Domain.Entities
 
             _shippingAddress.Remove(shippingAddress);
         }
+        public ShippingAddress GetDefaultShippingAddress()
+        {
+            var address = _shippingAddress.FirstOrDefault();
+            ArgumentNullException.ThrowIfNull(address);
+            return address;
+        }
     }
 }

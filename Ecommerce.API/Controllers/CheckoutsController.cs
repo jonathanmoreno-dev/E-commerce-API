@@ -26,9 +26,9 @@ namespace Ecommerce.API.Controllers
             return Ok(checkout);
         }
         [HttpPost]
-        public async Task<ActionResult<CheckoutDetailsDTO>> Create(CheckoutCreateDTO requestDTO)
+        public async Task<ActionResult<CheckoutDetailsDTO>> Create()
         {
-            var checkout = await _checkoutService.CreateAsync(requestDTO);
+            var checkout = await _checkoutService.CreateAsync();
             return CreatedAtAction(nameof(GetById), new { id = checkout.Id }, checkout);
         }
         [HttpPatch("{id:guid}")]
