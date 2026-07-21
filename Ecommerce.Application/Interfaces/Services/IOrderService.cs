@@ -11,7 +11,7 @@ namespace Ecommerce.Application.Interfaces.Services
         public Task<IEnumerable<OrderListItemDTO>> GetAllCurrentUserOrdersAsync();
         public Task<IEnumerable<OrderListItemDTO>> GetAllCurrentUserOrdersByStatusAsync(OrderStatus status);
         public Task<OrderDetailsDTO> GetByIdAsync(Guid id);
-        internal void CreateFromCheckoutAsync(Checkout checkout);
+        internal void CreateFromCheckout(Checkout checkout);
         public Task<OrderDetailsDTO> RefundItemAsync(RefundCreateDTO refundCreate);
         public Task SetTrackingCodeAsync(Guid orderId, string trackingCode);
         public Task CancelAsync(Guid orderId);

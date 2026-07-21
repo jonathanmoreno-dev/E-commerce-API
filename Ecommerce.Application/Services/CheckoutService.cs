@@ -11,14 +11,16 @@ namespace Ecommerce.Application.Services
     public class CheckoutService : ICheckoutService
     {
         private readonly ICheckoutRepository _checkoutRepository;
-        private readonly IProductRepository _productRepository;
+        private readonly ICartRepository _cartRepository;
+        private readonly IUserRepository _userRepository;
         private readonly ICurrentUserService _currentUserService;
         private readonly IOrderService _orderService;
         private readonly IUnitOfWork _unitOfWork;
-        public CheckoutService(ICheckoutRepository checkoutRepository, IProductRepository productRepository, ICurrentUserService currentUserService, IOrderService orderService, IUnitOfWork unitOfWork)
+        public CheckoutService(ICheckoutRepository checkoutRepository, ICartRepository cartRepository, IUserRepository userRepository, ICurrentUserService currentUserService, IOrderService orderService, IUnitOfWork unitOfWork)
         {
             _checkoutRepository = checkoutRepository;
-            _productRepository = productRepository;
+            _cartRepository = cartRepository;
+            _userRepository = userRepository;
             _currentUserService = currentUserService;
             _orderService = orderService;
             _unitOfWork = unitOfWork;
@@ -53,32 +55,21 @@ namespace Ecommerce.Application.Services
             var checkoutDetailsDTO = CheckoutMapper.ToDetailsDTO(checkout);
             return checkoutDetailsDTO;
         }
-        public async Task<CheckoutDetailsDTO> CreateAsync(CheckoutCreateDTO checkoutCreate)
+        public async Task<CheckoutDetailsDTO> CreateAsync()
         {
-            var shippingAddress = new ShippingAddress(
-                new PersonName(checkoutCreate.ShippingAddressDTO.RecipientName),
-                new PhoneNumber(checkoutCreate.ShippingAddressDTO.PhoneNumber),
-                checkoutCreate.ShippingAddressDTO.Neighborhood,
-                checkoutCreate.ShippingAddressDTO.Street,
-                checkoutCreate.ShippingAddressDTO.Number,
-                checkoutCreate.ShippingAddressDTO.State,
-                checkoutCreate.ShippingAddressDTO.City,
-                checkoutCreate.ShippingAddressDTO.ZipCode
-            );
+            var user = await _userRepository.GetByIdAsync(_currentUserService.UserId);
+            var cart = await _cartRepository.GetByUserIdAsync(_currentUserService.UserId);
+            if (user is null)
+                throw new KeyNotFoundException($"User with Id: {_currentUserService.UserId} was not found");
+            if(cart is null)
+                throw new KeyNotFoundException($"Cart with User Id: {_currentUserService.UserId} was not found");
+
+            var address = user.GetDefaultShippingAddress();
+
             var shippingCost = new Money(30); // Fixed Value
-            var paymentMethod = checkoutCreate.PaymentMethod;
-            
-            var items = new List<(Guid, Money, Quantity)>();
-            foreach (var itemDTO in checkoutCreate.CheckoutItemsToCreate)
-            {
-                var product = await _productRepository.GetByIdAsync(itemDTO.ProductId);
-                if (product is null)
-                    throw new KeyNotFoundException($"Product with Id: {itemDTO.ProductId} was not found");
+            var items = cart.CartItems.Select(x => (x.ProductId,x.UnitPrice,x.Quantity)).ToList();
 
-                items.Add((product.Id, product.Price, new Quantity(itemDTO.Quantity)));
-            }
-
-            var checkout = new Checkout(_currentUserService.UserId, shippingAddress, shippingCost, paymentMethod, items);
+            var checkout = new Checkout(_currentUserService.UserId, address, shippingCost, items);
             _checkoutRepository.Add(checkout);
             await _unitOfWork.SaveChangesAsync();
 
@@ -112,10 +103,13 @@ namespace Ecommerce.Application.Services
         public async Task CreatePaymentAsync(Guid checkoutId)
         {
             var checkout = await _checkoutRepository.GetByIdWithPaymentAttemptsAsync(checkoutId);
+            var cart = await _cartRepository.GetByUserIdAsync(_currentUserService.UserId);
             if (checkout is null || _currentUserService.UserId == checkout.UserId)
                 throw new KeyNotFoundException($"Checkout with Id: {checkoutId} was not found");
-
+            if (cart is null)
+                throw new KeyNotFoundException($"Cart with User Id: {_currentUserService.UserId} was not found");
             checkout.CreatePayment();
+            cart.ClearItems();
             await _unitOfWork.SaveChangesAsync();
         }
         public async Task AuthorizePaymentAsync(Guid checkoutId)
@@ -134,7 +128,7 @@ namespace Ecommerce.Application.Services
                 throw new KeyNotFoundException($"Checkout with Id: {checkoutId} was not found");
 
             checkout.CompletePayment();
-            _orderService.CreateFromCheckoutAsync(checkout);
+            _orderService.CreateFromCheckout(checkout);
             await _unitOfWork.SaveChangesAsync();
         }
         public async Task FailPaymentAsync(Guid checkoutId)
