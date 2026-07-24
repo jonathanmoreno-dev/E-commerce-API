@@ -1,4 +1,5 @@
-﻿using Ecommerce.Application.DTOs.CheckoutDTOs;
+﻿using System.Net;
+using Ecommerce.Application.DTOs.CheckoutDTOs;
 using Ecommerce.Application.DTOs.OrderDTOs;
 using Ecommerce.Application.Interfaces.Repositories;
 using Ecommerce.Application.Interfaces.Services;
@@ -67,8 +68,14 @@ namespace Ecommerce.Application.Services
 
             var address = user.GetDefaultShippingAddress();
             var shippingCost = new Money(30); // Fixed Value
-            var items = cart.CartItems.Select(x => (x.ProductId,x.UnitPrice,x.Quantity)).ToList();
+            foreach (var item in cart.CartItems)
+            {
+                if (item.Product is null)
+                    throw new InvalidOperationException($"Product with Id: {item.ProductId} was deleted");
 
+                item.Product.ReserveStock(item.Quantity);
+            }
+            var items = cart.CartItems.Select(x => (x.ProductId,x.UnitPrice,x.Quantity)).ToList();
             var checkout = new Checkout(_currentUserService.UserId, address, shippingCost, items);
             _checkoutRepository.Add(checkout);
             await _unitOfWork.SaveChangesAsync();
@@ -127,6 +134,10 @@ namespace Ecommerce.Application.Services
             if (checkout is null)
                 throw new KeyNotFoundException($"Checkout with Id: {checkoutId} was not found");
 
+            foreach (var item in checkout.CheckoutItems)
+            {
+                item.Product.ConfirmStockReservation(item.Quantity);
+            }
             checkout.CompletePayment();
             _orderService.CreateFromCheckout(checkout);
             await _unitOfWork.SaveChangesAsync();
