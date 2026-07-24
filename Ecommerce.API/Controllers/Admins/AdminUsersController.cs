@@ -1,6 +1,7 @@
 ﻿using Ecommerce.Application.DTOs.ProductDTOs;
 using Ecommerce.Application.DTOs.UserDTOs;
 using Ecommerce.Application.Interfaces.Services;
+using Ecommerce.Application.Pagination;
 using Ecommerce.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,15 +19,15 @@ namespace Ecommerce.API.Controllers.Admins
             _userService = userService;
         }
         [HttpGet]
-        public async Task<ActionResult<UserListDTO>> GetAll()
+        public async Task<ActionResult<UserListDTO>> GetAll([FromQuery] PaginationParams paginationParams)
         {
-            var users = await _userService.GetAllAsync();
+            var users = await _userService.GetAllAsync(paginationParams);
             return Ok(users);
         }
         [HttpGet("role")]
-        public async Task<ActionResult<UserListDTO>> GetAllByRole(UserRole role)
+        public async Task<ActionResult<UserListDTO>> GetAllByRole(UserRole role, [FromQuery] PaginationParams paginationParams)
         {
-            var users = await _userService.GetAllByRoleAsync(role);
+            var users = await _userService.GetAllByRoleAsync(role, paginationParams);
             return Ok(users);
         }
         [HttpGet("{id:guid}")]

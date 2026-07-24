@@ -2,6 +2,7 @@
 using Ecommerce.Application.Interfaces.Repositories;
 using Ecommerce.Application.Interfaces.Services;
 using Ecommerce.Application.Mappers;
+using Ecommerce.Application.Pagination;
 using Ecommerce.Domain.Entities;
 using Ecommerce.Domain.ValueObjects;
 using static System.Net.Mime.MediaTypeNames;
@@ -19,16 +20,16 @@ namespace Ecommerce.Application.Services
             _categoryRepository = categoryRepository;
             _unitOfWork = unitOfWork;
         }
-        public async Task<IEnumerable<ProductListDTO>> GetAllAsync()
+        public async Task<PagedList<ProductListDTO>> GetAllAsync(PaginationParams paginationParams)
         {
-            var products = await _productRepository.GetAllAsync();
+            var products = await _productRepository.GetAllAsync(paginationParams);
 
             var productListDTOs = products.Select(x => ProductMapper.ToListDTO(x));
             return productListDTOs;
         }
-        public async Task<IEnumerable<ProductListDTO>> GetAllByCategoryIdAsync(Guid categoryId)
+        public async Task<PagedList<ProductListDTO>> GetAllByCategoryIdAsync(Guid categoryId, PaginationParams paginationParams)
         {
-            var products = await _productRepository.GetAllByCategoryIdAsync(categoryId);
+            var products = await _productRepository.GetAllByCategoryIdAsync(categoryId, paginationParams);
 
             var productListDTOs = products.Select(x => ProductMapper.ToListDTO(x));
             return productListDTOs;

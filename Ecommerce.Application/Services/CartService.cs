@@ -3,6 +3,7 @@ using Ecommerce.Application.DTOs.CartItemDTOs;
 using Ecommerce.Application.Interfaces.Repositories;
 using Ecommerce.Application.Interfaces.Services;
 using Ecommerce.Application.Mappers;
+using Ecommerce.Application.Pagination;
 using Ecommerce.Domain.Entities;
 using Ecommerce.Domain.ValueObjects;
 
@@ -21,11 +22,11 @@ namespace Ecommerce.Application.Services
             _currentUserService = currentUserService;
             _unitOfWork = unitOfWork;
         }
-        public async Task<IEnumerable<CartListDTO>> GetAllAsync()
+        public async Task<PagedList<CartListDTO>> GetAllAsync(PaginationParams paginationParams)
         {
-            var carts = await _cartRepository.GetAllAsync();
+            var carts = await _cartRepository.GetAllAsync(paginationParams);
 
-            var cartListDTOs = carts.Select(x => CartMapper.ToListDTO(x)).ToList();
+            var cartListDTOs = carts.Select(x => CartMapper.ToListDTO(x));
             return cartListDTOs;
         }
         public async Task<CartDetailsDTO> GetByIdAsync(Guid id)

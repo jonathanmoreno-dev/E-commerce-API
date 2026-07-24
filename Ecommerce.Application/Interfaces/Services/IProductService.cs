@@ -1,11 +1,12 @@
 ﻿using Ecommerce.Application.DTOs.ProductDTOs;
+using Ecommerce.Application.Pagination;
 
 namespace Ecommerce.Application.Interfaces.Services
 {
     public interface IProductService
     {
-        public Task<IEnumerable<ProductListDTO>> GetAllAsync();
-        public Task<IEnumerable<ProductListDTO>> GetAllByCategoryIdAsync(Guid categoryId);
+        public Task<PagedList<ProductListDTO>> GetAllAsync(PaginationParams paginationParams);
+        public Task<PagedList<ProductListDTO>> GetAllByCategoryIdAsync(Guid categoryId, PaginationParams paginationParams);
         public Task<ProductDetailsDTO> GetByIdAsync(Guid id);
         public Task<ProductDetailsDTO> CreateAsync(ProductCreateDTO productCreate);
         public Task<ProductDetailsDTO> UpdateAsync(Guid productId, ProductUpdateDTO productUpdate);

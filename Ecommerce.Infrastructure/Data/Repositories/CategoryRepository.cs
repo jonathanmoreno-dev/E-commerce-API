@@ -1,5 +1,6 @@
 ﻿using System.Xml.Schema;
 using Ecommerce.Application.Interfaces.Repositories;
+using Ecommerce.Application.Pagination;
 using Ecommerce.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,13 +13,21 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         {
             _appDbContext = appDbContext;
         }
-        public async Task<IEnumerable<Category>> GetAllAsync()
+        public async Task<PagedList<Category>> GetAllAsync(PaginationParams paginationParams)
         {
-            return await _appDbContext.Categories.AsNoTracking().ToListAsync();
+            var query = _appDbContext.Categories.AsNoTracking();
+            var totalItems = await query.CountAsync();
+            var categories = await query.Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
+
+            return new PagedList<Category>(categories, paginationParams.PageNumber, paginationParams.PageSize, totalItems);
         }
-        public async Task<IEnumerable<Category>> GetAllByProductIdAsync(Guid productId)
+        public async Task<PagedList<Category>> GetAllByProductIdAsync(Guid productId, PaginationParams paginationParams)
         {
-            return await _appDbContext.Categories.Where(x => x.Products.Any(x => x.Id == productId)).AsNoTracking().ToListAsync();
+            var query = _appDbContext.Categories.Where(x => x.Products.Any(x => x.Id == productId)).AsNoTracking();
+            var totalItems = await query.CountAsync();
+            var categories = await query.Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
+
+            return new PagedList<Category>(categories, paginationParams.PageNumber, paginationParams.PageSize, totalItems);
         }
         public async Task<Category?> GetByIdAsync(Guid id)
         {

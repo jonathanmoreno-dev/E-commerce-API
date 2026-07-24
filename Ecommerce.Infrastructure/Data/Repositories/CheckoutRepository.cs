@@ -1,4 +1,5 @@
 ﻿using Ecommerce.Application.Interfaces.Repositories;
+using Ecommerce.Application.Pagination;
 using Ecommerce.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,13 +12,23 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         {
             _appDbContext = appDbContext;
         }
-        public async Task<IEnumerable<Checkout>> GetAllActiveAsync()
+        public async Task<PagedList<Checkout>> GetAllActiveAsync(PaginationParams paginationParams)
         {
-            return await _appDbContext.Checkouts.Include(x => x.CheckoutItems).ThenInclude(y => y.Product).Where(x => x.ExpiresAt > DateTime.UtcNow && x.PaymentAttempts.Any()).AsNoTracking().ToListAsync();
+            var query = _appDbContext.Checkouts.Include(x => x.CheckoutItems).ThenInclude(y => y.Product)
+                .Where(x => x.ExpiresAt > DateTime.UtcNow && x.PaymentAttempts.Any()).AsNoTracking();
+            var totalItems = await query.CountAsync();
+            var checkouts = await query.Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
+
+            return new PagedList<Checkout>(checkouts, paginationParams.PageNumber, paginationParams.PageSize, totalItems);
         }
-        public async Task<IEnumerable<Checkout>> GetAllActiveByUserIdAsync(Guid userId)
+        public async Task<PagedList<Checkout>> GetAllActiveByUserIdAsync(Guid userId, PaginationParams paginationParams)
         {
-            return await _appDbContext.Checkouts.Include(x => x.CheckoutItems).ThenInclude(y => y.Product).Where(x => x.UserId == userId).Where(x => x.ExpiresAt > DateTime.UtcNow && x.PaymentAttempts.Any()).AsNoTracking().ToListAsync();
+            var query = _appDbContext.Checkouts.Include(x => x.CheckoutItems).ThenInclude(y => y.Product)
+                .Where(x => x.UserId == userId).Where(x => x.ExpiresAt > DateTime.UtcNow && x.PaymentAttempts.Any()).AsNoTracking();
+            var totalItems = await query.CountAsync();
+            var checkouts = await query.Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
+
+            return new PagedList<Checkout>(checkouts, paginationParams.PageNumber, paginationParams.PageSize, totalItems);
         }
         public async Task<Checkout?> GetByIdAsync(Guid id)
         {

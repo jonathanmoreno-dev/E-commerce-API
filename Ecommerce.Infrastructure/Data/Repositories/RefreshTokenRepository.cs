@@ -1,4 +1,5 @@
 ﻿using Ecommerce.Application.Interfaces.Repositories;
+using Ecommerce.Application.Pagination;
 using Ecommerce.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,13 +12,21 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         {
             _appDbContext = appDbContext;
         }
-        public async Task<IEnumerable<RefreshToken>> GetAllAsync()
+        public async Task<PagedList<RefreshToken>> GetAllAsync(PaginationParams paginationParams)
         {
-            return await _appDbContext.RefreshTokens.AsNoTracking().ToListAsync();
+            var query = _appDbContext.RefreshTokens.AsNoTracking();
+            var totalItems = await query.CountAsync();
+            var refreshTokens = await query.Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
+
+            return new PagedList<RefreshToken>(refreshTokens, paginationParams.PageNumber, paginationParams.PageSize, totalItems);
         }
-        public async Task<IEnumerable<RefreshToken>> GetAllByUserIdAsync(Guid userId)
+        public async Task<PagedList<RefreshToken>> GetAllByUserIdAsync(Guid userId, PaginationParams paginationParams)
         {
-            return await _appDbContext.RefreshTokens.Where(x => x.UserId == userId).AsNoTracking().ToListAsync();
+            var query = _appDbContext.RefreshTokens.Where(x => x.UserId == userId).AsNoTracking();
+            var totalItems = await query.CountAsync();
+            var refreshTokens = await query.Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
+
+            return new PagedList<RefreshToken>(refreshTokens, paginationParams.PageNumber, paginationParams.PageSize, totalItems);
         }
         public async Task<RefreshToken?> GetActiveByUserIdAsync(Guid userId)
         {

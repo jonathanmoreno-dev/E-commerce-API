@@ -1,11 +1,12 @@
 ﻿using Ecommerce.Application.DTOs.CartDTOs;
 using Ecommerce.Application.DTOs.CartItemDTOs;
+using Ecommerce.Application.Pagination;
 
 namespace Ecommerce.Application.Interfaces.Services
 {
     public interface ICartService
     {
-        public Task<IEnumerable<CartListDTO>> GetAllAsync();
+        public Task<PagedList<CartListDTO>> GetAllAsync(PaginationParams paginationParams);
         public Task<CartDetailsDTO> GetByIdAsync(Guid id);
         public Task<CartDetailsDTO> GetByUserIdAsync(Guid userId);
         public Task<CartDetailsDTO> GetCurrentUserCartAsync();

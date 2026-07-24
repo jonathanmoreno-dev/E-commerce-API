@@ -3,6 +3,7 @@ using Ecommerce.Application.DTOs.RefundDTOs;
 using Ecommerce.Application.Interfaces.Repositories;
 using Ecommerce.Application.Interfaces.Services;
 using Ecommerce.Application.Mappers;
+using Ecommerce.Application.Pagination;
 using Ecommerce.Domain.Entities;
 using Ecommerce.Domain.Enums;
 using Ecommerce.Domain.ValueObjects;
@@ -22,23 +23,23 @@ namespace Ecommerce.Application.Services
             _currentUserService = currentUserService;
             _unitOfWork = unitOfWork;
         }
-        public async Task<IEnumerable<OrderListItemDTO>> GetAllByUserIdAsync(Guid userId)
+        public async Task<PagedList<OrderListItemDTO>> GetAllByUserIdAsync(Guid userId, PaginationParams paginationParams)
         {
-            var currentOrders = await _orderRepository.GetAllByUserIdAsync(userId);
+            var currentOrders = await _orderRepository.GetAllByUserIdAsync(userId, paginationParams);
             
             var currentOrderListItemDTOs = currentOrders.Select(x => OrderMapper.ToListItemDTO(x));
             return currentOrderListItemDTOs;
         }
-        public async Task<IEnumerable<OrderListItemDTO>> GetAllCurrentUserOrdersAsync()
+        public async Task<PagedList<OrderListItemDTO>> GetAllCurrentUserOrdersAsync(PaginationParams paginationParams)
         {
-            var currentOrders = await _orderRepository.GetAllByUserIdAsync(_currentUserService.UserId);
+            var currentOrders = await _orderRepository.GetAllByUserIdAsync(_currentUserService.UserId, paginationParams);
 
             var currentOrderListItemDTOs = currentOrders.Select(x => OrderMapper.ToListItemDTO(x));
             return currentOrderListItemDTOs;
         }
-        public async Task<IEnumerable<OrderListItemDTO>> GetAllCurrentUserOrdersByStatusAsync(OrderStatus status)
+        public async Task<PagedList<OrderListItemDTO>> GetAllCurrentUserOrdersByStatusAsync(OrderStatus status, PaginationParams paginationParams)
         {
-            var orders = await _orderRepository.GetAllByUserIdAndStatusAsync(_currentUserService.UserId, status);
+            var orders = await _orderRepository.GetAllByUserIdAndStatusAsync(_currentUserService.UserId, status, paginationParams);
 
             var currentOrderListItemDTOs = orders.Select(x => OrderMapper.ToListItemDTO(x));
             return currentOrderListItemDTOs;

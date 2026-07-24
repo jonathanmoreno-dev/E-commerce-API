@@ -1,4 +1,5 @@
 ﻿using Ecommerce.Application.Interfaces.Repositories;
+using Ecommerce.Application.Pagination;
 using Ecommerce.Domain.Entities;
 using Ecommerce.Domain.Enums;
 using Ecommerce.Domain.ValueObjects;
@@ -13,13 +14,21 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         {
             _appDbContext = appDbContext;
         }
-        public async Task<IEnumerable<User>> GetAllAsync()
+        public async Task<PagedList<User>> GetAllAsync(PaginationParams paginationParams)
         {
-            return await _appDbContext.Users.AsNoTracking().ToListAsync();
+            var query = _appDbContext.Users.AsNoTracking();
+            var totalItems = await query.CountAsync();
+            var users = await query.Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
+
+            return new PagedList<User>(users, paginationParams.PageNumber, paginationParams.PageSize, totalItems);
         }
-        public async Task<IEnumerable<User>> GetAllByRoleAsync(UserRole role)
+        public async Task<PagedList<User>> GetAllByRoleAsync(UserRole role, PaginationParams paginationParams)
         {
-            return await _appDbContext.Users.Where(x => x.Role == role).AsNoTracking().ToListAsync();
+            var query = _appDbContext.Users.Where(x => x.Role == role).AsNoTracking();
+            var totalItems = await query.CountAsync();
+            var users = await query.Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
+
+            return new PagedList<User>(users, paginationParams.PageNumber, paginationParams.PageSize, totalItems);
         }
         public async Task<User?> GetByIdAsync(Guid id)
         {

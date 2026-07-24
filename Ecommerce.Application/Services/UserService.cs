@@ -4,6 +4,7 @@ using Ecommerce.Application.DTOs.UserDTOs;
 using Ecommerce.Application.Interfaces.Repositories;
 using Ecommerce.Application.Interfaces.Services;
 using Ecommerce.Application.Mappers;
+using Ecommerce.Application.Pagination;
 using Ecommerce.Domain.Enums;
 using Ecommerce.Domain.ValueObjects;
 
@@ -22,16 +23,16 @@ namespace Ecommerce.Application.Services
             _passwordHasher = passwordHasher;
             _unitOfWork = unitOfWork;
         }
-        public async Task<IEnumerable<UserListDTO>> GetAllAsync()
+        public async Task<PagedList<UserListDTO>> GetAllAsync(PaginationParams paginationParams)
         {
-            var users = await _userRepository.GetAllAsync();
+            var users = await _userRepository.GetAllAsync(paginationParams);
 
             var userListDTOs = users.Select(x => UserMapper.ToListDTO(x));
             return userListDTOs;
         }
-        public async Task<IEnumerable<UserSummaryDTO>> GetAllByRoleAsync(UserRole role)
+        public async Task<PagedList<UserSummaryDTO>> GetAllByRoleAsync(UserRole role, PaginationParams paginationParams)
         {
-            var users = await _userRepository.GetAllByRoleAsync(role);
+            var users = await _userRepository.GetAllByRoleAsync(role, paginationParams);
 
             var userSummaryDTOs = users.Select(x => UserMapper.ToSummaryDTO(x));
             return userSummaryDTOs;
@@ -41,7 +42,7 @@ namespace Ecommerce.Application.Services
             var user = await _userRepository.GetByIdAsync(id);
             if (user is null)
                 throw new KeyNotFoundException($"User with Id: {id} was not found");
-
+            
             var userDetailsDTO = UserMapper.ToDetailsDTO(user);
             return userDetailsDTO;
         }

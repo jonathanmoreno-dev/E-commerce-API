@@ -2,6 +2,7 @@
 using Ecommerce.Application.Interfaces.Repositories;
 using Ecommerce.Application.Interfaces.Services;
 using Ecommerce.Application.Mappers;
+using Ecommerce.Application.Pagination;
 using Ecommerce.Domain.Entities;
 using Ecommerce.Domain.ValueObjects;
 
@@ -16,16 +17,16 @@ namespace Ecommerce.Application.Services
             _categoryRepository = categoryRepository;
             _unitOfWork = unitOfWork;
         }
-        public async Task<IEnumerable<CategoryListDTO>> GetAllAsync()
+        public async Task<PagedList<CategoryListDTO>> GetAllAsync(PaginationParams paginationParams)
         {
-            var categories = await _categoryRepository.GetAllAsync();
+            var categories = await _categoryRepository.GetAllAsync(paginationParams);
 
             var categoryListDTO = categories.Select(x => CategoryMapper.ToListDTO(x));
             return categoryListDTO;
         }
-        public async Task<IEnumerable<CategoryListDTO>> GetAllByProductIdAsync(Guid productId)
+        public async Task<PagedList<CategoryListDTO>> GetAllByProductIdAsync(Guid productId, PaginationParams paginationParams)
         {
-            var categories = await _categoryRepository.GetAllByProductIdAsync(productId);
+            var categories = await _categoryRepository.GetAllByProductIdAsync(productId, paginationParams);
 
             var categoryListDTO = categories.Select(x => CategoryMapper.ToListDTO(x));
             return categoryListDTO;

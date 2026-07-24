@@ -1,5 +1,6 @@
 ﻿using Ecommerce.Application.DTOs.CheckoutDTOs;
 using Ecommerce.Application.Interfaces.Services;
+using Ecommerce.Application.Pagination;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ecommerce.API.Controllers
@@ -14,9 +15,9 @@ namespace Ecommerce.API.Controllers
             _checkoutService = checkoutService;
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CheckoutSummaryDTO>>> GetAllCurrentUserCheckouts()
+        public async Task<ActionResult<IEnumerable<CheckoutSummaryDTO>>> GetAllCurrentUserCheckouts([FromQuery] PaginationParams paginationParams)
         {
-            var checkouts = await _checkoutService.GetAllCurrentUserCheckoutsActiveAsync();
+            var checkouts = await _checkoutService.GetAllCurrentUserCheckoutsActiveAsync(paginationParams);
             return Ok(checkouts);
         }
         [HttpGet("{id:guid}")]

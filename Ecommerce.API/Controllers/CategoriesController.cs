@@ -1,6 +1,7 @@
 ﻿using Ecommerce.Application.DTOs.CategoryDTOs;
 using Ecommerce.Application.DTOs.ProductDTOs;
 using Ecommerce.Application.Interfaces.Services;
+using Ecommerce.Application.Pagination;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ecommerce.API.Controllers
@@ -18,15 +19,15 @@ namespace Ecommerce.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CategoryListDTO>>> GetAll()
+        public async Task<ActionResult<IEnumerable<CategoryListDTO>>> GetAll([FromQuery] PaginationParams paginationParams)
         {
-            var categories = await _categoryService.GetAllAsync();
+            var categories = await _categoryService.GetAllAsync(paginationParams);
             return Ok(categories);
         }
         [HttpGet("{id:guid}/products")]
-        public async Task<ActionResult<IEnumerable<ProductListDTO>>> GetAllProductsByCategoryId(Guid id)
+        public async Task<ActionResult<IEnumerable<ProductListDTO>>> GetAllProductsByCategoryId(Guid id, [FromQuery] PaginationParams paginationParams)
         {
-            var products = await _productService.GetAllByCategoryIdAsync(id);
+            var products = await _productService.GetAllByCategoryIdAsync(id, paginationParams);
             return Ok(products);
         }
         [HttpGet("{id:guid}")]

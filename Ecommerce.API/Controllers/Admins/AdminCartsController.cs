@@ -1,6 +1,7 @@
 ﻿using Ecommerce.Application.DTOs.CartDTOs;
 using Ecommerce.Application.DTOs.CategoryDTOs;
 using Ecommerce.Application.Interfaces.Services;
+using Ecommerce.Application.Pagination;
 using Ecommerce.Application.Services;
 using Ecommerce.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
@@ -21,9 +22,9 @@ namespace Ecommerce.API.Controllers.Admins
             _categoryService = categoryService;
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CartListDTO>>> GetAllCarts()
+        public async Task<ActionResult<IEnumerable<CartListDTO>>> GetAllCarts([FromQuery] PaginationParams paginationParams)
         {
-            var carts = await _cartService.GetAllAsync();
+            var carts = await _cartService.GetAllAsync(paginationParams);
             return Ok(carts);
         }
         [HttpGet("{id:guid}")]

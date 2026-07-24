@@ -1,4 +1,5 @@
 ﻿using Ecommerce.Application.Interfaces.Repositories;
+using Ecommerce.Application.Pagination;
 using Ecommerce.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,9 +12,13 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         {
             _appDbContext = appDbContext;
         }
-        public async Task<IEnumerable<Cart>> GetAllAsync()
+        public async Task<PagedList<Cart>> GetAllAsync(PaginationParams paginationParams)
         {
-            return await _appDbContext.Carts.Include(x => x.User).AsNoTracking().ToListAsync();
+            var query = _appDbContext.Carts.Include(x => x.User).AsNoTracking();
+            var totalItems = await query.CountAsync();
+            var carts = await query.Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
+
+            return new PagedList<Cart>(carts, paginationParams.PageNumber, paginationParams.PageSize, totalItems);
         }
         public async Task<Cart?> GetByIdAsync(Guid id)
         {
