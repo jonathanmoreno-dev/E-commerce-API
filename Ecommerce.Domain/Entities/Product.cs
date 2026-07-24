@@ -12,6 +12,7 @@ namespace Ecommerce.Domain.Entities
         public ProductLongDescription LongDescription { get; private set; } = null!;
         public Money Price { get; private set; } = null!;
         public Quantity Stock { get; private set; } = null!;
+        public Quantity ReservedStock { get; private set; } = null!;
         private readonly List<ProductImage> _productImages = new();
         public IReadOnlyCollection<ProductImage> ProductImages => _productImages;
         private readonly List<Category> _categories = new();
@@ -29,6 +30,7 @@ namespace Ecommerce.Domain.Entities
             ChangeLongDescription(longDescription);
             ChangePrice(price);
             Stock = stock;
+            ReservedStock = new Quantity(0);
         }
         public void ChangeName(ProductName name)
         {
@@ -116,11 +118,34 @@ namespace Ecommerce.Domain.Entities
         }
         public void DecreaseStock(Quantity quantity)
         {
+            if ((Stock.Value - quantity.Value) < ReservedStock.Value)
+                throw new InvalidOperationException("Stock cannot be less than reserved stock");
+
             Stock = Stock.Remove(quantity.Value);
         }
         public void ChangeStock(Quantity quantity)
         {
+            if(quantity.Value < ReservedStock.Value)
+                throw new InvalidOperationException("Stock cannot be less than reserved stock");
+
             Stock = quantity;
+        }
+        public void ReserveStock(Quantity quantity)
+        {
+            var availableStock = Stock.Value - quantity.Value;
+            if (availableStock < quantity.Value)
+                throw new InvalidOperationException("Insufficient stock");
+
+            ReservedStock = ReservedStock.Add(quantity.Value);
+        }
+        public void ConfirmStockReservation(Quantity quantity)
+        {
+            ReservedStock = ReservedStock.Remove(quantity.Value);
+            DecreaseStock(quantity);
+        }
+        public void CancelStockReservation(Quantity quantity)
+        {
+            ReservedStock = ReservedStock.Remove(quantity.Value);
         }
         public void AddCategory(Category category)
         {
