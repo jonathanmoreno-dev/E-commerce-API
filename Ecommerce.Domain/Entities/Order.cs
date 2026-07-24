@@ -1,4 +1,5 @@
 ﻿using Ecommerce.Domain.Enums;
+using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.ValueObjects;
 
 namespace Ecommerce.Domain.Entities
@@ -51,7 +52,7 @@ namespace Ecommerce.Domain.Entities
             var expectedTotal = SubTotal.Value + ShippingCost.Value;
 
             if (totalPaid.Value != expectedTotal)
-                throw new InvalidOperationException("Paid amount does not match expected total");
+                throw new BusinessRuleException("Paid amount does not match expected total");
 
             TotalPaid = totalPaid;
         }
@@ -60,7 +61,7 @@ namespace Ecommerce.Domain.Entities
             ArgumentNullException.ThrowIfNull(items);
 
             if (!items.Any())
-                throw new InvalidOperationException("Order must have at least one item");
+                throw new BusinessRuleException("Order must have at least one item");
 
             foreach (var item in items)
             {
@@ -74,7 +75,7 @@ namespace Ecommerce.Domain.Entities
         public void Cancel()
         {
             if (Status != OrderStatus.Paid)
-                throw new InvalidOperationException("Only paid orders can be canceled");
+                throw new BusinessRuleException("Only paid orders can be canceled");
 
             Status = OrderStatus.Canceled;
         }
@@ -82,7 +83,7 @@ namespace Ecommerce.Domain.Entities
         {
             var item = _orderItems.FirstOrDefault(x => x.Id == orderItemId);
             if (item is null)
-                throw new KeyNotFoundException($"OrderItem with this Id {orderItemId} not found");
+                throw new NotFoundException("OrderItem", $"OrderItem with this Id {orderItemId} not found");
 
             item.AddRefund(quantity);
         }
@@ -94,26 +95,26 @@ namespace Ecommerce.Domain.Entities
         public void SetTrackingCode(string trackingCode)
         {
             if (Shipping is null)
-                throw new InvalidOperationException("Shipping doesn't exist");
+                throw new BusinessRuleException("Shipping doesn't exist");
 
             Shipping.SetTrackingCode(trackingCode);
         }
         public void MarkAsProcessing()
         {
             if (Shipping is null)
-                throw new InvalidOperationException("Shipping doesn't exists");
+                throw new BusinessRuleException("Shipping doesn't exists");
             if (Status != OrderStatus.Paid)
-                throw new InvalidOperationException("Only paid orders can be ProcessingShipping");
+                throw new BusinessRuleException("Only paid orders can be ProcessingShipping");
 
             Shipping.MarkAsProcessing();
         }
         public void MarkAsShipped()
         {
             if (Shipping is null)
-                throw new InvalidOperationException("Shipping doesn't exists");
+                throw new BusinessRuleException("Shipping doesn't exists");
 
             if (Status != OrderStatus.Paid)
-                throw new InvalidOperationException("Only paid orders can be shipped");
+                throw new BusinessRuleException("Only paid orders can be shipped");
 
             Shipping.MarkAsShipped();
             Status = OrderStatus.Shipped;
@@ -121,20 +122,20 @@ namespace Ecommerce.Domain.Entities
         public void MarkAsInTransit()
         {
             if (Shipping is null)
-                throw new InvalidOperationException("Shipping doesn't exists");
+                throw new BusinessRuleException("Shipping doesn't exists");
 
             if (Status != OrderStatus.Shipped)
-                throw new InvalidOperationException("Only shipped orders can be in transit");
+                throw new BusinessRuleException("Only shipped orders can be in transit");
 
             Shipping.MarkAsInTransit();
         }
         public void MarkAsDelivered()
         {
             if (Shipping is null)
-                throw new InvalidOperationException("Shipping doesn't exists");
+                throw new BusinessRuleException("Shipping doesn't exists");
 
             if (Status != OrderStatus.Shipped)
-                throw new InvalidOperationException("Only shipped orders can be delivered");
+                throw new BusinessRuleException("Only shipped orders can be delivered");
 
             Shipping.MarkAsDelivered();
             Status = OrderStatus.Delivered;
@@ -142,7 +143,7 @@ namespace Ecommerce.Domain.Entities
         public void MarkAsReturned()
         {
             if (Shipping is null)
-                throw new InvalidOperationException("Shipping doesn't exists");
+                throw new BusinessRuleException("Shipping doesn't exists");
 
             Shipping.MarkAsReturned();
         }

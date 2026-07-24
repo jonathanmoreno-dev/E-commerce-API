@@ -2,6 +2,7 @@
 using Ecommerce.Application.Interfaces.Repositories;
 using Ecommerce.Application.Interfaces.Services;
 using Ecommerce.Domain.Entities;
+using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.ValueObjects;
 
 namespace Ecommerce.Application.Services
@@ -27,7 +28,7 @@ namespace Ecommerce.Application.Services
         {
             var userExists = await _userRepository.GetByEmailAsync(request.Email);
             if (userExists is not null)
-                throw new ArgumentException("Email already registered");
+                throw new ConflictException("Email already registered");
 
             var user = new User(new PersonName(request.FullName), new Email(request.Email), new PhoneNumber(request.PhoneNumber), _passwordHasher.HashPassword(request.Password));
             var cart = new Cart(user.Id);
@@ -51,10 +52,10 @@ namespace Ecommerce.Application.Services
         {
             var user = await _userRepository.GetByEmailAsync(request.Email);
             if (user is null)
-                throw new UnauthorizedAccessException("Invalid credentials");
+                throw new UnauthorizedException("Invalid credentials");
 
             if (!_passwordHasher.VerifyPassword(request.Password, user.PasswordHash))
-                throw new UnauthorizedAccessException("Invalid credentials");
+                throw new UnauthorizedException("Invalid credentials");
 
             var refreshTokenExists = await _refreshTokenRepository.GetActiveByUserIdAsync(user.Id);
             if(refreshTokenExists is not null)
@@ -76,11 +77,11 @@ namespace Ecommerce.Application.Services
         {
             var refreshTokenExists = await _refreshTokenRepository.GetByTokenAsync(token);
             if(refreshTokenExists is null)
-                throw new UnauthorizedAccessException("Invalid refresh token");
+                throw new UnauthorizedException("Invalid refresh token");
             if (refreshTokenExists.IsExpired)
-                throw new UnauthorizedAccessException("Refresh token expired");
+                throw new UnauthorizedException("Refresh token expired");
             if(refreshTokenExists.IsRevoked)
-                throw new UnauthorizedAccessException("Refresh token revoked");
+                throw new UnauthorizedException("Refresh token revoked");
 
             refreshTokenExists.Revoke();
 

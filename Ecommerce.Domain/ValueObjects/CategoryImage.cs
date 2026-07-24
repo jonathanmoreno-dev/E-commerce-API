@@ -1,4 +1,6 @@
-﻿namespace Ecommerce.Domain.ValueObjects
+﻿using Ecommerce.Domain.Exceptions;
+
+namespace Ecommerce.Domain.ValueObjects
 {
     public record CategoryImage
     {
@@ -7,7 +9,7 @@
         public CategoryImage(string url)
         {
             if (string.IsNullOrWhiteSpace(url))
-                throw new ArgumentException("CategoryImageUrl cannot be empty", nameof(url));
+                throw new DomainValidationException("CategoryImageUrl cannot be empty");
 
             Url = url;
         }

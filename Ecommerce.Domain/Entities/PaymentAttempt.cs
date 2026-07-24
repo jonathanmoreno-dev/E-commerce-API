@@ -1,4 +1,5 @@
 ﻿using Ecommerce.Domain.Enums;
+using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.ValueObjects;
 
 namespace Ecommerce.Domain.Entities
@@ -28,35 +29,35 @@ namespace Ecommerce.Domain.Entities
         public void MarkAsAuthorized()
         {
             if (Status != PaymentStatus.Pending)
-                throw new InvalidOperationException("Only pending payments can be authorized");
+                throw new BusinessRuleException("Only pending payments can be authorized");
 
             Status = PaymentStatus.Authorized;
         }
         public void MarkAsCompleted()
         {
             if (Status != PaymentStatus.Authorized)
-                throw new InvalidOperationException("Only authorized payments can be completed");
+                throw new BusinessRuleException("Only authorized payments can be completed");
 
             Status = PaymentStatus.Completed;
         }
         public void MarkAsFailed()
         {
             if (Status != PaymentStatus.Pending && Status != PaymentStatus.Authorized)
-                throw new InvalidOperationException("Only pending or authorized payments can be failed");
+                throw new BusinessRuleException("Only pending or authorized payments can be failed");
 
             Status = PaymentStatus.Failed;
         }
         public void MarkAsCanceled()
         {
             if (Status != PaymentStatus.Pending && Status != PaymentStatus.Authorized)
-                throw new InvalidOperationException("Only pending or authorized payments can be canceled");
+                throw new BusinessRuleException("Only pending or authorized payments can be canceled");
 
             Status = PaymentStatus.Canceled;
         }
         public void MarkAsAbandoned()
         {
             if (Status != PaymentStatus.Pending)
-                throw new InvalidOperationException("Only pending payments can be abandoned");
+                throw new BusinessRuleException("Only pending payments can be abandoned");
 
             Status = PaymentStatus.Abandoned;
         }

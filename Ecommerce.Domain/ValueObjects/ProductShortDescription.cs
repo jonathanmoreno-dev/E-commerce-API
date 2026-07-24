@@ -1,4 +1,6 @@
-﻿namespace Ecommerce.Domain.ValueObjects
+﻿using Ecommerce.Domain.Exceptions;
+
+namespace Ecommerce.Domain.ValueObjects
 {
     public record ProductShortDescription
     {
@@ -7,9 +9,9 @@
         public ProductShortDescription(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
-                throw new ArgumentException("Product ShortDescription cannot be empty", nameof(value));
+                throw new DomainValidationException("Product ShortDescription cannot be empty");
             if (value.Length > 400)
-                throw new ArgumentException("Product ShortDescription cannot exceed 400 characters", nameof(value));
+                throw new DomainValidationException("Product ShortDescription cannot exceed 400 characters");
 
             Value = value;
         }

@@ -1,4 +1,6 @@
-﻿namespace Ecommerce.Domain.ValueObjects
+﻿using Ecommerce.Domain.Exceptions;
+
+namespace Ecommerce.Domain.ValueObjects
 {
     public record PersonName
     {
@@ -7,9 +9,9 @@
         public PersonName(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
-                throw new ArgumentException("Person name cannot be empty", nameof(value));
+                throw new DomainValidationException("Person name cannot be empty");
             if (value.Length > 150)
-                throw new ArgumentException("Person name exceed 150 characters", nameof(value));
+                throw new DomainValidationException("Person name exceed 150 characters");
 
             Value = value;
         }

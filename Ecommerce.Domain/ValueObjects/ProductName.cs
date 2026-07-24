@@ -1,4 +1,5 @@
 ﻿using System.Xml.Linq;
+using Ecommerce.Domain.Exceptions;
 
 namespace Ecommerce.Domain.ValueObjects
 {
@@ -9,9 +10,9 @@ namespace Ecommerce.Domain.ValueObjects
         public ProductName(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
-                throw new ArgumentException("Product name cannot be empty", nameof(value));
+                throw new DomainValidationException("Product name cannot be empty");
             if (value.Length > 255)
-                throw new ArgumentException("Product name cannot exceed 255 characters", nameof(value));
+                throw new DomainValidationException("Product name cannot exceed 255 characters");
 
             Value = value;
         }

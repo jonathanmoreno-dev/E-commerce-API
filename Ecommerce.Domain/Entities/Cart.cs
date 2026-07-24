@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.ValueObjects;
 
 namespace Ecommerce.Domain.Entities
@@ -37,7 +38,7 @@ namespace Ecommerce.Domain.Entities
         {
             var item = _cartItems.FirstOrDefault(x => x.ProductId == productId);
             if (item is null)
-                throw new KeyNotFoundException($"CartItem with Product Id: {productId} was not found");
+                throw new NotFoundException("CartItem", $"CartItem with Product Id: {productId} was not found");
 
             if (quantity.Value == 0)
                 _cartItems.Remove(item);
@@ -49,7 +50,7 @@ namespace Ecommerce.Domain.Entities
         {
             var item = _cartItems.FirstOrDefault(x => x.ProductId == productId);
             if (item is null)
-                throw new KeyNotFoundException($"CartItem with Product Id: {productId} was not found");
+                throw new NotFoundException("CartItem", $"CartItem with Product Id: {productId} was not found");
 
             _cartItems.Remove(item);
             UpdatedAt = DateTime.UtcNow;

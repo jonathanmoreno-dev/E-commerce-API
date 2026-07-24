@@ -1,4 +1,6 @@
-﻿namespace Ecommerce.Domain.ValueObjects
+﻿using Ecommerce.Domain.Exceptions;
+
+namespace Ecommerce.Domain.ValueObjects
 {
     public record CategoryDescription
     {
@@ -7,9 +9,9 @@
         public CategoryDescription(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
-                throw new ArgumentException("Category description cannot be empty", nameof(value));
+                throw new DomainValidationException("Category description cannot be empty");
             if (value.Length > 400)
-                throw new ArgumentException("Category description cannot exceed 400 characters", nameof(value));
+                throw new DomainValidationException("Category description cannot exceed 400 characters");
 
             Value = value;
         }

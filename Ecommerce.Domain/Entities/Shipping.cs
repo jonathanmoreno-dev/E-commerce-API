@@ -1,4 +1,5 @@
 ﻿using Ecommerce.Domain.Enums;
+using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.ValueObjects;
 
 namespace Ecommerce.Domain.Entities
@@ -29,21 +30,21 @@ namespace Ecommerce.Domain.Entities
         public void SetTrackingCode(string trackingCode)
         {
             if (string.IsNullOrWhiteSpace(trackingCode))
-                throw new ArgumentException("Tracking code cannot be empty", nameof(trackingCode));
+                throw new DomainValidationException("Tracking code cannot be empty");
 
             TrackingCode = trackingCode;
         }
         public void MarkAsProcessing()
         {
             if (Status != ShippingStatus.Pending)
-                throw new InvalidOperationException("Only pending shipping can be processing");
+                throw new BusinessRuleException("Only pending shipping can be processing");
 
             Status = ShippingStatus.Processing;
         }
         public void MarkAsShipped()
         {
             if (Status != ShippingStatus.Processing)
-                throw new InvalidOperationException("Only processing shipping can be shipped");
+                throw new BusinessRuleException("Only processing shipping can be shipped");
 
             Status = ShippingStatus.Shipped;
             ShippedDate = DateTime.UtcNow;
@@ -51,14 +52,14 @@ namespace Ecommerce.Domain.Entities
         public void MarkAsInTransit()
         {
             if (Status != ShippingStatus.Shipped)
-                throw new InvalidOperationException("Only shipped shipping can be in transit");
+                throw new BusinessRuleException("Only shipped shipping can be in transit");
 
             Status = ShippingStatus.InTransit;
         }
         public void MarkAsDelivered()
         {
             if (Status != ShippingStatus.InTransit)
-                throw new InvalidOperationException("Only shipping in transit can be delivered");
+                throw new BusinessRuleException("Only shipping in transit can be delivered");
 
             Status = ShippingStatus.Delivered;
             DeliveredDate = DateTime.UtcNow;

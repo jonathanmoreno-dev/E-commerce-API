@@ -1,4 +1,6 @@
-﻿namespace Ecommerce.Domain.ValueObjects
+﻿using Ecommerce.Domain.Exceptions;
+
+namespace Ecommerce.Domain.ValueObjects
 {
     public record AvatarImage
     {
@@ -7,7 +9,7 @@
         public AvatarImage(string url)
         {
             if (string.IsNullOrWhiteSpace(url))
-                throw new ArgumentException("AvatarImageUrl cannot be empty", nameof(url));
+                throw new DomainValidationException("AvatarImageUrl cannot be empty");
 
             Url = url;   
         }
