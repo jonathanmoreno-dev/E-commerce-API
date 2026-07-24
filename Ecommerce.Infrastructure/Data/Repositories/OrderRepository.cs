@@ -18,7 +18,7 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         {
             var query = _appDbContext.Orders.AsNoTracking();
             var totalItems = await query.CountAsync();
-            var orders = await query.Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
+            var orders = await query.OrderByDescending(x => x.CreatedAt).Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
 
             return new PagedList<Order>(orders, paginationParams.PageNumber, paginationParams.PageSize, totalItems);
         }
@@ -27,7 +27,7 @@ namespace Ecommerce.Infrastructure.Data.Repositories
             var query = _appDbContext.Orders.Include(x => x.OrderItems).ThenInclude(x => x.Refunds).Include(x => x.OrderItems).ThenInclude(y => y.Product)
                 .Where(x => x.UserId == userId).AsNoTracking();
             var totalItems = await query.CountAsync();
-            var orders = await query.Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
+            var orders = await query.OrderByDescending(x => x.CreatedAt).Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
 
             return new PagedList<Order>(orders, paginationParams.PageNumber, paginationParams.PageSize, totalItems);
         }
@@ -36,7 +36,7 @@ namespace Ecommerce.Infrastructure.Data.Repositories
             var query = _appDbContext.Orders.Include(x => x.OrderItems).ThenInclude(x => x.Refunds).Include(x => x.OrderItems).ThenInclude(y => y.Product)
                 .Where(x => x.Status == status && x.UserId == userId).AsNoTracking();
             var totalItems = await query.CountAsync();
-            var orders = await query.Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
+            var orders = await query.OrderByDescending(x => x.CreatedAt).Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
 
             return new PagedList<Order>(orders, paginationParams.PageNumber, paginationParams.PageSize, totalItems);
         }

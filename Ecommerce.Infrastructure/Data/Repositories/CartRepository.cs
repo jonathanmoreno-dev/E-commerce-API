@@ -16,7 +16,7 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         {
             var query = _appDbContext.Carts.Include(x => x.User).AsNoTracking();
             var totalItems = await query.CountAsync();
-            var carts = await query.Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
+            var carts = await query.OrderByDescending(x => x.CreatedAt).Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
 
             return new PagedList<Cart>(carts, paginationParams.PageNumber, paginationParams.PageSize, totalItems);
         }
