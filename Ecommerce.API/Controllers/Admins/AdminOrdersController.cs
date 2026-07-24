@@ -1,5 +1,6 @@
 ﻿using Ecommerce.Application.DTOs.OrderDTOs;
 using Ecommerce.Application.Interfaces.Services;
+using Ecommerce.Application.Pagination;
 using Ecommerce.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,9 +18,9 @@ namespace Ecommerce.API.Controllers.Admins
             _orderService = orderService;
         }
         [HttpGet("{userId:guid}")]
-        public async Task<ActionResult<IEnumerable<OrderListItemDTO>>> GetAllByUserId(Guid userId)
+        public async Task<ActionResult<IEnumerable<OrderListItemDTO>>> GetAllByUserId(Guid userId, [FromQuery] PaginationParams paginationParams)
         {
-            var orders = await _orderService.GetAllByUserIdAsync(userId);
+            var orders = await _orderService.GetAllByUserIdAsync(userId, paginationParams);
             return Ok(orders);
         }
         [HttpPatch("{id:guid}/tracking-code")]

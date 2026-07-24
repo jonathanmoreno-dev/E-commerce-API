@@ -1,12 +1,13 @@
-﻿using Ecommerce.Domain.Entities;
+﻿using Ecommerce.Application.Pagination;
+using Ecommerce.Domain.Entities;
 using Ecommerce.Domain.Enums;
 
 namespace Ecommerce.Application.Interfaces.Repositories
 {
     public interface IUserRepository
     {
-        public Task<IEnumerable<User>> GetAllAsync();
-        public Task<IEnumerable<User>> GetAllByRoleAsync(UserRole role);
+        public Task<PagedList<User>> GetAllAsync(PaginationParams paginationParams);
+        public Task<PagedList<User>> GetAllByRoleAsync(UserRole role, PaginationParams paginationParams);
         public Task<User?> GetByIdAsync(Guid id);
         public Task<User?> GetByEmailAsync(string email);
         public Task<bool> ExistsAdminAsync();

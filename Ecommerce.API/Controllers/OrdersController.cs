@@ -1,6 +1,7 @@
 ﻿using Ecommerce.Application.DTOs.OrderDTOs;
 using Ecommerce.Application.DTOs.RefundDTOs;
 using Ecommerce.Application.Interfaces.Services;
+using Ecommerce.Application.Pagination;
 using Ecommerce.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,15 +17,15 @@ namespace Ecommerce.API.Controllers
             _orderService = orderService;
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<OrderListItemDTO>>> GetAllCurrentUserOrders()
+        public async Task<ActionResult<IEnumerable<OrderListItemDTO>>> GetAllCurrentUserOrders([FromQuery] PaginationParams paginationParams)
         {
-            var orders = await _orderService.GetAllCurrentUserOrdersAsync();
+            var orders = await _orderService.GetAllCurrentUserOrdersAsync(paginationParams);
             return Ok(orders);
         }
         [HttpGet("status/{status}")]
-        public async Task<ActionResult<IEnumerable<OrderListItemDTO>>> GetAllCurrentUserOrdersByStatus(OrderStatus status)
+        public async Task<ActionResult<IEnumerable<OrderListItemDTO>>> GetAllCurrentUserOrdersByStatus(OrderStatus status, [FromQuery] PaginationParams paginationParams)
         {
-            var orders = await _orderService.GetAllCurrentUserOrdersByStatusAsync(status);
+            var orders = await _orderService.GetAllCurrentUserOrdersByStatusAsync(status, paginationParams);
             return Ok(orders);
         }
         [HttpGet("{id:guid}")]

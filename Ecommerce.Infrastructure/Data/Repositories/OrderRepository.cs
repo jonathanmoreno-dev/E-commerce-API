@@ -1,7 +1,9 @@
 ﻿using Ecommerce.Application.Interfaces.Repositories;
+using Ecommerce.Application.Pagination;
 using Ecommerce.Domain.Entities;
 using Ecommerce.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Ecommerce.Infrastructure.Data.Repositories
 {
@@ -12,17 +14,31 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         {
             _appDbContext = appDbContext;
         }
-        public async Task<IEnumerable<Order>> GetAllAsync()
+        public async Task<PagedList<Order>> GetAllAsync(PaginationParams paginationParams)
         {
-            return await _appDbContext.Orders.AsNoTracking().ToListAsync();
+            var query = _appDbContext.Orders.AsNoTracking();
+            var totalItems = await query.CountAsync();
+            var orders = await query.Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
+
+            return new PagedList<Order>(orders, paginationParams.PageNumber, paginationParams.PageSize, totalItems);
         }
-        public async Task<IEnumerable<Order>> GetAllByUserIdAsync(Guid userId)
+        public async Task<PagedList<Order>> GetAllByUserIdAsync(Guid userId, PaginationParams paginationParams)
         {
-            return await _appDbContext.Orders.Include(x => x.OrderItems).ThenInclude(x => x.Refunds).Include(x => x.OrderItems).ThenInclude(y => y.Product).Where(x => x.UserId == userId).AsNoTracking().ToListAsync();
+            var query = _appDbContext.Orders.Include(x => x.OrderItems).ThenInclude(x => x.Refunds).Include(x => x.OrderItems).ThenInclude(y => y.Product)
+                .Where(x => x.UserId == userId).AsNoTracking();
+            var totalItems = await query.CountAsync();
+            var orders = await query.Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
+
+            return new PagedList<Order>(orders, paginationParams.PageNumber, paginationParams.PageSize, totalItems);
         }
-        public async Task<IEnumerable<Order>> GetAllByUserIdAndStatusAsync(Guid userId, OrderStatus status)
+        public async Task<PagedList<Order>> GetAllByUserIdAndStatusAsync(Guid userId, OrderStatus status, PaginationParams paginationParams)
         {
-            return await _appDbContext.Orders.Include(x => x.OrderItems).ThenInclude(x => x.Refunds).Include(x => x.OrderItems).ThenInclude(y => y.Product).Where(x => x.Status == status && x.UserId == userId).AsNoTracking().ToListAsync();
+            var query = _appDbContext.Orders.Include(x => x.OrderItems).ThenInclude(x => x.Refunds).Include(x => x.OrderItems).ThenInclude(y => y.Product)
+                .Where(x => x.Status == status && x.UserId == userId).AsNoTracking();
+            var totalItems = await query.CountAsync();
+            var orders = await query.Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
+
+            return new PagedList<Order>(orders, paginationParams.PageNumber, paginationParams.PageSize, totalItems);
         }
         public async Task<Order?> GetByIdAsync(Guid id)
         {

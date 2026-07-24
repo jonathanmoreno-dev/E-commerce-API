@@ -1,5 +1,6 @@
 ﻿using Ecommerce.Application.DTOs.OrderDTOs;
 using Ecommerce.Application.DTOs.RefundDTOs;
+using Ecommerce.Application.Pagination;
 using Ecommerce.Domain.Entities;
 using Ecommerce.Domain.Enums;
 
@@ -7,9 +8,9 @@ namespace Ecommerce.Application.Interfaces.Services
 {
     public interface IOrderService
     {
-        public Task<IEnumerable<OrderListItemDTO>> GetAllByUserIdAsync(Guid userId);
-        public Task<IEnumerable<OrderListItemDTO>> GetAllCurrentUserOrdersAsync();
-        public Task<IEnumerable<OrderListItemDTO>> GetAllCurrentUserOrdersByStatusAsync(OrderStatus status);
+        public Task<PagedList<OrderListItemDTO>> GetAllByUserIdAsync(Guid userId, PaginationParams paginationParams);
+        public Task<PagedList<OrderListItemDTO>> GetAllCurrentUserOrdersAsync(PaginationParams paginationParams);
+        public Task<PagedList<OrderListItemDTO>> GetAllCurrentUserOrdersByStatusAsync(OrderStatus status, PaginationParams paginationParams);
         public Task<OrderDetailsDTO> GetByIdAsync(Guid id);
         internal void CreateFromCheckout(Checkout checkout);
         public Task<OrderDetailsDTO> RefundItemAsync(RefundCreateDTO refundCreate);

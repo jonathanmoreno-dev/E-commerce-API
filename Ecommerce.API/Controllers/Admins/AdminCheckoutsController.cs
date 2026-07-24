@@ -1,5 +1,6 @@
 ﻿using Ecommerce.Application.DTOs.CheckoutDTOs;
 using Ecommerce.Application.Interfaces.Services;
+using Ecommerce.Application.Pagination;
 using Ecommerce.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,15 +18,15 @@ namespace Ecommerce.API.Controllers.Admins
             _checkoutService = checkoutService;
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CheckoutSummaryDTO>>> GetAll()
+        public async Task<ActionResult<IEnumerable<CheckoutSummaryDTO>>> GetAll([FromQuery] PaginationParams paginationParams)
         {
-            var categories = await _checkoutService.GetAllActiveAsync();
+            var categories = await _checkoutService.GetAllActiveAsync(paginationParams);
             return Ok(categories);
         }
         [HttpGet("{userId:guid}")]
-        public async Task<ActionResult<IEnumerable<CheckoutSummaryDTO>>> GetAllByUserId(Guid userId)
+        public async Task<ActionResult<IEnumerable<CheckoutSummaryDTO>>> GetAllByUserId(Guid userId, [FromQuery] PaginationParams paginationParams)
         {
-            var categories = await _checkoutService.GetAllActiveByUserIdAsync(userId);
+            var categories = await _checkoutService.GetAllActiveByUserIdAsync(userId, paginationParams);
             return Ok(categories);
         }
         [HttpPatch("{id:guid}/payment/authorize")]

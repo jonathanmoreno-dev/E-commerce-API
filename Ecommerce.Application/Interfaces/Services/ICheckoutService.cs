@@ -1,13 +1,14 @@
 ﻿using Ecommerce.Application.DTOs.CheckoutDTOs;
 using Ecommerce.Application.DTOs.CheckoutItemDTOs;
+using Ecommerce.Application.Pagination;
 
 namespace Ecommerce.Application.Interfaces.Services
 {
     public interface ICheckoutService
     {
-        public Task<IEnumerable<CheckoutSummaryDTO>> GetAllActiveAsync();
-        public Task<IEnumerable<CheckoutSummaryDTO>> GetAllActiveByUserIdAsync(Guid userId);
-        public Task<IEnumerable<CheckoutSummaryDTO>> GetAllCurrentUserCheckoutsActiveAsync();
+        public Task<PagedList<CheckoutSummaryDTO>> GetAllActiveAsync(PaginationParams paginationParams);
+        public Task<PagedList<CheckoutSummaryDTO>> GetAllActiveByUserIdAsync(Guid userId, PaginationParams paginationParams);
+        public Task<PagedList<CheckoutSummaryDTO>> GetAllCurrentUserCheckoutsActiveAsync(PaginationParams paginationParams);
         public Task<CheckoutDetailsDTO> GetByIdAsync(Guid id);
         public Task<CheckoutDetailsDTO> CreateAsync();
         public Task<CheckoutDetailsDTO> UpdateAsync(Guid checkoutId, CheckoutUpdateDTO checkoutUpdate);

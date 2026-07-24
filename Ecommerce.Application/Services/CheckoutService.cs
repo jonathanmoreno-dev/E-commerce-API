@@ -3,6 +3,7 @@ using Ecommerce.Application.DTOs.OrderDTOs;
 using Ecommerce.Application.Interfaces.Repositories;
 using Ecommerce.Application.Interfaces.Services;
 using Ecommerce.Application.Mappers;
+using Ecommerce.Application.Pagination;
 using Ecommerce.Domain.Entities;
 using Ecommerce.Domain.ValueObjects;
 
@@ -25,23 +26,23 @@ namespace Ecommerce.Application.Services
             _orderService = orderService;
             _unitOfWork = unitOfWork;
         }
-        public async Task<IEnumerable<CheckoutSummaryDTO>> GetAllActiveAsync()
+        public async Task<PagedList<CheckoutSummaryDTO>> GetAllActiveAsync(PaginationParams paginationParams)
         {
-            var checkouts = await _checkoutRepository.GetAllActiveAsync();
+            var checkouts = await _checkoutRepository.GetAllActiveAsync(paginationParams);
 
             var checkoutSummaryDTOs = checkouts.Select(x => CheckoutMapper.ToSummaryDTO(x));
             return checkoutSummaryDTOs;
         }
-        public async Task<IEnumerable<CheckoutSummaryDTO>> GetAllActiveByUserIdAsync(Guid userId)
+        public async Task<PagedList<CheckoutSummaryDTO>> GetAllActiveByUserIdAsync(Guid userId, PaginationParams paginationParams)
         {
-            var checkouts = await _checkoutRepository.GetAllActiveByUserIdAsync(userId);
+            var checkouts = await _checkoutRepository.GetAllActiveByUserIdAsync(userId, paginationParams);
 
             var checkoutSummaryDTOs = checkouts.Select(x => CheckoutMapper.ToSummaryDTO(x));
             return checkoutSummaryDTOs;
         }
-        public async Task<IEnumerable<CheckoutSummaryDTO>> GetAllCurrentUserCheckoutsActiveAsync()
+        public async Task<PagedList<CheckoutSummaryDTO>> GetAllCurrentUserCheckoutsActiveAsync(PaginationParams paginationParams)
         {
-            var currentCheckouts = await _checkoutRepository.GetAllActiveByUserIdAsync(_currentUserService.UserId);
+            var currentCheckouts = await _checkoutRepository.GetAllActiveByUserIdAsync(_currentUserService.UserId, paginationParams);
 
             var currentCheckoutSummaryDTOs = currentCheckouts.Select(x => CheckoutMapper.ToSummaryDTO(x));
             return currentCheckoutSummaryDTOs;
@@ -65,7 +66,6 @@ namespace Ecommerce.Application.Services
                 throw new KeyNotFoundException($"Cart with User Id: {_currentUserService.UserId} was not found");
 
             var address = user.GetDefaultShippingAddress();
-
             var shippingCost = new Money(30); // Fixed Value
             var items = cart.CartItems.Select(x => (x.ProductId,x.UnitPrice,x.Quantity)).ToList();
 
