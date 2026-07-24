@@ -28,7 +28,7 @@ namespace Ecommerce.Application.Services
         {
             var userExists = await _userRepository.GetByEmailAsync(request.Email);
             if (userExists is not null)
-                throw new ConflictException("Email already registered");
+                throw new ConflictException("Email already registered", $"This email: {userExists.Email} already registered");
 
             var user = new User(new PersonName(request.FullName), new Email(request.Email), new PhoneNumber(request.PhoneNumber), _passwordHasher.HashPassword(request.Password));
             var cart = new Cart(user.Id);

@@ -153,7 +153,7 @@ namespace Ecommerce.Domain.Entities
             ArgumentNullException.ThrowIfNull(category);
 
             if (_categories.Any(x => x.Id == category.Id))
-                throw new ConflictException("Category", $"Category with Id: {category.Id} already in product");
+                throw new ConflictException("Category already in Product", $"Category with Id: {category.Id} already in product");
 
             _categories.Add(category);
             category.AddProduct(this);
