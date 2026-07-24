@@ -18,7 +18,7 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         {
             var query = _appDbContext.Users.AsNoTracking();
             var totalItems = await query.CountAsync();
-            var users = await query.Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
+            var users = await query.OrderBy(x => x.FullName).Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
 
             return new PagedList<User>(users, paginationParams.PageNumber, paginationParams.PageSize, totalItems);
         }
@@ -26,7 +26,7 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         {
             var query = _appDbContext.Users.Where(x => x.Role == role).AsNoTracking();
             var totalItems = await query.CountAsync();
-            var users = await query.Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
+            var users = await query.OrderBy(x => x.FullName).Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
 
             return new PagedList<User>(users, paginationParams.PageNumber, paginationParams.PageSize, totalItems);
         }

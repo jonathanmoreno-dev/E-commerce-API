@@ -16,7 +16,7 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         {
             var query = _appDbContext.RefreshTokens.AsNoTracking();
             var totalItems = await query.CountAsync();
-            var refreshTokens = await query.Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
+            var refreshTokens = await query.OrderByDescending(x => x.CreatedAt).Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
 
             return new PagedList<RefreshToken>(refreshTokens, paginationParams.PageNumber, paginationParams.PageSize, totalItems);
         }
@@ -24,7 +24,7 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         {
             var query = _appDbContext.RefreshTokens.Where(x => x.UserId == userId).AsNoTracking();
             var totalItems = await query.CountAsync();
-            var refreshTokens = await query.Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
+            var refreshTokens = await query.OrderByDescending(x => x.CreatedAt).Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
 
             return new PagedList<RefreshToken>(refreshTokens, paginationParams.PageNumber, paginationParams.PageSize, totalItems);
         }
