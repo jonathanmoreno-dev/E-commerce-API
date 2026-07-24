@@ -1,4 +1,5 @@
 ﻿using Ecommerce.Domain.Enums;
+using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.ValueObjects;
 
 namespace Ecommerce.Domain.Entities
@@ -72,7 +73,7 @@ namespace Ecommerce.Domain.Entities
             ArgumentNullException.ThrowIfNull(shippingAddress);
 
             if (!_shippingAddress.Contains(shippingAddress))
-                throw new KeyNotFoundException("ShippingAddress was not found");
+                throw new NotFoundException("ShippingAddress was not found");
 
             _shippingAddress.Remove(shippingAddress);
         }

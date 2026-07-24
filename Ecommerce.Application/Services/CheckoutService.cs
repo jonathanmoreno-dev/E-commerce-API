@@ -6,6 +6,7 @@ using Ecommerce.Application.Interfaces.Services;
 using Ecommerce.Application.Mappers;
 using Ecommerce.Application.Pagination;
 using Ecommerce.Domain.Entities;
+using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.ValueObjects;
 
 namespace Ecommerce.Application.Services
@@ -51,8 +52,8 @@ namespace Ecommerce.Application.Services
         public async Task<CheckoutDetailsDTO> GetByIdAsync(Guid id)
         {
             var checkout = await _checkoutRepository.GetByIdAsync(id);
-            if(checkout is null || _currentUserService.UserId == checkout.UserId)
-                throw new KeyNotFoundException($"Checkout with Id: {id} was not found");
+            if(checkout is null || _currentUserService.UserId != checkout.UserId)
+                throw new NotFoundException("Checkout", $"Checkout with Id: {id} was not found");
 
             var checkoutDetailsDTO = CheckoutMapper.ToDetailsDTO(checkout);
             return checkoutDetailsDTO;
@@ -62,16 +63,16 @@ namespace Ecommerce.Application.Services
             var user = await _userRepository.GetByIdAsync(_currentUserService.UserId);
             var cart = await _cartRepository.GetByUserIdAsync(_currentUserService.UserId);
             if (user is null)
-                throw new KeyNotFoundException($"User with Id: {_currentUserService.UserId} was not found");
+                throw new NotFoundException("User", $"User with Id: {_currentUserService.UserId} was not found");
             if(cart is null)
-                throw new KeyNotFoundException($"Cart with User Id: {_currentUserService.UserId} was not found");
+                throw new NotFoundException("Cart", $"Cart with User Id: {_currentUserService.UserId} was not found");
 
             var address = user.GetDefaultShippingAddress();
             var shippingCost = new Money(30); // Fixed Value
             foreach (var item in cart.CartItems)
             {
                 if (item.Product is null)
-                    throw new InvalidOperationException($"Product with Id: {item.ProductId} was deleted");
+                    throw new NotFoundException("Product", $"Product with Id: {item.ProductId} was deleted");
 
                 item.Product.ReserveStock(item.Quantity);
             }
@@ -86,8 +87,8 @@ namespace Ecommerce.Application.Services
         public async Task<CheckoutDetailsDTO> UpdateAsync(Guid checkoutId, CheckoutUpdateDTO checkoutUpdate)
         {
             var checkout = await _checkoutRepository.GetByIdAsync(checkoutId);
-            if (checkout is null || _currentUserService.UserId == checkout.UserId)
-                throw new KeyNotFoundException($"Checkout with Id: {checkoutId} was not found");
+            if (checkout is null || _currentUserService.UserId != checkout.UserId)
+                throw new NotFoundException("Checkout", $"Checkout with Id: {checkoutId} was not found");
 
             if (checkoutUpdate.PaymentMethod is not null)
                 checkout.ChangePaymentMethod(checkoutUpdate.PaymentMethod.Value);
@@ -111,10 +112,10 @@ namespace Ecommerce.Application.Services
         {
             var checkout = await _checkoutRepository.GetByIdWithPaymentAttemptsAsync(checkoutId);
             var cart = await _cartRepository.GetByUserIdAsync(_currentUserService.UserId);
-            if (checkout is null || _currentUserService.UserId == checkout.UserId)
-                throw new KeyNotFoundException($"Checkout with Id: {checkoutId} was not found");
+            if (checkout is null || _currentUserService.UserId != checkout.UserId)
+                throw new NotFoundException("Checkout", $"Checkout with Id: {checkoutId} was not found");
             if (cart is null)
-                throw new KeyNotFoundException($"Cart with User Id: {_currentUserService.UserId} was not found");
+                throw new NotFoundException("Cart", $"Cart with User Id: {_currentUserService.UserId} was not found");
             checkout.CreatePayment();
             cart.ClearItems();
             await _unitOfWork.SaveChangesAsync();
@@ -123,7 +124,7 @@ namespace Ecommerce.Application.Services
         {
             var checkout = await _checkoutRepository.GetByIdAsync(checkoutId);
             if (checkout is null)
-                throw new KeyNotFoundException($"Checkout with Id: {checkoutId} was not found");
+                throw new NotFoundException("Checkout", $"Checkout with Id: {checkoutId} was not found");
 
             checkout.AuthorizePayment();
             await _unitOfWork.SaveChangesAsync();
@@ -132,7 +133,7 @@ namespace Ecommerce.Application.Services
         {
             var checkout = await _checkoutRepository.GetByIdAsync(checkoutId);
             if (checkout is null)
-                throw new KeyNotFoundException($"Checkout with Id: {checkoutId} was not found");
+                throw new NotFoundException("Checkout", $"Checkout with Id: {checkoutId} was not found");
 
             foreach (var item in checkout.CheckoutItems)
             {
@@ -146,7 +147,7 @@ namespace Ecommerce.Application.Services
         {
             var checkout = await _checkoutRepository.GetByIdAsync(checkoutId);
             if (checkout is null)
-                throw new KeyNotFoundException($"Checkout with Id: {checkoutId} was not found");
+                throw new NotFoundException("Checkout", $"Checkout with Id: {checkoutId} was not found");
 
             checkout.FailPayment();
             await _unitOfWork.SaveChangesAsync();
@@ -155,7 +156,7 @@ namespace Ecommerce.Application.Services
         {
             var checkout = await _checkoutRepository.GetByIdAsync(checkoutId);
             if (checkout is null)
-                throw new KeyNotFoundException($"Checkout with Id: {checkoutId} was not found");
+                throw new NotFoundException("Checkout", $"Checkout with Id: {checkoutId} was not found");
 
             checkout.CancelPayment();
             await _unitOfWork.SaveChangesAsync();
@@ -164,7 +165,7 @@ namespace Ecommerce.Application.Services
         {
             var checkout = await _checkoutRepository.GetByIdAsync(checkoutId);
             if (checkout is null)
-                throw new KeyNotFoundException($"Checkout with Id: {checkoutId} was not found");
+                throw new NotFoundException("Checkout", $"Checkout with Id: {checkoutId} was not found");
 
             checkout.AbandonPayment();
             await _unitOfWork.SaveChangesAsync();
@@ -172,8 +173,8 @@ namespace Ecommerce.Application.Services
         public async Task DeleteAsync(Guid id)
         {
             var checkout = await _checkoutRepository.GetByIdAsync(id);
-            if (checkout is null || _currentUserService.UserId == checkout.UserId)
-                throw new KeyNotFoundException($"Checkout with Id: {id} was not found");
+            if (checkout is null || _currentUserService.UserId != checkout.UserId)
+                throw new NotFoundException("Checkout", $"Checkout with Id: {id} was not found");
 
             _checkoutRepository.Remove(checkout);
             await _unitOfWork.SaveChangesAsync();

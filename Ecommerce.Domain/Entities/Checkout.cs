@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Ecommerce.Domain.Enums;
+using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.ValueObjects;
 
 namespace Ecommerce.Domain.Entities
@@ -42,7 +43,7 @@ namespace Ecommerce.Domain.Entities
         {
             ArgumentNullException.ThrowIfNull(items);
             if (!items.Any())
-                throw new InvalidOperationException("Checkout must have at least one item");
+                throw new BusinessRuleException("Checkout must have at least one item");
 
             foreach (var item in items)
             {
@@ -78,7 +79,7 @@ namespace Ecommerce.Domain.Entities
         public void ChangePaymentMethod(PaymentMethod paymentMethod)
         {
             if(_paymentAttempts.Any(x => x.Status == PaymentStatus.Pending || x.Status == PaymentStatus.Authorized))
-                throw new InvalidOperationException("Cannot change payment method while payment is in progress.");
+                throw new BusinessRuleException("Cannot change payment method while payment is in progress.");
 
             PaymentMethod = paymentMethod;
             UpdatedAt = DateTime.UtcNow;
@@ -86,9 +87,9 @@ namespace Ecommerce.Domain.Entities
         public void CreatePayment()
         {
             if (_paymentAttempts.Any(p => p.Status == PaymentStatus.Pending))
-                throw new InvalidOperationException("There is already a pending payment");
+                throw new BusinessRuleException("There is already a pending payment");
             if(_paymentAttempts.Any(p => p.Status == PaymentStatus.Authorized) || _paymentAttempts.Any(p => p.Status == PaymentStatus.Completed))
-                throw new InvalidOperationException("There is already a authorized payment");
+                throw new BusinessRuleException("There is already a authorized payment");
 
             ArgumentNullException.ThrowIfNull(PaymentMethod);
             _paymentAttempts.Add(new PaymentAttempt(Total, PaymentMethod.Value));
@@ -124,7 +125,7 @@ namespace Ecommerce.Domain.Entities
             return _paymentAttempts.LastOrDefault(p =>
                 p.Status == PaymentStatus.Pending ||
                 p.Status == PaymentStatus.Authorized)
-                ?? throw new InvalidOperationException("There is no active payment");
+                ?? throw new BusinessRuleException("There is no active payment");
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Ecommerce.Domain.ValueObjects
+﻿using Ecommerce.Domain.Exceptions;
+
+namespace Ecommerce.Domain.ValueObjects
 {
     public record PhoneNumber
     {
@@ -7,9 +9,9 @@
         public PhoneNumber(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
-                throw new ArgumentException("Phone number cannot be empty", nameof(value));
+                throw new DomainValidationException("Phone number cannot be empty");
             if (value.Length > 50)
-                throw new ArgumentException("Phone number exceed 50 characters", nameof(value));
+                throw new DomainValidationException("Phone number exceed 50 characters");
 
             Value = value;
         }

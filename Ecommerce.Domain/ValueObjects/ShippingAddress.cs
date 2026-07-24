@@ -1,4 +1,6 @@
-﻿namespace Ecommerce.Domain.ValueObjects
+﻿using Ecommerce.Domain.Exceptions;
+
+namespace Ecommerce.Domain.ValueObjects
 {
     public record ShippingAddress
     {
@@ -64,44 +66,44 @@
         private void ValidateNeighborhood(string neighborhood)
         {
             if (string.IsNullOrWhiteSpace(neighborhood))
-                throw new ArgumentException("Neighborhood cannot be empty", nameof(neighborhood));
+                throw new DomainValidationException("Neighborhood cannot be empty");
             if(neighborhood.Length > 100)
-                throw new ArgumentException("Neighborhood cannot exceed 100 characters {nameof(neighborhood)}", nameof(neighborhood));
+                throw new DomainValidationException("Neighborhood cannot exceed 100 characters {nameof(neighborhood)}");
         }
         private void ValidateStreet(string street)
         {
             if (string.IsNullOrWhiteSpace(street))
-                throw new ArgumentException("Street cannot be empty", nameof(street));
+                throw new DomainValidationException("Street cannot be empty");
             if (street.Length > 50)
-                throw new ArgumentException("Street cannot exceed 50 characters", nameof(street));
+                throw new DomainValidationException("Street cannot exceed 50 characters");
         }
         private void ValidateNumber(string number)
         {
             if (string.IsNullOrWhiteSpace(number))
-                throw new ArgumentException("Number cannot be empty", nameof(number));
+                throw new DomainValidationException("Number cannot be empty");
             if (number.Length > 20)
-                throw new ArgumentException("Number cannot exceed 20 characters", nameof(number));
+                throw new DomainValidationException("Number cannot exceed 20 characters");
         }
         private void ValidateState(string state)
         {
             if (string.IsNullOrWhiteSpace(state))
-                throw new ArgumentException("State cannot be empty", nameof(state));
+                throw new DomainValidationException("State cannot be empty");
             if (state.Length > 50)
-                throw new ArgumentException("State cannot exceed 50 characters", nameof(state));
+                throw new DomainValidationException("State cannot exceed 50 characters");
         }
         private void ValidateCity(string city)
         {
             if (string.IsNullOrWhiteSpace(city))
-                throw new ArgumentException("City cannot be empty", nameof(city));
+                throw new DomainValidationException("City cannot be empty");
             if (city.Length > 100)
-                throw new ArgumentException("City cannot exceed 100 characters", nameof(city));
+                throw new DomainValidationException("City cannot exceed 100 characters");
         }
         private void ValidateZipCode(string zipCode)
         {
             if (string.IsNullOrWhiteSpace(zipCode))
-                throw new ArgumentException("ZipCode cannot be empty", nameof(zipCode));
+                throw new DomainValidationException("ZipCode cannot be empty");
             if (zipCode.Length > 20)
-                throw new ArgumentException("ZipCode cannot exceed 20 characters", nameof(zipCode));
+                throw new DomainValidationException("ZipCode cannot exceed 20 characters");
         }
     }
 }

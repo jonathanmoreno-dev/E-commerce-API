@@ -1,4 +1,5 @@
-﻿using Ecommerce.Domain.ValueObjects;
+﻿using Ecommerce.Domain.Exceptions;
+using Ecommerce.Domain.ValueObjects;
 
 namespace Ecommerce.Domain.Entities
 {
@@ -37,7 +38,7 @@ namespace Ecommerce.Domain.Entities
         {
             var totalRefunded = _refunds.Sum(x => x.Quantity.Value);
             if (totalRefunded + quantity.Value > Quantity.Value)
-                throw new InvalidOperationException("Refund quantity exceeds purchased quantity");
+                throw new BusinessRuleException("Refund quantity exceeds purchased quantity");
 
             _refunds.Add(new Refund(quantity));
         }

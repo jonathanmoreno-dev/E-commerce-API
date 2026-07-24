@@ -6,6 +6,7 @@ using Ecommerce.Application.Interfaces.Services;
 using Ecommerce.Application.Mappers;
 using Ecommerce.Application.Pagination;
 using Ecommerce.Domain.Enums;
+using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.ValueObjects;
 
 namespace Ecommerce.Application.Services
@@ -41,7 +42,7 @@ namespace Ecommerce.Application.Services
         {
             var user = await _userRepository.GetByIdAsync(id);
             if (user is null)
-                throw new KeyNotFoundException($"User with Id: {id} was not found");
+                throw new NotFoundException("User", $"User with Id: {id} was not found");
             
             var userDetailsDTO = UserMapper.ToDetailsDTO(user);
             return userDetailsDTO;
@@ -50,7 +51,7 @@ namespace Ecommerce.Application.Services
         {
             var user = await _userRepository.GetByIdAsync(_currentUserService.UserId);
             if (user is null)
-                throw new KeyNotFoundException($"User with Id: {_currentUserService.UserId} was not found");
+                throw new NotFoundException("User", $"User with Id: {_currentUserService.UserId} was not found");
 
             var userDetailsDTO = UserMapper.ToDetailsDTO(user);
             return userDetailsDTO;
@@ -59,7 +60,7 @@ namespace Ecommerce.Application.Services
         {
             var user = await _userRepository.GetByIdAsync(_currentUserService.UserId);
             if (user is null)
-                throw new KeyNotFoundException($"User with Id: {_currentUserService.UserId} was not found");
+                throw new NotFoundException("User", $"User with Id: {_currentUserService.UserId} was not found");
 
             if (userUpdate.FullName is not null)
                 user.ChangeName(new PersonName(userUpdate.FullName));
@@ -79,10 +80,10 @@ namespace Ecommerce.Application.Services
         {
             var user = await _userRepository.GetByIdAsync(_currentUserService.UserId);
             if (user is null)
-                throw new KeyNotFoundException($"User with Id: {_currentUserService.UserId} was not found");
+                throw new NotFoundException("User", $"User with Id: {_currentUserService.UserId} was not found");
 
             if (!_passwordHasher.VerifyPassword(password.CurrentPassword, user.PasswordHash))
-                throw new UnauthorizedAccessException("Invalid credentials");
+                throw new UnauthorizedException("Invalid credentials");
 
             user.ChangePasswordHash(_passwordHasher.HashPassword(password.NewPassword));
             await _unitOfWork.SaveChangesAsync();
@@ -91,7 +92,7 @@ namespace Ecommerce.Application.Services
         {
             var user = await _userRepository.GetByIdAsync(id);
             if (user is null)
-                throw new KeyNotFoundException($"User with Id: {id} was not found");
+                throw new NotFoundException("User", $"User with Id: {id} was not found");
 
             user.ChangeRole(role);
             await _unitOfWork.SaveChangesAsync();
@@ -100,7 +101,7 @@ namespace Ecommerce.Application.Services
         {
             var user = await _userRepository.GetByIdAsync(_currentUserService.UserId);
             if (user is null)
-                throw new KeyNotFoundException($"User with Id: {_currentUserService.UserId} was not found");
+                throw new NotFoundException("User", $"User with Id: {_currentUserService.UserId} was not found");
 
             user.AddShippingAddress(new ShippingAddress(
                 new PersonName(shippingAddress.RecipientName),
@@ -121,7 +122,7 @@ namespace Ecommerce.Application.Services
         {
             var user = await _userRepository.GetByIdAsync(_currentUserService.UserId);
             if (user is null)
-                throw new KeyNotFoundException($"User with Id: {_currentUserService.UserId} was not found");
+                throw new NotFoundException("User", $"User with Id: {_currentUserService.UserId} was not found");
 
             user.RemoveShippingAddress(new ShippingAddress(
                 new PersonName(shippingAddress.RecipientName),
@@ -142,7 +143,7 @@ namespace Ecommerce.Application.Services
         {
             var user = await _userRepository.GetByIdAsync(id);
             if (user is null)
-                throw new KeyNotFoundException($"User with Id: {id} was not found");
+                throw new NotFoundException("User", $"User with Id: {id} was not found");
 
             _userRepository.Remove(user);
             await _unitOfWork.SaveChangesAsync();

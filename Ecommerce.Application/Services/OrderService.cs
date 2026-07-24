@@ -6,6 +6,7 @@ using Ecommerce.Application.Mappers;
 using Ecommerce.Application.Pagination;
 using Ecommerce.Domain.Entities;
 using Ecommerce.Domain.Enums;
+using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.ValueObjects;
 
 namespace Ecommerce.Application.Services
@@ -47,8 +48,8 @@ namespace Ecommerce.Application.Services
         public async Task<OrderDetailsDTO> GetByIdAsync(Guid id)
         {
             var order = await _orderRepository.GetByIdForDetailsAsync(id);
-            if(order is null || _currentUserService.UserId == order.UserId)
-                throw new KeyNotFoundException($"Order with Id: {id} was not found");
+            if(order is null || _currentUserService.UserId != order.UserId)
+                throw new NotFoundException("Order", $"Order with Id: {id} was not found");
 
             var orderDetailsDTO = OrderMapper.ToDetailsDTO(order);
             return orderDetailsDTO;
@@ -72,8 +73,8 @@ namespace Ecommerce.Application.Services
         public async Task<OrderDetailsDTO> RefundItemAsync(RefundCreateDTO refundCreate)
         {
             var order = await _orderRepository.GetByIdForDetailsAsync(refundCreate.OrderId);
-            if (order is null || _currentUserService.UserId == order.UserId)
-                throw new KeyNotFoundException($"Order with Id: {refundCreate.OrderId} was not found");
+            if (order is null || _currentUserService.UserId != order.UserId)
+                throw new NotFoundException("Order", $"Order with Id: {refundCreate.OrderId} was not found");
 
             order.RefundItem(refundCreate.OrderItemId, new Quantity(refundCreate.Quantity));
             await _unitOfWork.SaveChangesAsync();
@@ -85,7 +86,7 @@ namespace Ecommerce.Application.Services
         {
             var order = await _orderRepository.GetByIdAsync(orderId);
             if (order is null)
-                throw new KeyNotFoundException($"Order with Id: {orderId} was not found");
+                throw new NotFoundException("Order", $"Order with Id: {orderId} was not found");
 
             order.SetTrackingCode(trackingCode);
             await _unitOfWork.SaveChangesAsync();
@@ -94,7 +95,7 @@ namespace Ecommerce.Application.Services
         {
             var order = await _orderRepository.GetByIdAsync(orderId);
             if (order is null)
-                throw new KeyNotFoundException($"Order with Id: {orderId} was not found");
+                throw new NotFoundException("Order", $"Order with Id: {orderId} was not found");
 
             order.Cancel();
             await _unitOfWork.SaveChangesAsync();
@@ -103,7 +104,7 @@ namespace Ecommerce.Application.Services
         {
             var order = await _orderRepository.GetByIdAsync(orderId);
             if (order is null)
-                throw new KeyNotFoundException($"Order with Id: {orderId} was not found");
+                throw new NotFoundException("Order", $"Order with Id: {orderId} was not found");
 
             order.MarkAsProcessing();
             await _unitOfWork.SaveChangesAsync();
@@ -112,7 +113,7 @@ namespace Ecommerce.Application.Services
         {
             var order = await _orderRepository.GetByIdAsync(orderId);
             if (order is null)
-                throw new KeyNotFoundException($"Order with Id: {orderId} was not found");
+                throw new NotFoundException("Order", $"Order with Id: {orderId} was not found");
 
             order.MarkAsShipped();
             await _unitOfWork.SaveChangesAsync();
@@ -121,7 +122,7 @@ namespace Ecommerce.Application.Services
         {
             var order = await _orderRepository.GetByIdAsync(orderId);
             if (order is null)
-                throw new KeyNotFoundException($"Order with Id: {orderId} was not found");
+                throw new NotFoundException("Order", $"Order with Id: {orderId} was not found");
 
             order.MarkAsInTransit();
             await _unitOfWork.SaveChangesAsync();
@@ -130,7 +131,7 @@ namespace Ecommerce.Application.Services
         {
             var order = await _orderRepository.GetByIdAsync(orderId);
             if (order is null)
-                throw new KeyNotFoundException($"Order with Id: {orderId} was not found");
+                throw new NotFoundException("Order", $"Order with Id: {orderId} was not found");
 
             order.MarkAsDelivered();
             await _unitOfWork.SaveChangesAsync();
@@ -139,7 +140,7 @@ namespace Ecommerce.Application.Services
         {
             var order = await _orderRepository.GetByIdAsync(orderId);
             if (order is null)
-                throw new KeyNotFoundException($"Order with Id: {orderId} was not found");
+                throw new NotFoundException("Order", $"Order with Id: {orderId} was not found");
 
             order.MarkAsReturned();
             await _unitOfWork.SaveChangesAsync();

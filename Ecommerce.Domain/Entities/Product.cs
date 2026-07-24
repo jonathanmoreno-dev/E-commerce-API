@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml.Linq;
+using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.ValueObjects;
 
 namespace Ecommerce.Domain.Entities
@@ -54,7 +55,7 @@ namespace Ecommerce.Domain.Entities
         {
             ArgumentNullException.ThrowIfNull(price);
             if(price.Value <= 0)
-                throw new ArgumentOutOfRangeException(nameof(price.Value), "Money must be greater than zero");
+                throw new DomainValidationException("Money must be greater than zero");
 
             Price = price;
         }
@@ -70,7 +71,7 @@ namespace Ecommerce.Domain.Entities
             ArgumentNullException.ThrowIfNull(productImage);
 
             if (!_productImages.Contains(productImage))
-                throw new KeyNotFoundException($"ProductImage was not found");
+                throw new NotFoundException($"ProductImage was not found");
 
             _productImages.Remove(productImage);
             OrganizeProductImageOrder();
@@ -80,7 +81,7 @@ namespace Ecommerce.Domain.Entities
             ArgumentNullException.ThrowIfNull(productImage);
 
             if (!_productImages.Contains(productImage))
-                throw new KeyNotFoundException($"ProductImage was not found");
+                throw new NotFoundException($"ProductImage was not found");
 
             _productImages.Remove(productImage);
             _productImages.Add(new ProductImage(newUrl, productImage.Order));
@@ -91,11 +92,11 @@ namespace Ecommerce.Domain.Entities
             ArgumentNullException.ThrowIfNull(productImage);
 
             if (!_productImages.Contains(productImage))
-                throw new KeyNotFoundException($"ProductImage was not found");
+                throw new NotFoundException($"ProductImage was not found");
             if (newOrder > _productImages.Count)
-                throw new ArgumentOutOfRangeException(nameof(newOrder), "Order cannot be bigger than size of list");
+                throw new DomainValidationException("Order cannot be bigger than size of list");
             if (newOrder <= 0)
-                throw new ArgumentOutOfRangeException(nameof(newOrder), "NewOrder must be greater than 0");
+                throw new DomainValidationException("NewOrder must be greater than 0");
 
             _productImages.Remove(productImage);
             _productImages.Insert(newOrder - 1, new ProductImage(productImage.Url, newOrder));
@@ -119,14 +120,14 @@ namespace Ecommerce.Domain.Entities
         public void DecreaseStock(Quantity quantity)
         {
             if ((Stock.Value - quantity.Value) < ReservedStock.Value)
-                throw new InvalidOperationException("Stock cannot be less than reserved stock");
+                throw new BusinessRuleException("Stock cannot be less than reserved stock");
 
             Stock = Stock.Remove(quantity.Value);
         }
         public void ChangeStock(Quantity quantity)
         {
             if(quantity.Value < ReservedStock.Value)
-                throw new InvalidOperationException("Stock cannot be less than reserved stock");
+                throw new BusinessRuleException("Stock cannot be less than reserved stock");
 
             Stock = quantity;
         }
@@ -134,7 +135,7 @@ namespace Ecommerce.Domain.Entities
         {
             var availableStock = Stock.Value - quantity.Value;
             if (availableStock < quantity.Value)
-                throw new InvalidOperationException("Insufficient stock");
+                throw new BusinessRuleException("Insufficient stock");
 
             ReservedStock = ReservedStock.Add(quantity.Value);
         }
@@ -152,7 +153,7 @@ namespace Ecommerce.Domain.Entities
             ArgumentNullException.ThrowIfNull(category);
 
             if (_categories.Any(x => x.Id == category.Id))
-                throw new InvalidOperationException($"Category with Id: {category.Id} already in product");
+                throw new ConflictException("Category", $"Category with Id: {category.Id} already in product");
 
             _categories.Add(category);
             category.AddProduct(this);
@@ -161,7 +162,7 @@ namespace Ecommerce.Domain.Entities
         {
             var category = _categories.FirstOrDefault(x => x.Id == categoryId);
             if (category is null)
-                throw new KeyNotFoundException($"Category with Id: {categoryId} was not found");
+                throw new NotFoundException("Category", $"Category with Id: {categoryId} was not found");
 
             _categories.Remove(category);
             category.RemoveProduct(Id);

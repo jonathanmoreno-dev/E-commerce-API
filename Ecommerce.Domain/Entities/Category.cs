@@ -1,4 +1,5 @@
 ﻿using System.Xml.Linq;
+using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.ValueObjects;
 
 namespace Ecommerce.Domain.Entities
@@ -43,7 +44,7 @@ namespace Ecommerce.Domain.Entities
             ArgumentNullException.ThrowIfNull(product);
 
             if (_products.Any(x => x.Id == product.Id))
-                throw new InvalidOperationException($"Product with Id: {product.Id} already in category");
+                throw new ConflictException($"Product with Id: {product.Id} already in category");
 
             _products.Add(product);
         }
@@ -51,7 +52,7 @@ namespace Ecommerce.Domain.Entities
         {
             var product = _products.FirstOrDefault(x => x.Id == productId);
             if(product is null)
-                throw new KeyNotFoundException($"Product with Id: {productId} was not found");
+                throw new NotFoundException("Product", $"Product with Id: {productId} was not found");
 
             _products.Remove(product);
         }

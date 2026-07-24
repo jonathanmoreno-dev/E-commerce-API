@@ -4,6 +4,7 @@ using Ecommerce.Application.Interfaces.Services;
 using Ecommerce.Application.Mappers;
 using Ecommerce.Application.Pagination;
 using Ecommerce.Domain.Entities;
+using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.ValueObjects;
 
 namespace Ecommerce.Application.Services
@@ -35,7 +36,7 @@ namespace Ecommerce.Application.Services
         {
             var category = await _categoryRepository.GetByIdAsync(id);
             if(category is null)
-                throw new KeyNotFoundException($"Category with Id: {id} was not found");
+                throw new NotFoundException("Category", $"Category with Id: {id} was not found");
 
             var categoryDetailsDTO = CategoryMapper.ToDetailsDTO(category);
             return categoryDetailsDTO;
@@ -53,7 +54,7 @@ namespace Ecommerce.Application.Services
         {
             var category = await _categoryRepository.GetByIdAsync(categoryId);
             if (category is null)
-                throw new KeyNotFoundException($"Category with Id: {categoryId} was not found");
+                throw new NotFoundException("Category", $"Category with Id: {categoryId} was not found");
 
             if(categoryUpdate.Name is not null)
                 category.ChangeName(new CategoryName(categoryUpdate.Name));
@@ -72,7 +73,7 @@ namespace Ecommerce.Application.Services
         {
             var category = await _categoryRepository.GetByIdAsync(id);
             if (category is null)
-                throw new KeyNotFoundException($"Category with Id: {id} was not found");
+                throw new NotFoundException("Category", $"Category with Id: {id} was not found");
 
             _categoryRepository.Remove(category);
             await _unitOfWork.SaveChangesAsync();

@@ -5,6 +5,7 @@ using Ecommerce.Application.Interfaces.Services;
 using Ecommerce.Application.Mappers;
 using Ecommerce.Application.Pagination;
 using Ecommerce.Domain.Entities;
+using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.ValueObjects;
 
 namespace Ecommerce.Application.Services
@@ -33,7 +34,7 @@ namespace Ecommerce.Application.Services
         {
             var cart = await _cartRepository.GetByIdAsync(id);
             if (cart is null)
-                throw new KeyNotFoundException($"Cart with Id: {id} was not found");
+                throw new NotFoundException("Cart", $"Cart with Id: {id} was not found");
 
             var cartDetailsDTO = CartMapper.ToDetailsDTO(cart);
             return cartDetailsDTO;
@@ -42,7 +43,7 @@ namespace Ecommerce.Application.Services
         {
             var cart = await _cartRepository.GetByUserIdAsync(userId);
             if(cart is null)
-                throw new KeyNotFoundException($"Cart with User Id: {userId} was not found");
+                throw new NotFoundException("Cart", $"Cart with User Id: {userId} was not found");
 
             var cartDetailsDTO = CartMapper.ToDetailsDTO(cart);
             return cartDetailsDTO;
@@ -60,7 +61,7 @@ namespace Ecommerce.Application.Services
 
             var product = await _productRepository.GetByIdAsync(item.ProductId);
             if (product is null)
-                throw new KeyNotFoundException($"Product with Id: {item.ProductId} was not found");
+                throw new NotFoundException("Product", $"Product with Id: {item.ProductId} was not found");
 
             currentCart.AddItem(product.Id, product.Price, new Quantity(item.Quantity));
             await _unitOfWork.SaveChangesAsync();
@@ -102,7 +103,7 @@ namespace Ecommerce.Application.Services
         {
             var currentCart = await _cartRepository.GetByUserIdAsync(_currentUserService.UserId);
             if (currentCart is null)
-                throw new KeyNotFoundException($"Cart with User Id: {_currentUserService.UserId} was not found");
+                throw new NotFoundException("Cart", $"Cart with User Id: {_currentUserService.UserId} was not found");
 
             return currentCart;
         }
