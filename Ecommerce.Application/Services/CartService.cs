@@ -1,4 +1,5 @@
-﻿using Ecommerce.Application.DTOs.CartDTOs;
+﻿using System.Threading;
+using Ecommerce.Application.DTOs.CartDTOs;
 using Ecommerce.Application.DTOs.CartItemDTOs;
 using Ecommerce.Application.Interfaces.Repositories;
 using Ecommerce.Application.Interfaces.Services;
@@ -23,85 +24,85 @@ namespace Ecommerce.Application.Services
             _currentUserService = currentUserService;
             _unitOfWork = unitOfWork;
         }
-        public async Task<PagedList<CartListDTO>> GetAllAsync(PaginationParams paginationParams)
+        public async Task<PagedList<CartListDTO>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken)
         {
-            var carts = await _cartRepository.GetAllAsync(paginationParams);
+            var carts = await _cartRepository.GetAllAsync(paginationParams, cancellationToken);
 
             var cartListDTOs = carts.Select(x => CartMapper.ToListDTO(x));
             return cartListDTOs;
         }
-        public async Task<CartDetailsDTO> GetByIdAsync(Guid id)
+        public async Task<CartDetailsDTO> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            var cart = await _cartRepository.GetByIdAsync(id);
+            var cart = await _cartRepository.GetByIdAsync(id, cancellationToken);
             if (cart is null)
                 throw new NotFoundException("Cart", $"Cart with Id: {id} was not found");
 
             var cartDetailsDTO = CartMapper.ToDetailsDTO(cart);
             return cartDetailsDTO;
         }
-        public async Task<CartDetailsDTO> GetByUserIdAsync(Guid userId)
+        public async Task<CartDetailsDTO> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken)
         {
-            var cart = await _cartRepository.GetByUserIdAsync(userId);
+            var cart = await _cartRepository.GetByUserIdAsync(userId, cancellationToken);
             if(cart is null)
                 throw new NotFoundException("Cart", $"Cart with User Id: {userId} was not found");
 
             var cartDetailsDTO = CartMapper.ToDetailsDTO(cart);
             return cartDetailsDTO;
         }
-        public async Task<CartDetailsDTO> GetCurrentUserCartAsync()
+        public async Task<CartDetailsDTO> GetCurrentUserCartAsync(CancellationToken cancellationToken)
         {
-            var currentCart = await GetCurrentCartAsync();
+            var currentCart = await GetCurrentCartAsync(cancellationToken);
 
             var currentCartDetailsDTO = CartMapper.ToDetailsDTO(currentCart);
             return currentCartDetailsDTO;
         }
-        public async Task<CartDetailsDTO> AddItemAsync(CartItemCreateDTO item)
+        public async Task<CartDetailsDTO> AddItemAsync(CartItemCreateDTO item, CancellationToken cancellationToken)
         {
-            var currentCart = await GetCurrentCartAsync();
+            var currentCart = await GetCurrentCartAsync(cancellationToken);
 
-            var product = await _productRepository.GetByIdAsync(item.ProductId);
+            var product = await _productRepository.GetByIdAsync(item.ProductId, cancellationToken);
             if (product is null)
                 throw new NotFoundException("Product", $"Product with Id: {item.ProductId} was not found");
 
             currentCart.AddItem(product.Id, product.Price, new Quantity(item.Quantity));
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             var currentCartDetailsDTO = CartMapper.ToDetailsDTO(currentCart);
             return currentCartDetailsDTO;
         }
-        public async Task<CartDetailsDTO> RemoveItemAsync(Guid productId)
+        public async Task<CartDetailsDTO> RemoveItemAsync(Guid productId, CancellationToken cancellationToken)
         {
-            var currentCart = await GetCurrentCartAsync();
+            var currentCart = await GetCurrentCartAsync(cancellationToken);
 
             currentCart.RemoveItem(productId);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             var currentCartDetailsDTO = CartMapper.ToDetailsDTO(currentCart);
             return currentCartDetailsDTO;
         }
-        public async Task<CartDetailsDTO> UpdateItemAsync(CartItemUpdateDTO itemUpdate)
+        public async Task<CartDetailsDTO> UpdateItemAsync(CartItemUpdateDTO itemUpdate, CancellationToken cancellationToken)
         {
-            var currentCart = await GetCurrentCartAsync();
+            var currentCart = await GetCurrentCartAsync(cancellationToken);
 
             currentCart.ChangeItemQuantity(itemUpdate.ProductId, new Quantity(itemUpdate.Quantity));
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             var currentCartDetailsDTO = CartMapper.ToDetailsDTO(currentCart);
             return currentCartDetailsDTO;
         }
-        public async Task<CartDetailsDTO> ClearAsync()
+        public async Task<CartDetailsDTO> ClearAsync(CancellationToken cancellationToken)
         {
-            var currentCart = await GetCurrentCartAsync();
+            var currentCart = await GetCurrentCartAsync(cancellationToken);
 
             currentCart.ClearItems();
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             var currentCartDetailsDTO = CartMapper.ToDetailsDTO(currentCart);
             return currentCartDetailsDTO;
         }
-        private async Task<Cart> GetCurrentCartAsync()
+        private async Task<Cart> GetCurrentCartAsync(CancellationToken cancellationToken)
         {
-            var currentCart = await _cartRepository.GetByUserIdAsync(_currentUserService.UserId);
+            var currentCart = await _cartRepository.GetByUserIdAsync(_currentUserService.UserId, cancellationToken);
             if (currentCart is null)
                 throw new NotFoundException("Cart", $"Cart with User Id: {_currentUserService.UserId} was not found");
 

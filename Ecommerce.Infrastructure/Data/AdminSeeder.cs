@@ -22,7 +22,7 @@ namespace Ecommerce.Infrastructure.Data
         }
         public async Task SeedAsync()
         {
-            if (await _userRepository.ExistsAdminAsync())
+            if (await _userRepository.ExistsAdminAsync(CancellationToken.None))
                 return;
 
             var passwordHash = _passwordHasher.HashPassword("Admin@123");
@@ -31,7 +31,7 @@ namespace Ecommerce.Infrastructure.Data
             user.ChangeRole(UserRole.Admin);
             _userRepository.Add(user);
             _cartRepository.Add(cart);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(CancellationToken.None);
         }
     }
 }

@@ -12,21 +12,21 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         {
             _appDbContext = appDbContext;
         }
-        public async Task<PagedList<Cart>> GetAllAsync(PaginationParams paginationParams)
+        public async Task<PagedList<Cart>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken)
         {
             var query = _appDbContext.Carts.Include(x => x.User).AsNoTracking();
-            var totalItems = await query.CountAsync();
-            var carts = await query.OrderByDescending(x => x.CreatedAt).Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
+            var totalItems = await query.CountAsync(cancellationToken);
+            var carts = await query.OrderByDescending(x => x.CreatedAt).Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync(cancellationToken);
 
             return new PagedList<Cart>(carts, paginationParams.PageNumber, paginationParams.PageSize, totalItems);
         }
-        public async Task<Cart?> GetByIdAsync(Guid id)
+        public async Task<Cart?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            return await _appDbContext.Carts.Include(x => x.CartItems).ThenInclude(y => y.Product).FirstOrDefaultAsync(x => x.Id == id);
+            return await _appDbContext.Carts.Include(x => x.CartItems).ThenInclude(y => y.Product).FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         }
-        public async Task<Cart?> GetByUserIdAsync(Guid userId)
+        public async Task<Cart?> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken)
         {
-            return await _appDbContext.Carts.Include(x => x.CartItems).ThenInclude(y => y.Product).FirstOrDefaultAsync(x => x.UserId == userId);
+            return await _appDbContext.Carts.Include(x => x.CartItems).ThenInclude(y => y.Product).FirstOrDefaultAsync(x => x.UserId == userId, cancellationToken);
         }
         public void Add(Cart cart)
         {

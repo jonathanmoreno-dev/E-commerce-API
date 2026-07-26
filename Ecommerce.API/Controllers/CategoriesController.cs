@@ -1,4 +1,5 @@
-﻿using Ecommerce.Application.DTOs.CategoryDTOs;
+﻿using System.Threading;
+using Ecommerce.Application.DTOs.CategoryDTOs;
 using Ecommerce.Application.DTOs.ProductDTOs;
 using Ecommerce.Application.Interfaces.Services;
 using Ecommerce.Application.Pagination;
@@ -19,21 +20,21 @@ namespace Ecommerce.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CategoryListDTO>>> GetAll([FromQuery] PaginationParams paginationParams)
+        public async Task<ActionResult<IEnumerable<CategoryListDTO>>> GetAll([FromQuery] PaginationParams paginationParams, CancellationToken cancellationToken)
         {
-            var categories = await _categoryService.GetAllAsync(paginationParams);
+            var categories = await _categoryService.GetAllAsync(paginationParams, cancellationToken);
             return Ok(categories);
         }
         [HttpGet("{id:guid}/products")]
-        public async Task<ActionResult<IEnumerable<ProductListDTO>>> GetAllProductsByCategoryId(Guid id, [FromQuery] PaginationParams paginationParams)
+        public async Task<ActionResult<IEnumerable<ProductListDTO>>> GetAllProductsByCategoryId(Guid id, [FromQuery] PaginationParams paginationParams, CancellationToken cancellationToken)
         {
-            var products = await _productService.GetAllByCategoryIdAsync(id, paginationParams);
+            var products = await _productService.GetAllByCategoryIdAsync(id, paginationParams, cancellationToken);
             return Ok(products);
         }
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<CategoryDetailsDTO>> GetById(Guid id)
+        public async Task<ActionResult<CategoryDetailsDTO>> GetById(Guid id, CancellationToken cancellationToken)
         {
-            var category = await _categoryService.GetByIdAsync(id);
+            var category = await _categoryService.GetByIdAsync(id, cancellationToken);
             return Ok(category);
         }
     }

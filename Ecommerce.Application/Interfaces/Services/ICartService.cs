@@ -6,13 +6,13 @@ namespace Ecommerce.Application.Interfaces.Services
 {
     public interface ICartService
     {
-        public Task<PagedList<CartListDTO>> GetAllAsync(PaginationParams paginationParams);
-        public Task<CartDetailsDTO> GetByIdAsync(Guid id);
-        public Task<CartDetailsDTO> GetByUserIdAsync(Guid userId);
-        public Task<CartDetailsDTO> GetCurrentUserCartAsync();
-        public Task<CartDetailsDTO> AddItemAsync(CartItemCreateDTO item);
-        public Task<CartDetailsDTO> RemoveItemAsync(Guid productId);
-        public Task<CartDetailsDTO> UpdateItemAsync(CartItemUpdateDTO itemUpdate);
-        public Task<CartDetailsDTO> ClearAsync();
+        public Task<PagedList<CartListDTO>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken);
+        public Task<CartDetailsDTO> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+        public Task<CartDetailsDTO> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken);
+        public Task<CartDetailsDTO> GetCurrentUserCartAsync(CancellationToken cancellationToken);
+        public Task<CartDetailsDTO> AddItemAsync(CartItemCreateDTO item, CancellationToken cancellationToken);
+        public Task<CartDetailsDTO> RemoveItemAsync(Guid productId, CancellationToken cancellationToken);
+        public Task<CartDetailsDTO> UpdateItemAsync(CartItemUpdateDTO itemUpdate, CancellationToken cancellationToken);
+        public Task<CartDetailsDTO> ClearAsync(CancellationToken cancellationToken);
     }
 }

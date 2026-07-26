@@ -16,33 +16,33 @@ namespace Ecommerce.API.Controllers
             _userService = userService;
         }
         [HttpGet("me")]
-        public async Task<ActionResult<UserDetailsDTO>> GetCurrent()
+        public async Task<ActionResult<UserDetailsDTO>> GetCurrent(CancellationToken cancellationToken)
         {
-            var user = await _userService.GetCurrentAsync();
+            var user = await _userService.GetCurrentAsync(cancellationToken);
             return Ok(user);
         }
         [HttpPatch("me")]
-        public async Task<ActionResult<UserDetailsDTO>> Update(UserUpdateDTO requestDTO)
+        public async Task<ActionResult<UserDetailsDTO>> Update(UserUpdateDTO requestDTO, CancellationToken cancellationToken)
         {
-            var user = await _userService.UpdateAsync(requestDTO);
+            var user = await _userService.UpdateAsync(requestDTO, cancellationToken);
             return Ok(user);
         }
         [HttpPatch("me/password")]
-        public async Task<IActionResult> ChangePassword(ChangePasswordDTO requestDTO)
+        public async Task<IActionResult> ChangePassword(ChangePasswordDTO requestDTO, CancellationToken cancellationToken)
         {
-            await _userService.ChangePasswordAsync(requestDTO);
+            await _userService.ChangePasswordAsync(requestDTO, cancellationToken);
             return NoContent();
         }
         [HttpPost("me/shipping-addresses")]
-        public async Task<ActionResult<UserDetailsDTO>> AddShippingAddress(ShippingAddressDTO requestDTO)
+        public async Task<ActionResult<UserDetailsDTO>> AddShippingAddress(ShippingAddressDTO requestDTO, CancellationToken cancellationToken)
         {
-            var user = await _userService.AddShippingAddressAsync(requestDTO);
+            var user = await _userService.AddShippingAddressAsync(requestDTO, cancellationToken);
             return Ok(user);
         }
         [HttpDelete("me/shipping-addresses")]
-        public async Task<ActionResult<UserDetailsDTO>> RemoveShippingAddress(ShippingAddressDTO requestDTO)
+        public async Task<ActionResult<UserDetailsDTO>> RemoveShippingAddress(ShippingAddressDTO requestDTO, CancellationToken cancellationToken)
         {
-            var user = await _userService.RemoveShippingAddressAsync(requestDTO);
+            var user = await _userService.RemoveShippingAddressAsync(requestDTO, cancellationToken);
             return Ok(user);
         }
     }

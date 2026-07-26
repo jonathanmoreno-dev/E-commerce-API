@@ -12,37 +12,37 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         {
             _appDbContext = appDbContext;
         }
-        public async Task<PagedList<Checkout>> GetAllActiveWithPaymentAttemptsAsync(PaginationParams paginationParams)
+        public async Task<PagedList<Checkout>> GetAllActiveWithPaymentAttemptsAsync(PaginationParams paginationParams, CancellationToken cancellationToken)
         {
             var query = _appDbContext.Checkouts.Include(x => x.CheckoutItems).ThenInclude(y => y.Product)
                 .Where(x => x.ExpiresAt > DateTime.UtcNow && x.PaymentAttempts.Any()).AsNoTracking();
-            var totalItems = await query.CountAsync();
-            var checkouts = await query.OrderByDescending(x => x.CreatedAt).Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
+            var totalItems = await query.CountAsync(cancellationToken);
+            var checkouts = await query.OrderByDescending(x => x.CreatedAt).Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync(cancellationToken);
 
             return new PagedList<Checkout>(checkouts, paginationParams.PageNumber, paginationParams.PageSize, totalItems);
         }
-        public async Task<PagedList<Checkout>> GetAllActiveWithPaymentAttemptsByUserIdAsync(Guid userId, PaginationParams paginationParams)
+        public async Task<PagedList<Checkout>> GetAllActiveWithPaymentAttemptsByUserIdAsync(Guid userId, PaginationParams paginationParams, CancellationToken cancellationToken)
         {
             var query = _appDbContext.Checkouts.Include(x => x.CheckoutItems).ThenInclude(y => y.Product)
                 .Where(x => x.UserId == userId).Where(x => x.ExpiresAt > DateTime.UtcNow && x.PaymentAttempts.Any()).AsNoTracking();
-            var totalItems = await query.CountAsync();
-            var checkouts = await query.OrderByDescending(x => x.CreatedAt).Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
+            var totalItems = await query.CountAsync(cancellationToken);
+            var checkouts = await query.OrderByDescending(x => x.CreatedAt).Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync(cancellationToken);
 
             return new PagedList<Checkout>(checkouts, paginationParams.PageNumber, paginationParams.PageSize, totalItems);
         }
-        public async Task<IEnumerable<Checkout>> GetAllExpiredNotProcessedAsync()
+        public async Task<IEnumerable<Checkout>> GetAllExpiredNotProcessedAsync(CancellationToken cancellationToken)
         {
             return await _appDbContext.Checkouts.Include(x => x.CheckoutItems).ThenInclude(y => y.Product)
                 .Where(x => x.ExpiresAt <= DateTime.UtcNow && x.ExpirationProcessedAt == null)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
         }
-        public async Task<Checkout?> GetByIdAsync(Guid id)
+        public async Task<Checkout?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            return await _appDbContext.Checkouts.Include(x => x.CheckoutItems).ThenInclude(y => y.Product).FirstOrDefaultAsync(x => x.Id == id);
+            return await _appDbContext.Checkouts.Include(x => x.CheckoutItems).ThenInclude(y => y.Product).FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         }
-        public async Task<Checkout?> GetByIdWithPaymentAttemptsAsync(Guid id)
+        public async Task<Checkout?> GetByIdWithPaymentAttemptsAsync(Guid id, CancellationToken cancellationToken)
         {
-            return await _appDbContext.Checkouts.Include(x => x.PaymentAttempts).Include(x => x.CheckoutItems).ThenInclude(y => y.Product).FirstOrDefaultAsync(x => x.Id == id);
+            return await _appDbContext.Checkouts.Include(x => x.PaymentAttempts).Include(x => x.CheckoutItems).ThenInclude(y => y.Product).FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         }
         public void Add(Checkout checkout)
         {

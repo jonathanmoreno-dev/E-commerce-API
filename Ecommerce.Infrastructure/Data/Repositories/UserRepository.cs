@@ -1,4 +1,6 @@
-﻿using Ecommerce.Application.Interfaces.Repositories;
+﻿using System.Linq;
+using System.Threading;
+using Ecommerce.Application.Interfaces.Repositories;
 using Ecommerce.Application.Pagination;
 using Ecommerce.Domain.Entities;
 using Ecommerce.Domain.Enums;
@@ -14,33 +16,33 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         {
             _appDbContext = appDbContext;
         }
-        public async Task<PagedList<User>> GetAllAsync(PaginationParams paginationParams)
+        public async Task<PagedList<User>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken)
         {
             var query = _appDbContext.Users.AsNoTracking();
-            var totalItems = await query.CountAsync();
-            var users = await query.OrderBy(x => x.FullName).Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
+            var totalItems = await query.CountAsync(cancellationToken);
+            var users = await query.OrderBy(x => x.FullName).Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync(cancellationToken);
 
             return new PagedList<User>(users, paginationParams.PageNumber, paginationParams.PageSize, totalItems);
         }
-        public async Task<PagedList<User>> GetAllByRoleAsync(UserRole role, PaginationParams paginationParams)
+        public async Task<PagedList<User>> GetAllByRoleAsync(UserRole role, PaginationParams paginationParams, CancellationToken cancellationToken)
         {
             var query = _appDbContext.Users.Where(x => x.Role == role).AsNoTracking();
-            var totalItems = await query.CountAsync();
-            var users = await query.OrderBy(x => x.FullName).Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
+            var totalItems = await query.CountAsync(cancellationToken);
+            var users = await query.OrderBy(x => x.FullName).Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync(cancellationToken);
 
             return new PagedList<User>(users, paginationParams.PageNumber, paginationParams.PageSize, totalItems);
         }
-        public async Task<User?> GetByIdAsync(Guid id)
+        public async Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            return await _appDbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
+            return await _appDbContext.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         }
-        public async Task<User?> GetByEmailAsync(string email)
+        public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken)
         {
-            return await _appDbContext.Users.FirstOrDefaultAsync(x => x.Email == new Email(email));
+            return await _appDbContext.Users.FirstOrDefaultAsync(x => x.Email == new Email(email), cancellationToken);
         }
-        public async Task<bool> ExistsAdminAsync()
+        public async Task<bool> ExistsAdminAsync(CancellationToken cancellationToken)
         {
-            return await _appDbContext.Users.AnyAsync(x => x.Role == UserRole.Admin);
+            return await _appDbContext.Users.AnyAsync(x => x.Role == UserRole.Admin, cancellationToken);
         }
         public void Add(User user)
         {

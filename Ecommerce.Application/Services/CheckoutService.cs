@@ -28,40 +28,40 @@ namespace Ecommerce.Application.Services
             _orderService = orderService;
             _unitOfWork = unitOfWork;
         }
-        public async Task<PagedList<CheckoutSummaryDTO>> GetAllActiveAsync(PaginationParams paginationParams)
+        public async Task<PagedList<CheckoutSummaryDTO>> GetAllActiveAsync(PaginationParams paginationParams, CancellationToken cancellationToken)
         {
-            var checkouts = await _checkoutRepository.GetAllActiveWithPaymentAttemptsAsync(paginationParams);
+            var checkouts = await _checkoutRepository.GetAllActiveWithPaymentAttemptsAsync(paginationParams, cancellationToken);
 
             var checkoutSummaryDTOs = checkouts.Select(x => CheckoutMapper.ToSummaryDTO(x));
             return checkoutSummaryDTOs;
         }
-        public async Task<PagedList<CheckoutSummaryDTO>> GetAllActiveByUserIdAsync(Guid userId, PaginationParams paginationParams)
+        public async Task<PagedList<CheckoutSummaryDTO>> GetAllActiveByUserIdAsync(Guid userId, PaginationParams paginationParams, CancellationToken cancellationToken)
         {
-            var checkouts = await _checkoutRepository.GetAllActiveWithPaymentAttemptsByUserIdAsync(userId, paginationParams);
+            var checkouts = await _checkoutRepository.GetAllActiveWithPaymentAttemptsByUserIdAsync(userId, paginationParams, cancellationToken);
 
             var checkoutSummaryDTOs = checkouts.Select(x => CheckoutMapper.ToSummaryDTO(x));
             return checkoutSummaryDTOs;
         }
-        public async Task<PagedList<CheckoutSummaryDTO>> GetAllCurrentUserCheckoutsActiveAsync(PaginationParams paginationParams)
+        public async Task<PagedList<CheckoutSummaryDTO>> GetAllCurrentUserCheckoutsActiveAsync(PaginationParams paginationParams, CancellationToken cancellationToken)
         {
-            var currentCheckouts = await _checkoutRepository.GetAllActiveWithPaymentAttemptsByUserIdAsync(_currentUserService.UserId, paginationParams);
+            var currentCheckouts = await _checkoutRepository.GetAllActiveWithPaymentAttemptsByUserIdAsync(_currentUserService.UserId, paginationParams, cancellationToken);
 
             var currentCheckoutSummaryDTOs = currentCheckouts.Select(x => CheckoutMapper.ToSummaryDTO(x));
             return currentCheckoutSummaryDTOs;
         }
-        public async Task<CheckoutDetailsDTO> GetByIdAsync(Guid id)
+        public async Task<CheckoutDetailsDTO> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            var checkout = await _checkoutRepository.GetByIdAsync(id);
+            var checkout = await _checkoutRepository.GetByIdAsync(id, cancellationToken);
             if(checkout is null || _currentUserService.UserId != checkout.UserId)
                 throw new NotFoundException("Checkout", $"Checkout with Id: {id} was not found");
 
             var checkoutDetailsDTO = CheckoutMapper.ToDetailsDTO(checkout);
             return checkoutDetailsDTO;
         }
-        public async Task<CheckoutDetailsDTO> CreateAsync()
+        public async Task<CheckoutDetailsDTO> CreateAsync(CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetByIdAsync(_currentUserService.UserId);
-            var cart = await _cartRepository.GetByUserIdAsync(_currentUserService.UserId);
+            var user = await _userRepository.GetByIdAsync(_currentUserService.UserId, cancellationToken);
+            var cart = await _cartRepository.GetByUserIdAsync(_currentUserService.UserId, cancellationToken);
             if (user is null)
                 throw new NotFoundException("User", $"User with Id: {_currentUserService.UserId} was not found");
             if(cart is null)
@@ -79,14 +79,14 @@ namespace Ecommerce.Application.Services
             var items = cart.CartItems.Select(x => (x.ProductId,x.UnitPrice,x.Quantity)).ToList();
             var checkout = new Checkout(_currentUserService.UserId, address, shippingCost, items);
             _checkoutRepository.Add(checkout);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             var checkoutDetailsDTO = CheckoutMapper.ToDetailsDTO(checkout);
             return checkoutDetailsDTO;
         }
-        public async Task<CheckoutDetailsDTO> UpdateAsync(Guid checkoutId, CheckoutUpdateDTO checkoutUpdate)
+        public async Task<CheckoutDetailsDTO> UpdateAsync(Guid checkoutId, CheckoutUpdateDTO checkoutUpdate, CancellationToken cancellationToken)
         {
-            var checkout = await _checkoutRepository.GetByIdAsync(checkoutId);
+            var checkout = await _checkoutRepository.GetByIdAsync(checkoutId, cancellationToken);
             if (checkout is null || _currentUserService.UserId != checkout.UserId)
                 throw new NotFoundException("Checkout", $"Checkout with Id: {checkoutId} was not found");
 
@@ -103,14 +103,14 @@ namespace Ecommerce.Application.Services
                 checkoutUpdate.ShippingAddress.City,
                 checkoutUpdate.ShippingAddress.ZipCode
             ));
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             var checkoutDetailsDTO = CheckoutMapper.ToDetailsDTO(checkout);
             return checkoutDetailsDTO;
         }
-        public async Task ProcessExpiredCheckoutsAsync()
+        public async Task ProcessExpiredCheckoutsAsync(CancellationToken cancellationToken)
         {
-            var checkouts = await _checkoutRepository.GetAllExpiredNotProcessedAsync();
+            var checkouts = await _checkoutRepository.GetAllExpiredNotProcessedAsync(cancellationToken);
             foreach (var checkout in checkouts)
             {
                 foreach (var checkoutItem in checkout.CheckoutItems)
@@ -119,32 +119,32 @@ namespace Ecommerce.Application.Services
                 }
                 checkout.MarkExpirationAsProcessed();
             }
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
-        public async Task CreatePaymentAsync(Guid checkoutId)
+        public async Task CreatePaymentAsync(Guid checkoutId, CancellationToken cancellationToken)
         {
-            var checkout = await _checkoutRepository.GetByIdWithPaymentAttemptsAsync(checkoutId);
-            var cart = await _cartRepository.GetByUserIdAsync(_currentUserService.UserId);
+            var checkout = await _checkoutRepository.GetByIdWithPaymentAttemptsAsync(checkoutId, cancellationToken);
+            var cart = await _cartRepository.GetByUserIdAsync(_currentUserService.UserId, cancellationToken);
             if (checkout is null || _currentUserService.UserId != checkout.UserId)
                 throw new NotFoundException("Checkout", $"Checkout with Id: {checkoutId} was not found");
             if (cart is null)
                 throw new NotFoundException("Cart", $"Cart with User Id: {_currentUserService.UserId} was not found");
             checkout.CreatePayment();
             cart.ClearItems();
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
-        public async Task AuthorizePaymentAsync(Guid checkoutId)
+        public async Task AuthorizePaymentAsync(Guid checkoutId, CancellationToken cancellationToken)
         {
-            var checkout = await _checkoutRepository.GetByIdAsync(checkoutId);
+            var checkout = await _checkoutRepository.GetByIdAsync(checkoutId, cancellationToken);
             if (checkout is null)
                 throw new NotFoundException("Checkout", $"Checkout with Id: {checkoutId} was not found");
 
             checkout.AuthorizePayment();
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
-        public async Task CompletePaymentAsync(Guid checkoutId)
+        public async Task CompletePaymentAsync(Guid checkoutId, CancellationToken cancellationToken)
         {
-            var checkout = await _checkoutRepository.GetByIdAsync(checkoutId);
+            var checkout = await _checkoutRepository.GetByIdAsync(checkoutId, cancellationToken);
             if (checkout is null)
                 throw new NotFoundException("Checkout", $"Checkout with Id: {checkoutId} was not found");
 
@@ -154,43 +154,43 @@ namespace Ecommerce.Application.Services
             }
             checkout.CompletePayment();
             _orderService.CreateFromCheckout(checkout);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
-        public async Task FailPaymentAsync(Guid checkoutId)
+        public async Task FailPaymentAsync(Guid checkoutId, CancellationToken cancellationToken)
         {
-            var checkout = await _checkoutRepository.GetByIdAsync(checkoutId);
+            var checkout = await _checkoutRepository.GetByIdAsync(checkoutId, cancellationToken);
             if (checkout is null)
                 throw new NotFoundException("Checkout", $"Checkout with Id: {checkoutId} was not found");
 
             checkout.FailPayment();
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
-        public async Task CancelPaymentAsync(Guid checkoutId)
+        public async Task CancelPaymentAsync(Guid checkoutId, CancellationToken cancellationToken)
         {
-            var checkout = await _checkoutRepository.GetByIdAsync(checkoutId);
+            var checkout = await _checkoutRepository.GetByIdAsync(checkoutId, cancellationToken);
             if (checkout is null)
                 throw new NotFoundException("Checkout", $"Checkout with Id: {checkoutId} was not found");
 
             checkout.CancelPayment();
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
-        public async Task AbandonPaymentAsync(Guid checkoutId)
+        public async Task AbandonPaymentAsync(Guid checkoutId, CancellationToken cancellationToken)
         {
-            var checkout = await _checkoutRepository.GetByIdAsync(checkoutId);
+            var checkout = await _checkoutRepository.GetByIdAsync(checkoutId, cancellationToken);
             if (checkout is null)
                 throw new NotFoundException("Checkout", $"Checkout with Id: {checkoutId} was not found");
 
             checkout.AbandonPayment();
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
-        public async Task DeleteAsync(Guid id)
+        public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
-            var checkout = await _checkoutRepository.GetByIdAsync(id);
+            var checkout = await _checkoutRepository.GetByIdAsync(id, cancellationToken);
             if (checkout is null || _currentUserService.UserId != checkout.UserId)
                 throw new NotFoundException("Checkout", $"Checkout with Id: {id} was not found");
 
             _checkoutRepository.Remove(checkout);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 }
