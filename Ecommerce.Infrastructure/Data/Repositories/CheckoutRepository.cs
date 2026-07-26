@@ -12,7 +12,7 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         {
             _appDbContext = appDbContext;
         }
-        public async Task<PagedList<Checkout>> GetAllActiveAsync(PaginationParams paginationParams)
+        public async Task<PagedList<Checkout>> GetAllActiveWithPaymentAttemptsAsync(PaginationParams paginationParams)
         {
             var query = _appDbContext.Checkouts.Include(x => x.CheckoutItems).ThenInclude(y => y.Product)
                 .Where(x => x.ExpiresAt > DateTime.UtcNow && x.PaymentAttempts.Any()).AsNoTracking();
@@ -21,7 +21,7 @@ namespace Ecommerce.Infrastructure.Data.Repositories
 
             return new PagedList<Checkout>(checkouts, paginationParams.PageNumber, paginationParams.PageSize, totalItems);
         }
-        public async Task<PagedList<Checkout>> GetAllActiveByUserIdAsync(Guid userId, PaginationParams paginationParams)
+        public async Task<PagedList<Checkout>> GetAllActiveWithPaymentAttemptsByUserIdAsync(Guid userId, PaginationParams paginationParams)
         {
             var query = _appDbContext.Checkouts.Include(x => x.CheckoutItems).ThenInclude(y => y.Product)
                 .Where(x => x.UserId == userId).Where(x => x.ExpiresAt > DateTime.UtcNow && x.PaymentAttempts.Any()).AsNoTracking();
@@ -29,6 +29,12 @@ namespace Ecommerce.Infrastructure.Data.Repositories
             var checkouts = await query.OrderByDescending(x => x.CreatedAt).Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
 
             return new PagedList<Checkout>(checkouts, paginationParams.PageNumber, paginationParams.PageSize, totalItems);
+        }
+        public async Task<IEnumerable<Checkout>> GetAllExpiredNotProcessedAsync()
+        {
+            return await _appDbContext.Checkouts.Include(x => x.CheckoutItems).ThenInclude(y => y.Product)
+                .Where(x => x.ExpiresAt <= DateTime.UtcNow && x.ExpirationProcessedAt == null)
+                .ToListAsync();
         }
         public async Task<Checkout?> GetByIdAsync(Guid id)
         {
