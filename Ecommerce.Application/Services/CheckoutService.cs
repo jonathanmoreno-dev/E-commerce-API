@@ -30,21 +30,21 @@ namespace Ecommerce.Application.Services
         }
         public async Task<PagedList<CheckoutSummaryDTO>> GetAllActiveAsync(PaginationParams paginationParams)
         {
-            var checkouts = await _checkoutRepository.GetAllActiveAsync(paginationParams);
+            var checkouts = await _checkoutRepository.GetAllActiveWithPaymentAttemptsAsync(paginationParams);
 
             var checkoutSummaryDTOs = checkouts.Select(x => CheckoutMapper.ToSummaryDTO(x));
             return checkoutSummaryDTOs;
         }
         public async Task<PagedList<CheckoutSummaryDTO>> GetAllActiveByUserIdAsync(Guid userId, PaginationParams paginationParams)
         {
-            var checkouts = await _checkoutRepository.GetAllActiveByUserIdAsync(userId, paginationParams);
+            var checkouts = await _checkoutRepository.GetAllActiveWithPaymentAttemptsByUserIdAsync(userId, paginationParams);
 
             var checkoutSummaryDTOs = checkouts.Select(x => CheckoutMapper.ToSummaryDTO(x));
             return checkoutSummaryDTOs;
         }
         public async Task<PagedList<CheckoutSummaryDTO>> GetAllCurrentUserCheckoutsActiveAsync(PaginationParams paginationParams)
         {
-            var currentCheckouts = await _checkoutRepository.GetAllActiveByUserIdAsync(_currentUserService.UserId, paginationParams);
+            var currentCheckouts = await _checkoutRepository.GetAllActiveWithPaymentAttemptsByUserIdAsync(_currentUserService.UserId, paginationParams);
 
             var currentCheckoutSummaryDTOs = currentCheckouts.Select(x => CheckoutMapper.ToSummaryDTO(x));
             return currentCheckoutSummaryDTOs;
@@ -107,6 +107,19 @@ namespace Ecommerce.Application.Services
 
             var checkoutDetailsDTO = CheckoutMapper.ToDetailsDTO(checkout);
             return checkoutDetailsDTO;
+        }
+        public async Task ProcessExpiredCheckoutsAsync()
+        {
+            var checkouts = await _checkoutRepository.GetAllExpiredNotProcessedAsync();
+            foreach (var checkout in checkouts)
+            {
+                foreach (var checkoutItem in checkout.CheckoutItems)
+                {
+                    checkoutItem.Product.CancelStockReservation(checkoutItem.Quantity);
+                }
+                checkout.MarkExpirationAsProcessed();
+            }
+            await _unitOfWork.SaveChangesAsync();
         }
         public async Task CreatePaymentAsync(Guid checkoutId)
         {

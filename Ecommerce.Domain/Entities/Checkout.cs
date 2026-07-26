@@ -18,6 +18,7 @@ namespace Ecommerce.Domain.Entities
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
         public DateTime ExpiresAt { get; private set; }
+        public DateTime? ExpirationProcessedAt { get; private set; }
         public bool IsActive => ExpiresAt > DateTime.UtcNow;
         public bool HasStartedPayment => _paymentAttempts.Any();
         public PaymentAttempt? CompletedPayment => _paymentAttempts.SingleOrDefault(x => x.Status == PaymentStatus.Completed);
@@ -58,7 +59,13 @@ namespace Ecommerce.Domain.Entities
         // =========================
         //          ADDRESS
         // =========================
+        public void MarkExpirationAsProcessed()
+        {
+            if (ExpirationProcessedAt is not null)
+                throw new BusinessRuleException("Checkout expiration has already been processed.");
 
+            ExpirationProcessedAt = DateTime.UtcNow;
+        }
         public void ChangeShippingAddress(ShippingAddress shippingAddress)
         {
             ArgumentNullException.ThrowIfNull(shippingAddress);
