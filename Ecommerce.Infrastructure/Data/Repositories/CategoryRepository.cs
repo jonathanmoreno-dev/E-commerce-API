@@ -13,25 +13,25 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         {
             _appDbContext = appDbContext;
         }
-        public async Task<PagedList<Category>> GetAllAsync(PaginationParams paginationParams)
+        public async Task<PagedList<Category>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken)
         {
             var query = _appDbContext.Categories.AsNoTracking();
-            var totalItems = await query.CountAsync();
-            var categories = await query.OrderBy(x => x.Name).Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
+            var totalItems = await query.CountAsync(cancellationToken);
+            var categories = await query.OrderBy(x => x.Name).Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync(cancellationToken);
 
             return new PagedList<Category>(categories, paginationParams.PageNumber, paginationParams.PageSize, totalItems);
         }
-        public async Task<PagedList<Category>> GetAllByProductIdAsync(Guid productId, PaginationParams paginationParams)
+        public async Task<PagedList<Category>> GetAllByProductIdAsync(Guid productId, PaginationParams paginationParams, CancellationToken cancellationToken)
         {
             var query = _appDbContext.Categories.Where(x => x.Products.Any(x => x.Id == productId)).AsNoTracking();
-            var totalItems = await query.CountAsync();
-            var categories = await query.OrderBy(x => x.Name).Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
+            var totalItems = await query.CountAsync(cancellationToken);
+            var categories = await query.OrderBy(x => x.Name).Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync(cancellationToken);
 
             return new PagedList<Category>(categories, paginationParams.PageNumber, paginationParams.PageSize, totalItems);
         }
-        public async Task<Category?> GetByIdAsync(Guid id)
+        public async Task<Category?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            return await _appDbContext.Categories.Include(x => x.Products).FirstOrDefaultAsync(x => x.Id == id);
+            return await _appDbContext.Categories.Include(x => x.Products).FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         }
         public void Add(Category category)
         {

@@ -6,11 +6,11 @@ namespace Ecommerce.Application.Interfaces.Repositories
 {
     public interface IUserRepository
     {
-        public Task<PagedList<User>> GetAllAsync(PaginationParams paginationParams);
-        public Task<PagedList<User>> GetAllByRoleAsync(UserRole role, PaginationParams paginationParams);
-        public Task<User?> GetByIdAsync(Guid id);
-        public Task<User?> GetByEmailAsync(string email);
-        public Task<bool> ExistsAdminAsync();
+        public Task<PagedList<User>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken);
+        public Task<PagedList<User>> GetAllByRoleAsync(UserRole role, PaginationParams paginationParams, CancellationToken cancellationToken);
+        public Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken);
+        public Task<bool> ExistsAdminAsync(CancellationToken cancellationToken);
         public void Add(User user);
         public void Remove(User user);
     }

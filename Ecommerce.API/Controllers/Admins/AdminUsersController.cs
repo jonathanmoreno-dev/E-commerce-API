@@ -19,33 +19,33 @@ namespace Ecommerce.API.Controllers.Admins
             _userService = userService;
         }
         [HttpGet]
-        public async Task<ActionResult<UserListDTO>> GetAll([FromQuery] PaginationParams paginationParams)
+        public async Task<ActionResult<UserListDTO>> GetAll([FromQuery] PaginationParams paginationParams, CancellationToken cancellationToken)
         {
-            var users = await _userService.GetAllAsync(paginationParams);
+            var users = await _userService.GetAllAsync(paginationParams, cancellationToken);
             return Ok(users);
         }
         [HttpGet("role")]
-        public async Task<ActionResult<UserListDTO>> GetAllByRole(UserRole role, [FromQuery] PaginationParams paginationParams)
+        public async Task<ActionResult<UserListDTO>> GetAllByRole(UserRole role, [FromQuery] PaginationParams paginationParams, CancellationToken cancellationToken)
         {
-            var users = await _userService.GetAllByRoleAsync(role, paginationParams);
+            var users = await _userService.GetAllByRoleAsync(role, paginationParams, cancellationToken);
             return Ok(users);
         }
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<ProductDetailsDTO>> GetById(Guid id)
+        public async Task<ActionResult<ProductDetailsDTO>> GetById(Guid id, CancellationToken cancellationToken)
         {
-            var user = await _userService.GetByIdAsync(id);
+            var user = await _userService.GetByIdAsync(id, cancellationToken);
             return Ok(user);
         }
         [HttpPatch("{id:guid}/role")]
-        public async Task<IActionResult> ChangeRole(Guid id, ChangeUserRoleDTO request)
+        public async Task<IActionResult> ChangeRole(Guid id, ChangeUserRoleDTO request, CancellationToken cancellationToken)
         {
-            await _userService.ChangeRoleAsync(id, request.Role);
+            await _userService.ChangeRoleAsync(id, request.Role, cancellationToken);
             return NoContent();
         }
         [HttpDelete("{id:guid}")]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
         {
-            await _userService.DeleteAsync(id);
+            await _userService.DeleteAsync(id, cancellationToken);
             return NoContent();
         }
     }

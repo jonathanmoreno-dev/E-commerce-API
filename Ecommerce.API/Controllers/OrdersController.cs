@@ -17,27 +17,27 @@ namespace Ecommerce.API.Controllers
             _orderService = orderService;
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<OrderListItemDTO>>> GetAllCurrentUserOrders([FromQuery] PaginationParams paginationParams)
+        public async Task<ActionResult<IEnumerable<OrderListItemDTO>>> GetAllCurrentUserOrders([FromQuery] PaginationParams paginationParams, CancellationToken cancellationToken)
         {
-            var orders = await _orderService.GetAllCurrentUserOrdersAsync(paginationParams);
+            var orders = await _orderService.GetAllCurrentUserOrdersAsync(paginationParams, cancellationToken);
             return Ok(orders);
         }
         [HttpGet("status/{status}")]
-        public async Task<ActionResult<IEnumerable<OrderListItemDTO>>> GetAllCurrentUserOrdersByStatus(OrderStatus status, [FromQuery] PaginationParams paginationParams)
+        public async Task<ActionResult<IEnumerable<OrderListItemDTO>>> GetAllCurrentUserOrdersByStatus(OrderStatus status, [FromQuery] PaginationParams paginationParams, CancellationToken cancellationToken)
         {
-            var orders = await _orderService.GetAllCurrentUserOrdersByStatusAsync(status, paginationParams);
+            var orders = await _orderService.GetAllCurrentUserOrdersByStatusAsync(status, paginationParams, cancellationToken);
             return Ok(orders);
         }
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<OrderDetailsDTO>> GetById(Guid id)
+        public async Task<ActionResult<OrderDetailsDTO>> GetById(Guid id, CancellationToken cancellationToken)
         {
-            var order = await _orderService.GetByIdAsync(id);
+            var order = await _orderService.GetByIdAsync(id, cancellationToken);
             return Ok(order);
         }
         [HttpPatch("refund")]
-        public async Task<ActionResult<OrderDetailsDTO>> RefundItem(RefundCreateDTO requestDTO)
+        public async Task<ActionResult<OrderDetailsDTO>> RefundItem(RefundCreateDTO requestDTO, CancellationToken cancellationToken)
         {
-            var order = await _orderService.RefundItemAsync(requestDTO);
+            var order = await _orderService.RefundItemAsync(requestDTO, cancellationToken);
             return Ok(order);
         }
     }

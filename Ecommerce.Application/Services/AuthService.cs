@@ -1,4 +1,5 @@
-﻿using Ecommerce.Application.DTOs.Authentication;
+﻿using System.Threading;
+using Ecommerce.Application.DTOs.Authentication;
 using Ecommerce.Application.Interfaces.Repositories;
 using Ecommerce.Application.Interfaces.Services;
 using Ecommerce.Domain.Entities;
@@ -24,9 +25,9 @@ namespace Ecommerce.Application.Services
             _passwordHasher = passwordHasher;
             _unitOfWork = unitOfWork;
         }
-        public async Task<AuthResponseDTO> RegisterAsync(RegisterRequestDTO request)
+        public async Task<AuthResponseDTO> RegisterAsync(RegisterRequestDTO request, CancellationToken cancellationToken)
         {
-            var userExists = await _userRepository.GetByEmailAsync(request.Email);
+            var userExists = await _userRepository.GetByEmailAsync(request.Email, cancellationToken);
             if (userExists is not null)
                 throw new ConflictException("Email already registered", $"This email: {userExists.Email} already registered");
 
@@ -39,7 +40,7 @@ namespace Ecommerce.Application.Services
             var refreshToken = new RefreshToken(user.Id, _tokenService.GenerateRefreshToken(), _tokenService.GetRefreshTokenExpiration());
 
             _refreshTokenRepository.Add(refreshToken);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             var authResponseDTO = new AuthResponseDTO()
             {
@@ -48,23 +49,23 @@ namespace Ecommerce.Application.Services
             };
             return authResponseDTO;
         }
-        public async Task<AuthResponseDTO> LoginAsync(LoginRequestDTO request)
+        public async Task<AuthResponseDTO> LoginAsync(LoginRequestDTO request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetByEmailAsync(request.Email);
+            var user = await _userRepository.GetByEmailAsync(request.Email, cancellationToken);
             if (user is null)
                 throw new UnauthorizedException("Invalid credentials");
 
             if (!_passwordHasher.VerifyPassword(request.Password, user.PasswordHash))
                 throw new UnauthorizedException("Invalid credentials");
 
-            var refreshTokenExists = await _refreshTokenRepository.GetActiveByUserIdAsync(user.Id);
+            var refreshTokenExists = await _refreshTokenRepository.GetActiveByUserIdAsync(user.Id, cancellationToken);
             if(refreshTokenExists is not null)
                 refreshTokenExists.Revoke();
 
             var refreshToken = new RefreshToken(user.Id, _tokenService.GenerateRefreshToken(), _tokenService.GetRefreshTokenExpiration());
 
             _refreshTokenRepository.Add(refreshToken);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             var authResponseDTO = new AuthResponseDTO()
             {
@@ -73,9 +74,9 @@ namespace Ecommerce.Application.Services
             };
             return authResponseDTO;
         }
-        public async Task<AuthResponseDTO> RefreshTokenAsync(string token)
+        public async Task<AuthResponseDTO> RefreshTokenAsync(string token, CancellationToken cancellationToken)
         {
-            var refreshTokenExists = await _refreshTokenRepository.GetByTokenAsync(token);
+            var refreshTokenExists = await _refreshTokenRepository.GetByTokenAsync(token, cancellationToken);
             if(refreshTokenExists is null)
                 throw new UnauthorizedException("Invalid refresh token");
             if (refreshTokenExists.IsExpired)
@@ -88,7 +89,7 @@ namespace Ecommerce.Application.Services
             var refreshToken = new RefreshToken(refreshTokenExists.UserId, _tokenService.GenerateRefreshToken(), _tokenService.GetRefreshTokenExpiration());
 
             _refreshTokenRepository.Add(refreshToken);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             var authResponseDTO = new AuthResponseDTO()
             {
@@ -97,14 +98,14 @@ namespace Ecommerce.Application.Services
             };
             return authResponseDTO;
         }
-        public async Task LogoutAsync(string token)
+        public async Task LogoutAsync(string token, CancellationToken cancellationToken)
         {
-            var refreshToken = await _refreshTokenRepository.GetByTokenAsync(token);
+            var refreshToken = await _refreshTokenRepository.GetByTokenAsync(token, cancellationToken);
             if(refreshToken is null)
                 return;
 
             refreshToken.Revoke();
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 }

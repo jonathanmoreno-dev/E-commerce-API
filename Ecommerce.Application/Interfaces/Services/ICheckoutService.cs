@@ -6,19 +6,19 @@ namespace Ecommerce.Application.Interfaces.Services
 {
     public interface ICheckoutService
     {
-        public Task<PagedList<CheckoutSummaryDTO>> GetAllActiveAsync(PaginationParams paginationParams);
-        public Task<PagedList<CheckoutSummaryDTO>> GetAllActiveByUserIdAsync(Guid userId, PaginationParams paginationParams);
-        public Task<PagedList<CheckoutSummaryDTO>> GetAllCurrentUserCheckoutsActiveAsync(PaginationParams paginationParams);
-        public Task<CheckoutDetailsDTO> GetByIdAsync(Guid id);
-        public Task<CheckoutDetailsDTO> CreateAsync();
-        public Task<CheckoutDetailsDTO> UpdateAsync(Guid checkoutId, CheckoutUpdateDTO checkoutUpdate);
-        public Task ProcessExpiredCheckoutsAsync();
-        public Task CreatePaymentAsync(Guid checkoutId);
-        public Task AuthorizePaymentAsync(Guid checkoutId);
-        public Task CompletePaymentAsync(Guid checkoutId);
-        public Task FailPaymentAsync(Guid checkoutId);
-        public Task CancelPaymentAsync(Guid checkoutId);
-        public Task AbandonPaymentAsync(Guid checkoutId);
-        public Task DeleteAsync(Guid id);
+        public Task<PagedList<CheckoutSummaryDTO>> GetAllActiveAsync(PaginationParams paginationParams, CancellationToken cancellationToken);
+        public Task<PagedList<CheckoutSummaryDTO>> GetAllActiveByUserIdAsync(Guid userId, PaginationParams paginationParams, CancellationToken cancellationToken);
+        public Task<PagedList<CheckoutSummaryDTO>> GetAllCurrentUserCheckoutsActiveAsync(PaginationParams paginationParams, CancellationToken cancellationToken);
+        public Task<CheckoutDetailsDTO> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+        public Task<CheckoutDetailsDTO> CreateAsync(CancellationToken cancellationToken);
+        public Task<CheckoutDetailsDTO> UpdateAsync(Guid checkoutId, CheckoutUpdateDTO checkoutUpdate, CancellationToken cancellationToken);
+        public Task ProcessExpiredCheckoutsAsync(CancellationToken cancellationToken);
+        public Task CreatePaymentAsync(Guid checkoutId, CancellationToken cancellationToken);
+        public Task AuthorizePaymentAsync(Guid checkoutId, CancellationToken cancellationToken);
+        public Task CompletePaymentAsync(Guid checkoutId, CancellationToken cancellationToken);
+        public Task FailPaymentAsync(Guid checkoutId, CancellationToken cancellationToken);
+        public Task CancelPaymentAsync(Guid checkoutId, CancellationToken cancellationToken);
+        public Task AbandonPaymentAsync(Guid checkoutId, CancellationToken cancellationToken);
+        public Task DeleteAsync(Guid id, CancellationToken cancellationToken);
     }
 }

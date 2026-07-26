@@ -17,27 +17,27 @@ namespace Ecommerce.API.Controllers.Admins
             _categoryService = categoryService;
         }
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<CategoryDetailsDTO>> GetById(Guid id)
+        public async Task<ActionResult<CategoryDetailsDTO>> GetById(Guid id, CancellationToken cancellationToken)
         {
-            var category = await _categoryService.GetByIdAsync(id);
+            var category = await _categoryService.GetByIdAsync(id, cancellationToken);
             return Ok(category);
         }
         [HttpPost]
-        public async Task<ActionResult<CategoryDetailsDTO>> Create(CategoryCreateDTO requestDTO)
+        public async Task<ActionResult<CategoryDetailsDTO>> Create(CategoryCreateDTO requestDTO, CancellationToken cancellationToken)
         {
-            var category = await _categoryService.CreateAsync(requestDTO);
+            var category = await _categoryService.CreateAsync(requestDTO, cancellationToken);
             return CreatedAtAction(nameof(GetById), new { id = category.Id }, category);
         }
         [HttpPatch("{id:guid}")]
-        public async Task<ActionResult<CategoryDetailsDTO>> Update(Guid id, CategoryUpdateDTO requestDTO)
+        public async Task<ActionResult<CategoryDetailsDTO>> Update(Guid id, CategoryUpdateDTO requestDTO, CancellationToken cancellationToken)
         {
-            var category = await _categoryService.UpdateAsync(id, requestDTO);
+            var category = await _categoryService.UpdateAsync(id, requestDTO, cancellationToken);
             return Ok(category);
         }
         [HttpDelete("{id:guid}")]
-        public async Task<ActionResult> Delete(Guid id)
+        public async Task<ActionResult> Delete(Guid id, CancellationToken cancellationToken)
         {
-            await _categoryService.DeleteAsync(id);
+            await _categoryService.DeleteAsync(id, cancellationToken);
             return NoContent();
         }
     }

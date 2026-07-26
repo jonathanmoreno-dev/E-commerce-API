@@ -8,18 +8,18 @@ namespace Ecommerce.Application.Interfaces.Services
 {
     public interface IOrderService
     {
-        public Task<PagedList<OrderListItemDTO>> GetAllByUserIdAsync(Guid userId, PaginationParams paginationParams);
-        public Task<PagedList<OrderListItemDTO>> GetAllCurrentUserOrdersAsync(PaginationParams paginationParams);
-        public Task<PagedList<OrderListItemDTO>> GetAllCurrentUserOrdersByStatusAsync(OrderStatus status, PaginationParams paginationParams);
-        public Task<OrderDetailsDTO> GetByIdAsync(Guid id);
+        public Task<PagedList<OrderListItemDTO>> GetAllByUserIdAsync(Guid userId, PaginationParams paginationParams, CancellationToken cancellationToken);
+        public Task<PagedList<OrderListItemDTO>> GetAllCurrentUserOrdersAsync(PaginationParams paginationParams, CancellationToken cancellationToken);
+        public Task<PagedList<OrderListItemDTO>> GetAllCurrentUserOrdersByStatusAsync(OrderStatus status, PaginationParams paginationParams, CancellationToken cancellationToken);
+        public Task<OrderDetailsDTO> GetByIdAsync(Guid id, CancellationToken cancellationToken);
         internal void CreateFromCheckout(Checkout checkout);
-        public Task<OrderDetailsDTO> RefundItemAsync(RefundCreateDTO refundCreate);
-        public Task SetTrackingCodeAsync(Guid orderId, string trackingCode);
-        public Task CancelAsync(Guid orderId);
-        public Task MarkAsProcessingAsync(Guid orderId);
-        public Task MarkAsShippedAsync(Guid orderId);
-        public Task MarkAsInTransitAsync(Guid orderId);
-        public Task MarkAsDeliveredAsync(Guid orderId);
-        public Task MarkAsReturnedAsync(Guid orderId);
+        public Task<OrderDetailsDTO> RefundItemAsync(RefundCreateDTO refundCreate, CancellationToken cancellationToken);
+        public Task SetTrackingCodeAsync(Guid orderId, string trackingCode, CancellationToken cancellationToken);
+        public Task CancelAsync(Guid orderId, CancellationToken cancellationToken);
+        public Task MarkAsProcessingAsync(Guid orderId, CancellationToken cancellationToken);
+        public Task MarkAsShippedAsync(Guid orderId, CancellationToken cancellationToken);
+        public Task MarkAsInTransitAsync(Guid orderId, CancellationToken cancellationToken);
+        public Task MarkAsDeliveredAsync(Guid orderId, CancellationToken cancellationToken);
+        public Task MarkAsReturnedAsync(Guid orderId, CancellationToken cancellationToken);
     }
 }

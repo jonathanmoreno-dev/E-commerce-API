@@ -24,41 +24,41 @@ namespace Ecommerce.Application.Services
             _passwordHasher = passwordHasher;
             _unitOfWork = unitOfWork;
         }
-        public async Task<PagedList<UserListDTO>> GetAllAsync(PaginationParams paginationParams)
+        public async Task<PagedList<UserListDTO>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken)
         {
-            var users = await _userRepository.GetAllAsync(paginationParams);
+            var users = await _userRepository.GetAllAsync(paginationParams, cancellationToken);
 
             var userListDTOs = users.Select(x => UserMapper.ToListDTO(x));
             return userListDTOs;
         }
-        public async Task<PagedList<UserSummaryDTO>> GetAllByRoleAsync(UserRole role, PaginationParams paginationParams)
+        public async Task<PagedList<UserSummaryDTO>> GetAllByRoleAsync(UserRole role, PaginationParams paginationParams, CancellationToken cancellationToken)
         {
-            var users = await _userRepository.GetAllByRoleAsync(role, paginationParams);
+            var users = await _userRepository.GetAllByRoleAsync(role, paginationParams, cancellationToken);
 
             var userSummaryDTOs = users.Select(x => UserMapper.ToSummaryDTO(x));
             return userSummaryDTOs;
         }
-        public async Task<UserDetailsDTO> GetByIdAsync(Guid id)
+        public async Task<UserDetailsDTO> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetByIdAsync(id);
+            var user = await _userRepository.GetByIdAsync(id, cancellationToken);
             if (user is null)
                 throw new NotFoundException("User", $"User with Id: {id} was not found");
             
             var userDetailsDTO = UserMapper.ToDetailsDTO(user);
             return userDetailsDTO;
         }
-        public async Task<UserDetailsDTO> GetCurrentAsync()
+        public async Task<UserDetailsDTO> GetCurrentAsync(CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetByIdAsync(_currentUserService.UserId);
+            var user = await _userRepository.GetByIdAsync(_currentUserService.UserId, cancellationToken);
             if (user is null)
                 throw new NotFoundException("User", $"User with Id: {_currentUserService.UserId} was not found");
 
             var userDetailsDTO = UserMapper.ToDetailsDTO(user);
             return userDetailsDTO;
         }
-        public async Task<UserDetailsDTO> UpdateAsync(UserUpdateDTO userUpdate)
+        public async Task<UserDetailsDTO> UpdateAsync(UserUpdateDTO userUpdate, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetByIdAsync(_currentUserService.UserId);
+            var user = await _userRepository.GetByIdAsync(_currentUserService.UserId, cancellationToken);
             if (user is null)
                 throw new NotFoundException("User", $"User with Id: {_currentUserService.UserId} was not found");
 
@@ -71,14 +71,14 @@ namespace Ecommerce.Application.Services
             if (userUpdate.AvatarImageUrl is not null)
                 user.ChangeAvatarImage(new AvatarImage(userUpdate.AvatarImageUrl));
 
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             var userDetailsDTO = UserMapper.ToDetailsDTO(user);
             return userDetailsDTO;
         }
-        public async Task ChangePasswordAsync(ChangePasswordDTO password)
+        public async Task ChangePasswordAsync(ChangePasswordDTO password, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetByIdAsync(_currentUserService.UserId);
+            var user = await _userRepository.GetByIdAsync(_currentUserService.UserId, cancellationToken);
             if (user is null)
                 throw new NotFoundException("User", $"User with Id: {_currentUserService.UserId} was not found");
 
@@ -86,20 +86,20 @@ namespace Ecommerce.Application.Services
                 throw new UnauthorizedException("Invalid credentials");
 
             user.ChangePasswordHash(_passwordHasher.HashPassword(password.NewPassword));
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
-        public async Task ChangeRoleAsync(Guid id, UserRole role)
+        public async Task ChangeRoleAsync(Guid id, UserRole role, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetByIdAsync(id);
+            var user = await _userRepository.GetByIdAsync(id, cancellationToken);
             if (user is null)
                 throw new NotFoundException("User", $"User with Id: {id} was not found");
 
             user.ChangeRole(role);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
-        public async Task<UserDetailsDTO> AddShippingAddressAsync(ShippingAddressDTO shippingAddress)
+        public async Task<UserDetailsDTO> AddShippingAddressAsync(ShippingAddressDTO shippingAddress, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetByIdAsync(_currentUserService.UserId);
+            var user = await _userRepository.GetByIdAsync(_currentUserService.UserId, cancellationToken);
             if (user is null)
                 throw new NotFoundException("User", $"User with Id: {_currentUserService.UserId} was not found");
 
@@ -113,14 +113,14 @@ namespace Ecommerce.Application.Services
                 shippingAddress.City,
                 shippingAddress.ZipCode
             ));
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             var userDetailsDTO = UserMapper.ToDetailsDTO(user);
             return userDetailsDTO;
         }
-        public async Task<UserDetailsDTO> RemoveShippingAddressAsync(ShippingAddressDTO shippingAddress)
+        public async Task<UserDetailsDTO> RemoveShippingAddressAsync(ShippingAddressDTO shippingAddress, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetByIdAsync(_currentUserService.UserId);
+            var user = await _userRepository.GetByIdAsync(_currentUserService.UserId, cancellationToken);
             if (user is null)
                 throw new NotFoundException("User", $"User with Id: {_currentUserService.UserId} was not found");
 
@@ -134,19 +134,19 @@ namespace Ecommerce.Application.Services
                 shippingAddress.City,
                 shippingAddress.ZipCode
             ));
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             var userDetailsDTO = UserMapper.ToDetailsDTO(user);
             return userDetailsDTO;
         }
-        public async Task DeleteAsync(Guid id)
+        public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetByIdAsync(id);
+            var user = await _userRepository.GetByIdAsync(id, cancellationToken);
             if (user is null)
                 throw new NotFoundException("User", $"User with Id: {id} was not found");
 
             _userRepository.Remove(user);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 }

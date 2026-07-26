@@ -18,45 +18,45 @@ namespace Ecommerce.API.Controllers.Admins
             _orderService = orderService;
         }
         [HttpGet("{userId:guid}")]
-        public async Task<ActionResult<IEnumerable<OrderListItemDTO>>> GetAllByUserId(Guid userId, [FromQuery] PaginationParams paginationParams)
+        public async Task<ActionResult<IEnumerable<OrderListItemDTO>>> GetAllByUserId(Guid userId, [FromQuery] PaginationParams paginationParams, CancellationToken cancellationToken)
         {
-            var orders = await _orderService.GetAllByUserIdAsync(userId, paginationParams);
+            var orders = await _orderService.GetAllByUserIdAsync(userId, paginationParams, cancellationToken);
             return Ok(orders);
         }
         [HttpPatch("{id:guid}/tracking-code")]
-        public async Task<IActionResult> SetTrackingCode(Guid id, string trackingCode)
+        public async Task<IActionResult> SetTrackingCode(Guid id, string trackingCode, CancellationToken cancellationToken)
         {
-            await _orderService.SetTrackingCodeAsync(id, trackingCode);
+            await _orderService.SetTrackingCodeAsync(id, trackingCode, cancellationToken);
             return NoContent();
         }
         [HttpPatch("{id:guid}/processing")]
-        public async Task<IActionResult> ProcessShipping(Guid id)
+        public async Task<IActionResult> ProcessShipping(Guid id, CancellationToken cancellationToken)
         {
-            await _orderService.MarkAsProcessingAsync(id);
+            await _orderService.MarkAsProcessingAsync(id, cancellationToken);
             return NoContent();
         }
         [HttpPatch("{id:guid}/shipped")]
-        public async Task<IActionResult> MarkAsShipped(Guid id)
+        public async Task<IActionResult> MarkAsShipped(Guid id, CancellationToken cancellationToken)
         {
-            await _orderService.MarkAsShippedAsync(id);
+            await _orderService.MarkAsShippedAsync(id, cancellationToken);
             return NoContent();
         }
         [HttpPatch("{id:guid}/in-transit")]
-        public async Task<IActionResult> MarkAsInTransit(Guid id)
+        public async Task<IActionResult> MarkAsInTransit(Guid id, CancellationToken cancellationToken)
         {
-            await _orderService.MarkAsInTransitAsync(id);
+            await _orderService.MarkAsInTransitAsync(id, cancellationToken);
             return NoContent();
         }
         [HttpPatch("{id:guid}/delivered")]
-        public async Task<IActionResult> MarkAsDelivered(Guid id)
+        public async Task<IActionResult> MarkAsDelivered(Guid id, CancellationToken cancellationToken)
         {
-            await _orderService.MarkAsDeliveredAsync(id);
+            await _orderService.MarkAsDeliveredAsync(id, cancellationToken);
             return NoContent();
         }
         [HttpPatch("{id:guid}/returned")]
-        public async Task<IActionResult> MarkAsReturned(Guid id)
+        public async Task<IActionResult> MarkAsReturned(Guid id, CancellationToken cancellationToken)
         {
-            await _orderService.MarkAsReturnedAsync(id);
+            await _orderService.MarkAsReturnedAsync(id, cancellationToken);
             return NoContent();
         }
     }

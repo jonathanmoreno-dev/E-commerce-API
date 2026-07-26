@@ -1,5 +1,4 @@
-﻿using Ecommerce.Application.Interfaces.Repositories;
-using Ecommerce.Application.Interfaces.Services;
+﻿using Ecommerce.Application.Interfaces.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -24,7 +23,7 @@ namespace Ecommerce.Infrastructure.BackgroundServices
                     await using (var scope = _scopeFactory.CreateAsyncScope())
                     {
                         var checkoutService = scope.ServiceProvider.GetRequiredService<ICheckoutService>();
-                        await checkoutService.ProcessExpiredCheckoutsAsync();
+                        await checkoutService.ProcessExpiredCheckoutsAsync(cancellationToken);
                     }
                 }
                 catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)

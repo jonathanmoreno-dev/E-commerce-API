@@ -17,27 +17,27 @@ namespace Ecommerce.API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<AuthResponseDTO>> Register(RegisterRequestDTO requestDTO)
+        public async Task<ActionResult<AuthResponseDTO>> Register(RegisterRequestDTO requestDTO, CancellationToken cancellationToken)
         {
-            var authResponseDTO = await _authService.RegisterAsync(requestDTO);
+            var authResponseDTO = await _authService.RegisterAsync(requestDTO, cancellationToken);
             return Ok(authResponseDTO);
         }
         [HttpPost("login")]
-        public async Task<ActionResult<AuthResponseDTO>> Login(LoginRequestDTO requestDTO)
+        public async Task<ActionResult<AuthResponseDTO>> Login(LoginRequestDTO requestDTO, CancellationToken cancellationToken)
         {
-            var authResponseDTO = await _authService.LoginAsync(requestDTO);
+            var authResponseDTO = await _authService.LoginAsync(requestDTO, cancellationToken);
             return Ok(authResponseDTO);
         }
         [HttpPost("refresh-token")]
-        public async Task<ActionResult<AuthResponseDTO>> RefreshToken(RefreshTokenRequestDTO requestDTO)
+        public async Task<ActionResult<AuthResponseDTO>> RefreshToken(RefreshTokenRequestDTO requestDTO, CancellationToken cancellationToken)
         {
-            var authResponseDTO = await _authService.RefreshTokenAsync(requestDTO.RefreshToken);
+            var authResponseDTO = await _authService.RefreshTokenAsync(requestDTO.RefreshToken, cancellationToken);
             return Ok(authResponseDTO);
         }
         [HttpPost("logout")]
-        public async Task<IActionResult> Logout(RefreshTokenRequestDTO requestDTO)
+        public async Task<IActionResult> Logout(RefreshTokenRequestDTO requestDTO, CancellationToken cancellationToken)
         {
-            await _authService.LogoutAsync(requestDTO.RefreshToken);
+            await _authService.LogoutAsync(requestDTO.RefreshToken, cancellationToken);
             return NoContent();
         }
     }

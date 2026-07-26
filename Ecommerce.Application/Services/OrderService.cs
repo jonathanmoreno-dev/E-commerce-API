@@ -24,30 +24,30 @@ namespace Ecommerce.Application.Services
             _currentUserService = currentUserService;
             _unitOfWork = unitOfWork;
         }
-        public async Task<PagedList<OrderListItemDTO>> GetAllByUserIdAsync(Guid userId, PaginationParams paginationParams)
+        public async Task<PagedList<OrderListItemDTO>> GetAllByUserIdAsync(Guid userId, PaginationParams paginationParams, CancellationToken cancellationToken)
         {
-            var currentOrders = await _orderRepository.GetAllByUserIdAsync(userId, paginationParams);
+            var currentOrders = await _orderRepository.GetAllByUserIdAsync(userId, paginationParams, cancellationToken);
             
             var currentOrderListItemDTOs = currentOrders.Select(x => OrderMapper.ToListItemDTO(x));
             return currentOrderListItemDTOs;
         }
-        public async Task<PagedList<OrderListItemDTO>> GetAllCurrentUserOrdersAsync(PaginationParams paginationParams)
+        public async Task<PagedList<OrderListItemDTO>> GetAllCurrentUserOrdersAsync(PaginationParams paginationParams, CancellationToken cancellationToken)
         {
-            var currentOrders = await _orderRepository.GetAllByUserIdAsync(_currentUserService.UserId, paginationParams);
+            var currentOrders = await _orderRepository.GetAllByUserIdAsync(_currentUserService.UserId, paginationParams, cancellationToken);
 
             var currentOrderListItemDTOs = currentOrders.Select(x => OrderMapper.ToListItemDTO(x));
             return currentOrderListItemDTOs;
         }
-        public async Task<PagedList<OrderListItemDTO>> GetAllCurrentUserOrdersByStatusAsync(OrderStatus status, PaginationParams paginationParams)
+        public async Task<PagedList<OrderListItemDTO>> GetAllCurrentUserOrdersByStatusAsync(OrderStatus status, PaginationParams paginationParams, CancellationToken cancellationToken)
         {
-            var orders = await _orderRepository.GetAllByUserIdAndStatusAsync(_currentUserService.UserId, status, paginationParams);
+            var orders = await _orderRepository.GetAllByUserIdAndStatusAsync(_currentUserService.UserId, status, paginationParams, cancellationToken);
 
             var currentOrderListItemDTOs = orders.Select(x => OrderMapper.ToListItemDTO(x));
             return currentOrderListItemDTOs;
         }
-        public async Task<OrderDetailsDTO> GetByIdAsync(Guid id)
+        public async Task<OrderDetailsDTO> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            var order = await _orderRepository.GetByIdForDetailsAsync(id);
+            var order = await _orderRepository.GetByIdForDetailsAsync(id, cancellationToken);
             if(order is null || _currentUserService.UserId != order.UserId)
                 throw new NotFoundException("Order", $"Order with Id: {id} was not found");
 
@@ -70,80 +70,80 @@ namespace Ecommerce.Application.Services
 
             _orderRepository.Add(order);
         }
-        public async Task<OrderDetailsDTO> RefundItemAsync(RefundCreateDTO refundCreate)
+        public async Task<OrderDetailsDTO> RefundItemAsync(RefundCreateDTO refundCreate, CancellationToken cancellationToken)
         {
-            var order = await _orderRepository.GetByIdForDetailsAsync(refundCreate.OrderId);
+            var order = await _orderRepository.GetByIdForDetailsAsync(refundCreate.OrderId, cancellationToken);
             if (order is null || _currentUserService.UserId != order.UserId)
                 throw new NotFoundException("Order", $"Order with Id: {refundCreate.OrderId} was not found");
 
             order.RefundItem(refundCreate.OrderItemId, new Quantity(refundCreate.Quantity));
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             var orderDetailsDTO = OrderMapper.ToDetailsDTO(order);
             return orderDetailsDTO;
         }
-        public async Task SetTrackingCodeAsync(Guid orderId, string trackingCode)
+        public async Task SetTrackingCodeAsync(Guid orderId, string trackingCode, CancellationToken cancellationToken)
         {
-            var order = await _orderRepository.GetByIdAsync(orderId);
+            var order = await _orderRepository.GetByIdAsync(orderId, cancellationToken);
             if (order is null)
                 throw new NotFoundException("Order", $"Order with Id: {orderId} was not found");
 
             order.SetTrackingCode(trackingCode);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
-        public async Task CancelAsync(Guid orderId)
+        public async Task CancelAsync(Guid orderId, CancellationToken cancellationToken)
         {
-            var order = await _orderRepository.GetByIdAsync(orderId);
+            var order = await _orderRepository.GetByIdAsync(orderId, cancellationToken);
             if (order is null)
                 throw new NotFoundException("Order", $"Order with Id: {orderId} was not found");
 
             order.Cancel();
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
-        public async Task MarkAsProcessingAsync(Guid orderId)
+        public async Task MarkAsProcessingAsync(Guid orderId, CancellationToken cancellationToken)
         {
-            var order = await _orderRepository.GetByIdAsync(orderId);
+            var order = await _orderRepository.GetByIdAsync(orderId, cancellationToken);
             if (order is null)
                 throw new NotFoundException("Order", $"Order with Id: {orderId} was not found");
 
             order.MarkAsProcessing();
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
-        public async Task MarkAsShippedAsync(Guid orderId)
+        public async Task MarkAsShippedAsync(Guid orderId, CancellationToken cancellationToken)
         {
-            var order = await _orderRepository.GetByIdAsync(orderId);
+            var order = await _orderRepository.GetByIdAsync(orderId, cancellationToken);
             if (order is null)
                 throw new NotFoundException("Order", $"Order with Id: {orderId} was not found");
 
             order.MarkAsShipped();
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
-        public async Task MarkAsInTransitAsync(Guid orderId)
+        public async Task MarkAsInTransitAsync(Guid orderId, CancellationToken cancellationToken)
         {
-            var order = await _orderRepository.GetByIdAsync(orderId);
+            var order = await _orderRepository.GetByIdAsync(orderId, cancellationToken);
             if (order is null)
                 throw new NotFoundException("Order", $"Order with Id: {orderId} was not found");
 
             order.MarkAsInTransit();
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
-        public async Task MarkAsDeliveredAsync(Guid orderId)
+        public async Task MarkAsDeliveredAsync(Guid orderId, CancellationToken cancellationToken)
         {
-            var order = await _orderRepository.GetByIdAsync(orderId);
+            var order = await _orderRepository.GetByIdAsync(orderId, cancellationToken);
             if (order is null)
                 throw new NotFoundException("Order", $"Order with Id: {orderId} was not found");
 
             order.MarkAsDelivered();
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
-        public async Task MarkAsReturnedAsync(Guid orderId)
+        public async Task MarkAsReturnedAsync(Guid orderId, CancellationToken cancellationToken)
         {
-            var order = await _orderRepository.GetByIdAsync(orderId);
+            var order = await _orderRepository.GetByIdAsync(orderId, cancellationToken);
             if (order is null)
                 throw new NotFoundException("Order", $"Order with Id: {orderId} was not found");
 
             order.MarkAsReturned();
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 }

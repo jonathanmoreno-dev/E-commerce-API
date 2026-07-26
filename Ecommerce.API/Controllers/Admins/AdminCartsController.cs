@@ -22,21 +22,21 @@ namespace Ecommerce.API.Controllers.Admins
             _categoryService = categoryService;
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CartListDTO>>> GetAllCarts([FromQuery] PaginationParams paginationParams)
+        public async Task<ActionResult<IEnumerable<CartListDTO>>> GetAllCarts([FromQuery] PaginationParams paginationParams, CancellationToken cancellationToken)
         {
-            var carts = await _cartService.GetAllAsync(paginationParams);
+            var carts = await _cartService.GetAllAsync(paginationParams, cancellationToken);
             return Ok(carts);
         }
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<CartDetailsDTO>> GetCartById(Guid id)
+        public async Task<ActionResult<CartDetailsDTO>> GetCartById(Guid id, CancellationToken cancellationToken)
         {
-            var cart = await _cartService.GetByIdAsync(id);
+            var cart = await _cartService.GetByIdAsync(id, cancellationToken);
             return Ok(cart);
         }
         [HttpGet("users/{userId:guid}/cart")]
-        public async Task<ActionResult<CartDetailsDTO>> GetCartByUserId(Guid userId)
+        public async Task<ActionResult<CartDetailsDTO>> GetCartByUserId(Guid userId, CancellationToken cancellationToken)
         {
-            var cart = await _cartService.GetByUserIdAsync(userId);
+            var cart = await _cartService.GetByUserIdAsync(userId, cancellationToken);
             return Ok(cart);
         }
     }
