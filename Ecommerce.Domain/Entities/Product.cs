@@ -156,7 +156,6 @@ namespace Ecommerce.Domain.Entities
                 throw new ConflictException("Category already in Product", $"Category with Id: {category.Id} already in product");
 
             _categories.Add(category);
-            category.AddProduct(this);
         }
         public void RemoveCategory(Guid categoryId)
         {
@@ -165,7 +164,6 @@ namespace Ecommerce.Domain.Entities
                 throw new NotFoundException("Category", $"Category with Id: {categoryId} was not found");
 
             _categories.Remove(category);
-            category.RemoveProduct(Id);
         }
     }
 }
