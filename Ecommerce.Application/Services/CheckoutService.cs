@@ -123,7 +123,7 @@ namespace Ecommerce.Application.Services
         }
         public async Task CreatePaymentAsync(Guid checkoutId, CancellationToken cancellationToken)
         {
-            var checkout = await _checkoutRepository.GetByIdWithPaymentAttemptsAsync(checkoutId, cancellationToken);
+            var checkout = await _checkoutRepository.GetByIdAsync(checkoutId, cancellationToken);
             var cart = await _cartRepository.GetByUserIdAsync(_currentUserService.UserId, cancellationToken);
             if (checkout is null || _currentUserService.UserId != checkout.UserId)
                 throw new NotFoundException("Checkout", $"Checkout with Id: {checkoutId} was not found");
@@ -135,7 +135,7 @@ namespace Ecommerce.Application.Services
         }
         public async Task AuthorizePaymentAsync(Guid checkoutId, CancellationToken cancellationToken)
         {
-            var checkout = await _checkoutRepository.GetByIdAsync(checkoutId, cancellationToken);
+            var checkout = await _checkoutRepository.GetByIdWithPaymentAttemptsAsync(checkoutId, cancellationToken);
             if (checkout is null)
                 throw new NotFoundException("Checkout", $"Checkout with Id: {checkoutId} was not found");
 
@@ -144,7 +144,7 @@ namespace Ecommerce.Application.Services
         }
         public async Task CompletePaymentAsync(Guid checkoutId, CancellationToken cancellationToken)
         {
-            var checkout = await _checkoutRepository.GetByIdAsync(checkoutId, cancellationToken);
+            var checkout = await _checkoutRepository.GetByIdWithPaymentAttemptsAsync(checkoutId, cancellationToken);
             if (checkout is null)
                 throw new NotFoundException("Checkout", $"Checkout with Id: {checkoutId} was not found");
 
@@ -158,7 +158,7 @@ namespace Ecommerce.Application.Services
         }
         public async Task FailPaymentAsync(Guid checkoutId, CancellationToken cancellationToken)
         {
-            var checkout = await _checkoutRepository.GetByIdAsync(checkoutId, cancellationToken);
+            var checkout = await _checkoutRepository.GetByIdWithPaymentAttemptsAsync(checkoutId, cancellationToken);
             if (checkout is null)
                 throw new NotFoundException("Checkout", $"Checkout with Id: {checkoutId} was not found");
 
@@ -167,7 +167,7 @@ namespace Ecommerce.Application.Services
         }
         public async Task CancelPaymentAsync(Guid checkoutId, CancellationToken cancellationToken)
         {
-            var checkout = await _checkoutRepository.GetByIdAsync(checkoutId, cancellationToken);
+            var checkout = await _checkoutRepository.GetByIdWithPaymentAttemptsAsync(checkoutId, cancellationToken);
             if (checkout is null)
                 throw new NotFoundException("Checkout", $"Checkout with Id: {checkoutId} was not found");
 
@@ -176,7 +176,7 @@ namespace Ecommerce.Application.Services
         }
         public async Task AbandonPaymentAsync(Guid checkoutId, CancellationToken cancellationToken)
         {
-            var checkout = await _checkoutRepository.GetByIdAsync(checkoutId, cancellationToken);
+            var checkout = await _checkoutRepository.GetByIdWithPaymentAttemptsAsync(checkoutId, cancellationToken);
             if (checkout is null)
                 throw new NotFoundException("Checkout", $"Checkout with Id: {checkoutId} was not found");
 
