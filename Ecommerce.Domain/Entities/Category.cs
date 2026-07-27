@@ -39,22 +39,5 @@ namespace Ecommerce.Domain.Entities
 
             CategoryImage = categoryImage;
         }
-        internal void AddProduct(Product product)
-        {
-            ArgumentNullException.ThrowIfNull(product);
-
-            if (_products.Any(x => x.Id == product.Id))
-                throw new ConflictException("Product already in Category", $"Product with Id: {product.Id} already in category");
-
-            _products.Add(product);
-        }
-        internal void RemoveProduct(Guid productId)
-        {
-            var product = _products.FirstOrDefault(x => x.Id == productId);
-            if(product is null)
-                throw new NotFoundException("Product", $"Product with Id: {productId} was not found");
-
-            _products.Remove(product);
-        }
     }
 }
