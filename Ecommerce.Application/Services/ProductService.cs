@@ -156,30 +156,6 @@ namespace Ecommerce.Application.Services
             var productDetailsDTO = ProductMapper.ToDetailsDTO(product);
             return productDetailsDTO;
         }
-        public async Task<ProductDetailsDTO> IncreaseStockAsync(Guid productId, int quantity, CancellationToken cancellationToken)
-        {
-            var product = await _productRepository.GetByIdAsync(productId, cancellationToken);
-            if (product is null)
-                throw new NotFoundException("Product", $"Product with Id: {productId} was not found");
-
-            product.IncreaseStock(new Quantity(quantity));
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-            var productDetailsDTO = ProductMapper.ToDetailsDTO(product);
-            return productDetailsDTO;
-        }
-        public async Task<ProductDetailsDTO> DecreaseStockAsync(Guid productId, int quantity, CancellationToken cancellationToken)
-        {
-            var product = await _productRepository.GetByIdAsync(productId, cancellationToken);
-            if (product is null)
-                throw new NotFoundException("Product", $"Product with Id: {productId} was not found");
-
-            product.DecreaseStock(new Quantity(quantity));
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-            var productDetailsDTO = ProductMapper.ToDetailsDTO(product);
-            return productDetailsDTO;
-        }
         public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
             var product = await _productRepository.GetByIdAsync(id, cancellationToken);

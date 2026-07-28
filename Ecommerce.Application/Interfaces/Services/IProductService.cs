@@ -16,8 +16,6 @@ namespace Ecommerce.Application.Interfaces.Services
         public Task<ProductDetailsDTO> RemoveImageAsync(Guid productId, ProductImageDTO image, CancellationToken cancellationToken);
         public Task<ProductDetailsDTO> ChangeImageUrlAsync(Guid productId, ChangeImageUrlDTO changeImage, CancellationToken cancellationToken);
         public Task<ProductDetailsDTO> ChangeImageOrderAsync(Guid productId, ChangeImageOrderDTO changeImage, CancellationToken cancellationToken);
-        public Task<ProductDetailsDTO> IncreaseStockAsync(Guid productId, int quantity, CancellationToken cancellationToken);
-        public Task<ProductDetailsDTO> DecreaseStockAsync(Guid productId, int quantity, CancellationToken cancellationToken);
         public Task DeleteAsync(Guid id, CancellationToken cancellationToken);
     }
 }
