@@ -64,7 +64,10 @@ namespace Ecommerce.Application.Services
             if (product is null)
                 throw new NotFoundException("Product", $"Product with Id: {item.ProductId} was not found");
 
-            currentCart.AddItem(product.Id, product.Price, new Quantity(item.Quantity));
+            var quantity = new Quantity(item.Quantity);
+            product.CheckAvailability(quantity);
+
+            currentCart.AddItem(product.Id, product.Price, quantity);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             var currentCartDetailsDTO = CartMapper.ToDetailsDTO(currentCart);
@@ -84,7 +87,14 @@ namespace Ecommerce.Application.Services
         {
             var currentCart = await GetCurrentCartAsync(cancellationToken);
 
-            currentCart.ChangeItemQuantity(itemUpdate.ProductId, new Quantity(itemUpdate.Quantity));
+            var product = await _productRepository.GetByIdAsync(itemUpdate.ProductId, cancellationToken);
+            if (product is null)
+                throw new NotFoundException("Product", $"Product with Id: {itemUpdate.ProductId} was not found");
+
+            var quantity = new Quantity(itemUpdate.Quantity);
+            product.CheckAvailability(quantity);
+
+            currentCart.ChangeItemQuantity(product.Id, quantity);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             var currentCartDetailsDTO = CartMapper.ToDetailsDTO(currentCart);

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics.Contracts;
 using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.ValueObjects;
 
@@ -27,6 +28,9 @@ namespace Ecommerce.Domain.Entities
         }
         public void AddItem(Guid productId, Money unitPrice, Quantity quantity)
         {
+            if (quantity.Value == 0)
+                throw new BusinessRuleException("Cannot add zero item quantity to cart");
+
             var existingItem = _cartItems.FirstOrDefault(x => x.ProductId == productId);
             if (existingItem is null)
                 _cartItems.Add(new CartItem(productId, unitPrice, quantity));
@@ -58,6 +62,7 @@ namespace Ecommerce.Domain.Entities
         public void ClearItems()
         {
             _cartItems.Clear();
+            UpdatedAt = DateTime.UtcNow;
         }
     }
 }

@@ -113,17 +113,6 @@ namespace Ecommerce.Domain.Entities
             _productImages.Clear();
             _productImages.AddRange(ordered);
         }
-        public void IncreaseStock(Quantity quantity)
-        {
-            Stock = Stock.Add(quantity.Value);
-        }
-        public void DecreaseStock(Quantity quantity)
-        {
-            if ((Stock.Value - quantity.Value) < ReservedStock.Value)
-                throw new BusinessRuleException("Stock cannot be less than reserved stock");
-
-            Stock = Stock.Remove(quantity.Value);
-        }
         public void ChangeStock(Quantity quantity)
         {
             if(quantity.Value < ReservedStock.Value)
@@ -133,20 +122,30 @@ namespace Ecommerce.Domain.Entities
         }
         public void ReserveStock(Quantity quantity)
         {
-            var availableStock = Stock.Value - quantity.Value;
-            if (availableStock < quantity.Value)
-                throw new BusinessRuleException("Insufficient stock");
+            CheckAvailability(quantity);
 
             ReservedStock = ReservedStock.Add(quantity.Value);
         }
         public void ConfirmStockReservation(Quantity quantity)
         {
+            if (quantity.Value > ReservedStock.Value)
+                throw new BusinessRuleException("Insufficient reserved stock");
+
             ReservedStock = ReservedStock.Remove(quantity.Value);
-            DecreaseStock(quantity);
+            Stock = Stock.Remove(quantity.Value);
         }
         public void CancelStockReservation(Quantity quantity)
         {
+            if (quantity.Value > ReservedStock.Value)
+                throw new BusinessRuleException("Insufficient reserved stock");
+
             ReservedStock = ReservedStock.Remove(quantity.Value);
+        }
+        public void CheckAvailability(Quantity quantity)
+        {
+            var availableStock = Stock.Value - ReservedStock.Value;
+            if(quantity.Value > availableStock)
+                throw new BusinessRuleException("Insufficient stock");
         }
         public void AddCategory(Category category)
         {
