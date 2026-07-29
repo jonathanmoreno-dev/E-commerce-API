@@ -10,7 +10,6 @@ namespace Ecommerce.Application.Interfaces.Repositories
         public Task<PagedList<Order>> GetAllByUserIdAsync(Guid userId, PaginationParams paginationParams, CancellationToken cancellationToken);
         public Task<PagedList<Order>> GetAllByUserIdAndStatusAsync(Guid userId, OrderStatus status, PaginationParams paginationParams, CancellationToken cancellationToken);
         public Task<Order?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
-        public Task<Order?> GetByIdForDetailsAsync(Guid id, CancellationToken cancellationToken);
         public void Add(Order order);
     }
 }

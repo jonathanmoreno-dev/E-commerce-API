@@ -14,13 +14,11 @@ namespace Ecommerce.Application.Services
     public class OrderService : IOrderService
     {
         private readonly IOrderRepository _orderRepository;
-        private readonly ICheckoutRepository _checkoutRepository;
         private readonly ICurrentUserService _currentUserService;
         private readonly IUnitOfWork _unitOfWork;
-        public OrderService(IOrderRepository orderRepository, ICheckoutRepository checkoutRepository, ICurrentUserService currentUserService, IUnitOfWork unitOfWork)
+        public OrderService(IOrderRepository orderRepository, ICurrentUserService currentUserService, IUnitOfWork unitOfWork)
         {
             _orderRepository = orderRepository;
-            _checkoutRepository = checkoutRepository;
             _currentUserService = currentUserService;
             _unitOfWork = unitOfWork;
         }
@@ -47,7 +45,7 @@ namespace Ecommerce.Application.Services
         }
         public async Task<OrderDetailsDTO> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            var order = await _orderRepository.GetByIdForDetailsAsync(id, cancellationToken);
+            var order = await _orderRepository.GetByIdAsync(id, cancellationToken);
             if(order is null || _currentUserService.UserId != order.UserId)
                 throw new NotFoundException("Order", $"Order with Id: {id} was not found");
 
@@ -72,7 +70,7 @@ namespace Ecommerce.Application.Services
         }
         public async Task<OrderDetailsDTO> RefundItemAsync(RefundCreateDTO refundCreate, CancellationToken cancellationToken)
         {
-            var order = await _orderRepository.GetByIdForDetailsAsync(refundCreate.OrderId, cancellationToken);
+            var order = await _orderRepository.GetByIdAsync(refundCreate.OrderId, cancellationToken);
             if (order is null || _currentUserService.UserId != order.UserId)
                 throw new NotFoundException("Order", $"Order with Id: {refundCreate.OrderId} was not found");
 
