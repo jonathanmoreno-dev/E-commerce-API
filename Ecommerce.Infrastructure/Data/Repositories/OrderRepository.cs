@@ -3,7 +3,6 @@ using Ecommerce.Application.Pagination;
 using Ecommerce.Domain.Entities;
 using Ecommerce.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Ecommerce.Infrastructure.Data.Repositories
 {
@@ -41,10 +40,6 @@ namespace Ecommerce.Infrastructure.Data.Repositories
             return new PagedList<Order>(orders, paginationParams.PageNumber, paginationParams.PageSize, totalItems);
         }
         public async Task<Order?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
-        {
-            return await _appDbContext.Orders.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
-        }
-        public async Task<Order?> GetByIdForDetailsAsync(Guid id, CancellationToken cancellationToken)
         {
             return await _appDbContext.Orders.Include(x => x.Shipping).Include(x => x.OrderItems).ThenInclude(x => x.Refunds).Include(x => x.OrderItems).ThenInclude(y => y.Product).FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         }
