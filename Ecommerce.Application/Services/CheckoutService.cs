@@ -154,6 +154,7 @@ namespace Ecommerce.Application.Services
             }
             checkout.CompletePayment();
             _orderService.CreateFromCheckout(checkout);
+            _checkoutRepository.Remove(checkout);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
         public async Task FailPaymentAsync(Guid checkoutId, CancellationToken cancellationToken)
