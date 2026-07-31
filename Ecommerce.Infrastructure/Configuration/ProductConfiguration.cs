@@ -16,6 +16,7 @@ namespace Ecommerce.Infrastructure.Configuration
             builder.ComplexProperty(x => x.LongDescription, p => p.Property(v => v.Value).HasColumnName("long_description").IsRequired());
             builder.ComplexProperty(x => x.Price, p => p.Property(v => v.Value).HasColumnName("price").HasPrecision(18, 2));
             builder.ComplexProperty(x => x.Stock, p => p.Property(v => v.Value).HasColumnName("stock"));
+            builder.ComplexProperty(x => x.ReservedStock, p => p.Property(v => v.Value).HasColumnName("reserved_stock"));
             builder.OwnsMany(x => x.ProductImages, p =>
             {
                 p.Property(v => v.Url).HasColumnName("product_image_url").IsRequired();
