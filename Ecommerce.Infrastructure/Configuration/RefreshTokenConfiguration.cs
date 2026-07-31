@@ -14,7 +14,7 @@ namespace Ecommerce.Infrastructure.Configuration
             builder.Property(x => x.Token).IsRequired().HasColumnName("token").HasMaxLength(500);
             builder.Property(x => x.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP").HasColumnName("created_at");
             builder.Property(x => x.ExpiresAt).HasColumnName("expires_at");
-            builder.Property(x => x.RevokedAt).HasColumnName("revoked_at");
+            builder.Property(x => x.RevokedAt).HasColumnName("revoked_at").IsRequired(false);
             builder.Property(x => x.UserId).HasColumnName("user_id");
             builder.HasIndex(x => x.Token).IsUnique();
             builder.HasOne(x => x.User).WithMany(y => y.RefreshTokens).HasForeignKey(x => x.UserId);

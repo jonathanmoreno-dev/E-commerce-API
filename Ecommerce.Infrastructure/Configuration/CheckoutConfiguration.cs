@@ -33,6 +33,7 @@ namespace Ecommerce.Infrastructure.Configuration
             builder.Ignore(x => x.CompletedPayment);
             builder.Property(x => x.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP").HasColumnName("created_at");
             builder.Property(x => x.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP").HasColumnName("updated_at");
+            builder.Property(x => x.ExpirationProcessedAt).HasColumnName("expiration_processed_at").IsRequired(false);
             builder.HasIndex(x => x.UserId).IsUnique();
         }
     }
