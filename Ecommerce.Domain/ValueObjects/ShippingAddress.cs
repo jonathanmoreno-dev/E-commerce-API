@@ -24,12 +24,12 @@ namespace Ecommerce.Domain.ValueObjects
             ValidateState(state);
             ValidateCity(city);
             ValidateZipCode(zipCode);
-            Neighborhood = neighborhood;
-            Street = street;
-            Number = number;
-            State = state;
-            City = city;
-            ZipCode = zipCode;
+            Neighborhood = neighborhood.Trim();
+            Street = street.Trim();
+            Number = number.Trim();
+            State = state.Trim();
+            City = city.Trim();
+            ZipCode = zipCode.Trim().Replace("-", "");
         }
         public ShippingAddress WithRecipientName(PersonName personName)
         {
