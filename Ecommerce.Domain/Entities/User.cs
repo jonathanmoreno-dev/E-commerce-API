@@ -14,12 +14,6 @@ namespace Ecommerce.Domain.Entities
         public Cart Cart { get; private set; } = null!;
         private readonly List<ShippingAddress> _shippingAddress = new();
         public IReadOnlyCollection<ShippingAddress> ShippingAddresses => _shippingAddress;
-        private readonly List<Checkout> _checkouts = new();
-        public IReadOnlyCollection<Checkout> Checkouts => _checkouts;
-        private readonly List<Order> _orders = new();
-        public IReadOnlyCollection<Order> Orders => _orders;
-        private readonly List<RefreshToken> _refreshTokens = new();
-        public IReadOnlyCollection<RefreshToken> RefreshTokens => _refreshTokens;
         public UserRole Role { get; private set; }
         public AvatarImage? AvatarImage { get; private set; }
         private User() { }
@@ -52,6 +46,9 @@ namespace Ecommerce.Domain.Entities
         }
         public void ChangePasswordHash(string passwordHash)
         {
+            if (string.IsNullOrWhiteSpace(passwordHash))
+                throw new DomainValidationException("Password hash is required.");
+
             PasswordHash = passwordHash;
         }
         public void ChangeRole(UserRole role)
@@ -65,6 +62,8 @@ namespace Ecommerce.Domain.Entities
         public void AddShippingAddress(ShippingAddress shippingAddress)
         {
             ArgumentNullException.ThrowIfNull(shippingAddress);
+            if (_shippingAddress.Count > 5)
+                throw new BusinessRuleException("User cannot have more than 5 shipping addresses");
 
             _shippingAddress.Add(shippingAddress);
         }
@@ -80,7 +79,9 @@ namespace Ecommerce.Domain.Entities
         public ShippingAddress GetDefaultShippingAddress()
         {
             var address = _shippingAddress.FirstOrDefault();
-            ArgumentNullException.ThrowIfNull(address);
+            if(address is null)
+                throw new DomainValidationException("User has no shipping address.");
+
             return address;
         }
     }
