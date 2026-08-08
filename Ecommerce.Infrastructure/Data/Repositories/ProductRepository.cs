@@ -16,7 +16,7 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         {
             var query = _appDbContext.Products.AsNoTracking();
             var totalItems = await query.CountAsync(cancellationToken);
-            var products = await query.OrderBy(x => x.Name).Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync(cancellationToken);
+            var products = await query.OrderBy(x => x.Name.Value).Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync(cancellationToken);
 
             return new PagedList<Product>(products, paginationParams.PageNumber, paginationParams.PageSize, totalItems);
         }
@@ -24,7 +24,7 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         {
             var query = _appDbContext.Products.Where(x => x.Categories.Any(x => x.Id == categoryId)).AsNoTracking();
             var totalItems = await query.CountAsync(cancellationToken);
-            var products = await query.OrderBy(x => x.Name).Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync(cancellationToken);
+            var products = await query.OrderBy(x => x.Name.Value).Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync(cancellationToken);
 
             return new PagedList<Product>(products, paginationParams.PageNumber, paginationParams.PageSize, totalItems);
         }
