@@ -17,7 +17,7 @@ namespace Ecommerce.Infrastructure.Configuration
             builder.Property(x => x.RevokedAt).HasColumnName("revoked_at").IsRequired(false);
             builder.Property(x => x.UserId).HasColumnName("user_id");
             builder.HasIndex(x => x.Token).IsUnique();
-            builder.HasOne(x => x.User).WithMany(y => y.RefreshTokens).HasForeignKey(x => x.UserId);
+            builder.HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId);
         }
     }
 }

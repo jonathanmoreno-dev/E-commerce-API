@@ -29,7 +29,7 @@ namespace Ecommerce.Infrastructure.Configuration
             builder.Property(x => x.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP").HasColumnName("created_at");
             builder.Property(x => x.Status).HasConversion<string>().HasColumnName("status");
             builder.Property(x => x.UserId).HasColumnName("user_id");
-            builder.HasOne(x => x.User).WithMany(y => y.Orders).HasForeignKey(x => x.UserId);
+            builder.HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId);
             builder.HasIndex(x => x.UserId);
         }
     }
