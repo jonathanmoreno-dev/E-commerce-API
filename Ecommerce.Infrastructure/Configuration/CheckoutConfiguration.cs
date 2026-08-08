@@ -12,7 +12,6 @@ namespace Ecommerce.Infrastructure.Configuration
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).HasColumnName("id").ValueGeneratedNever();
             builder.Property(x => x.UserId).HasColumnName("user_id");
-            builder.HasOne(x => x.User).WithMany(y => y.Checkouts).HasForeignKey(x => x.UserId);
             builder.ComplexProperty(x => x.ShippingAddress, p =>
             {
                 p.ComplexProperty(r => r.RecipientName, pn => pn.Property(v => v.Value).HasColumnName("recipient_name").IsRequired().HasMaxLength(100));
