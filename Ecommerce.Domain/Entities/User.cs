@@ -76,12 +76,9 @@ namespace Ecommerce.Domain.Entities
 
             _shippingAddress.Remove(shippingAddress);
         }
-        public ShippingAddress GetDefaultShippingAddress()
+        public ShippingAddress? GetDefaultShippingAddress()
         {
             var address = _shippingAddress.FirstOrDefault();
-            if(address is null)
-                throw new DomainValidationException("User has no shipping address.");
-
             return address;
         }
     }

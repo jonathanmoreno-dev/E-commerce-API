@@ -68,6 +68,9 @@ namespace Ecommerce.Application.Services
                 throw new NotFoundException("Cart", $"Cart with User Id: {_currentUserService.UserId} was not found");
 
             var address = user.GetDefaultShippingAddress();
+            if(address is null)
+                throw new BusinessRuleException("A shipping address is required to start checkout.");
+
             var shippingCost = new Money(30); // Fixed Value
             foreach (var item in cart.CartItems)
             {
