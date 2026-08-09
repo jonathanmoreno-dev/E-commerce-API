@@ -11,6 +11,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecommerce.Domain", "Ecommer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecommerce.Application", "Ecommerce.Application\Ecommerce.Application.csproj", "{C3ECBE45-9E3A-471D-BB56-A8CCD1545C8B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecommerce.Fakers", "Ecommerce.Fakers\Ecommerce.Fakers.csproj", "{16626911-B732-4E9B-B0CC-AE6E9BE30065}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A0A0D909-07CA-4AB0-AE96-8B7B8E597597} = {A0A0D909-07CA-4AB0-AE96-8B7B8E597597}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecommerce.Tests.Unit", "TestProject1\Ecommerce.Tests.Unit.csproj", "{DD8FB562-BAFE-4CD3-AB17-5F2A7DF6EB61}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +40,14 @@ Global
 		{C3ECBE45-9E3A-471D-BB56-A8CCD1545C8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3ECBE45-9E3A-471D-BB56-A8CCD1545C8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C3ECBE45-9E3A-471D-BB56-A8CCD1545C8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16626911-B732-4E9B-B0CC-AE6E9BE30065}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16626911-B732-4E9B-B0CC-AE6E9BE30065}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16626911-B732-4E9B-B0CC-AE6E9BE30065}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16626911-B732-4E9B-B0CC-AE6E9BE30065}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD8FB562-BAFE-4CD3-AB17-5F2A7DF6EB61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD8FB562-BAFE-4CD3-AB17-5F2A7DF6EB61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD8FB562-BAFE-4CD3-AB17-5F2A7DF6EB61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD8FB562-BAFE-4CD3-AB17-5F2A7DF6EB61}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
