@@ -4,9 +4,11 @@ using Ecommerce.API.ExceptionHandlers;
 using Ecommerce.Application.Interfaces.Repositories;
 using Ecommerce.Application.Interfaces.Services;
 using Ecommerce.Application.Services;
+using Ecommerce.Domain.Entities;
 using Ecommerce.Infrastructure.Authentication;
 using Ecommerce.Infrastructure.Data;
 using Ecommerce.Infrastructure.Data.Repositories;
+using Ecommerce.Infrastructure.Data.Seeders.EntitySeeders;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -52,12 +54,32 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Frontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173") 
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
 
 string? postgreSQLStringConnectionString = builder.Configuration.GetConnectionString("Default");
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(postgreSQLStringConnectionString));
 
 builder.Services.AddScoped<IUnitOfWork>(sp =>
     sp.GetRequiredService<AppDbContext>());
+
+// Seeders
+builder.Services.AddScoped<AdminSeeder>();
+builder.Services.AddScoped<DevelopmentSeeder>();
+builder.Services.AddScoped<CartSeeder>();
+builder.Services.AddScoped<CategorySeeder>();
+builder.Services.AddScoped<CheckoutSeeder>();
+builder.Services.AddScoped<OrderSeeder>();
+builder.Services.AddScoped<ProductSeeder>();
+builder.Services.AddScoped<UserSeeder>();
+
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICheckoutRepository, CheckoutRepository>();
@@ -107,27 +129,29 @@ builder.Services.AddAuthorization(options =>
         .RequireAuthenticatedUser()
         .Build();
 });
-builder.Services.AddScoped<AdminSeeder>();
 
 var app = builder.Build();
-
-using (var scope = app.Services.CreateScope())
-{
-    var seeder = scope.ServiceProvider.GetRequiredService<AdminSeeder>();
-    await seeder.SeedAsync();
-}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    using (var scope = app.Services.CreateScope())
+    {
+        var adminSeeder = scope.ServiceProvider.GetRequiredService<AdminSeeder>();
+        await adminSeeder.SeedAsync();
+
+        // ---- Populates the database with initial data for the development environment ----
+        //var developmentSeeder = scope.ServiceProvider.GetRequiredService<DevelopmentSeeder>();
+        //await developmentSeeder.SeedAsync();
+    }
 }
 
 app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
-
+app.UseCors("Frontend");
 app.UseAuthentication();
 app.UseAuthorization();
 
