@@ -62,7 +62,7 @@ namespace Ecommerce.Domain.Entities
         public void AddShippingAddress(ShippingAddress shippingAddress)
         {
             ArgumentNullException.ThrowIfNull(shippingAddress);
-            if (_shippingAddress.Count > 5)
+            if (_shippingAddress.Count >= 5)
                 throw new BusinessRuleException("User cannot have more than 5 shipping addresses");
 
             _shippingAddress.Add(shippingAddress);
