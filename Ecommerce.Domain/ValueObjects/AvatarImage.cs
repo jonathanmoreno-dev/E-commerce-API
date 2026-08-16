@@ -10,7 +10,9 @@ namespace Ecommerce.Domain.ValueObjects
         {
             if (string.IsNullOrWhiteSpace(url))
                 throw new DomainValidationException("AvatarImageUrl cannot be empty");
+
             url = url.Trim();
+
             if (url.Length > 2048)
                 throw new DomainValidationException("URL cannot exceed 2048 characters");
             if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
