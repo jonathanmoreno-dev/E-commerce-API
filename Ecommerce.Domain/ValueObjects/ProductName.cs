@@ -11,6 +11,9 @@ namespace Ecommerce.Domain.ValueObjects
         {
             if (string.IsNullOrWhiteSpace(value))
                 throw new DomainValidationException("Product name cannot be empty");
+
+            value.Trim();
+
             if (value.Length > 255)
                 throw new DomainValidationException("Product name cannot exceed 255 characters");
 

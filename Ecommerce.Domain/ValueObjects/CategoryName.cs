@@ -11,6 +11,7 @@ namespace Ecommerce.Domain.ValueObjects
         {
             if (string.IsNullOrWhiteSpace(value))
                 throw new DomainValidationException("Category name cannot be empty");
+            value.Trim();
             if (value.Length > 100)
                 throw new DomainValidationException("Category name cannot exceed 100 characters");
 
