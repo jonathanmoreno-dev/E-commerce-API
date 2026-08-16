@@ -5,6 +5,28 @@ namespace Ecommerce.Tests.Unit.Domain.ValueObjects
 {
     public class AvatarImageTests
     {
+        [Fact]
+        public void ShouldBeEqualWhenURLsAreTheSame()
+        {
+            var url = "https://example.com/avatar.png";
+
+            var avatarImage1 = new AvatarImage(url);
+            var avatarImage2 = new AvatarImage(url);
+
+            Assert.Equal(avatarImage1, avatarImage2);
+        }
+        [Fact]
+        public void ShouldNotBeEqualWhenURLsAreDifferent()
+        {
+            var url1 = "https://example.com/avatar.png";
+            var url2 = "https://example.com/";
+
+            var avatarImage1 = new AvatarImage(url1);
+            var avatarImage2 = new AvatarImage(url2);
+
+            Assert.NotEqual(avatarImage1, avatarImage2);
+        }
+
         [Theory]
         [InlineData("http://example.com/avatar.png")]
         [InlineData("https://example.com/avatar.png")]
@@ -13,7 +35,7 @@ namespace Ecommerce.Tests.Unit.Domain.ValueObjects
             var avatarImage = new AvatarImage(validUrl);
 
             Assert.NotNull(avatarImage);
-            Assert.Equal(avatarImage.Url, validUrl);
+            Assert.Equal(validUrl, avatarImage.Url);
         }
 
         [Theory]
@@ -50,7 +72,7 @@ namespace Ecommerce.Tests.Unit.Domain.ValueObjects
             var avatarImage = new AvatarImage(url);
 
             Assert.NotNull(avatarImage);
-            Assert.Equal(avatarImage.Url, url);
+            Assert.Equal(url, avatarImage.Url);
         }
         [Theory]
         [InlineData("not-a-url")]
