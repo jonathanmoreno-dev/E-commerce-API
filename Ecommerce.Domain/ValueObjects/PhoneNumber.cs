@@ -11,10 +11,12 @@ namespace Ecommerce.Domain.ValueObjects
         {
             if (string.IsNullOrWhiteSpace(value))
                 throw new DomainValidationException("Phone number cannot be empty");
+
+            value = value.Trim();
+
             if (value.Length > 50)
                 throw new DomainValidationException("Phone number exceed 50 characters");
 
-            value = value.Trim();
             if(!value.StartsWith('+'))
                 throw new DomainValidationException("Phone number need to starts with +");
 
