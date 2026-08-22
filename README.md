@@ -8,7 +8,9 @@
 
 API RESTful para uma plataforma de e-commerce, desenvolvida com ASP.NET Core, Entity Framework Core e PostgreSQL. A solução cobre autenticação, catálogo, carrinho, checkout, pagamentos, pedidos, entregas, reembolsos e operações administrativas.
 
-O projeto utiliza uma arquitetura em camadas inspirada em Clean Architecture, com regras de negócio concentradas no domínio, casos de uso na camada de aplicação e detalhes técnicos isolados na infraestrutura.
+O projeto utiliza uma arquitetura em camadas inspirada em Clean Architecture, princípios SOLID, práticas de Clean Code, modelagem rica de domínio e building blocks táticos de Domain-Driven Design, além de utilizar Dependency Injection, Repositories, UnitOfWork e Encapsulamento. As regras de negócio permanecem concentradas no domínio, os casos de uso são orquestrados pela camada de aplicação e os detalhes técnicos ficam isolados na infraestrutura.
+
+**+500 Testes Unitários e de Integração**
 
 ## Sumário
 
