@@ -1,10 +1,9 @@
-# E-commerce API
+# Ecommerce API
 
 ![.NET](https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet&logoColor=white)
 ![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-Web_API-512BD4?color=00FF00&logo=dotnet&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-EF_Core-4169E1?color=DC143C&logo=postgresql&logoColor=white)
-![xUnit](https://img.shields.io/badge/Tests-xUnit-512BD4?color=00FFFF)
-![Moq](https://img.shields.io/badge/Tests-Moq-512BD4?color=00FFFF)
+![xUnit](https://img.shields.io/badge/Tests-xUnit/Moq-512BD4?color=00FFFF)
 
 API RESTful para uma plataforma de e-commerce, desenvolvida com ASP.NET Core, Entity Framework Core e PostgreSQL. A solução cobre autenticação, catálogo, carrinho, checkout, pagamentos, pedidos, entregas, reembolsos e operações administrativas.
 
