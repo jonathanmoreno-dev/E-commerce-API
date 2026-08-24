@@ -2,8 +2,8 @@
 {
     public enum PaymentMethod
     {
-        CreditCard,
-        Boleto,
-        Pix
+        CreditCard = 1,
+        Boleto = 2,
+        Pix = 3
     }
 }
