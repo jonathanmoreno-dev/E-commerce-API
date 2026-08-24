@@ -6,6 +6,7 @@ using Ecommerce.Application.Interfaces.Services;
 using Ecommerce.Application.Mappers;
 using Ecommerce.Application.Pagination;
 using Ecommerce.Domain.Entities;
+using Ecommerce.Domain.Enums;
 using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.ValueObjects;
 
@@ -81,6 +82,7 @@ namespace Ecommerce.Application.Services
             }
             var items = cart.CartItems.Select(x => (x.ProductId,x.UnitPrice,x.Quantity)).ToList();
             var checkout = new Checkout(_currentUserService.UserId, address, shippingCost, items);
+            checkout.ChangePaymentMethod(PaymentMethod.Pix);
             _checkoutRepository.Add(checkout);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
@@ -89,7 +91,7 @@ namespace Ecommerce.Application.Services
         }
         public async Task<CheckoutDetailsDTO> UpdateAsync(Guid checkoutId, CheckoutUpdateDTO checkoutUpdate, CancellationToken cancellationToken)
         {
-            var checkout = await _checkoutRepository.GetByIdAsync(checkoutId, cancellationToken);
+            var checkout = await _checkoutRepository.GetByIdWithPaymentAttemptsAsync(checkoutId, cancellationToken);
             if (checkout is null || _currentUserService.UserId != checkout.UserId)
                 throw new NotFoundException("Checkout", $"Checkout with Id: {checkoutId} was not found");
 
@@ -126,7 +128,7 @@ namespace Ecommerce.Application.Services
         }
         public async Task CreatePaymentAsync(Guid checkoutId, CancellationToken cancellationToken)
         {
-            var checkout = await _checkoutRepository.GetByIdAsync(checkoutId, cancellationToken);
+            var checkout = await _checkoutRepository.GetByIdWithPaymentAttemptsAsync(checkoutId, cancellationToken);
             var cart = await _cartRepository.GetByUserIdAsync(_currentUserService.UserId, cancellationToken);
             if (checkout is null || _currentUserService.UserId != checkout.UserId)
                 throw new NotFoundException("Checkout", $"Checkout with Id: {checkoutId} was not found");
@@ -194,6 +196,10 @@ namespace Ecommerce.Application.Services
                 throw new NotFoundException("Checkout", $"Checkout with Id: {id} was not found");
 
             _checkoutRepository.Remove(checkout);
+            foreach (var item in checkout.CheckoutItems)
+            {
+                item.Product.CancelStockReservation(item.Quantity);
+            }
             await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
