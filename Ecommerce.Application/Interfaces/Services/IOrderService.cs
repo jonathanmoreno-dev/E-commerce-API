@@ -12,7 +12,7 @@ namespace Ecommerce.Application.Interfaces.Services
         public Task<PagedList<OrderListItemDTO>> GetAllCurrentUserOrdersAsync(PaginationParams paginationParams, CancellationToken cancellationToken);
         public Task<PagedList<OrderListItemDTO>> GetAllCurrentUserOrdersByStatusAsync(OrderStatus status, PaginationParams paginationParams, CancellationToken cancellationToken);
         public Task<OrderDetailsDTO> GetByIdAsync(Guid id, CancellationToken cancellationToken);
-        internal void CreateFromCheckout(Checkout checkout);
+        public void CreateFromCheckout(Checkout checkout);
         public Task<OrderDetailsDTO> RefundItemAsync(RefundCreateDTO refundCreate, CancellationToken cancellationToken);
         public Task SetTrackingCodeAsync(Guid orderId, string trackingCode, CancellationToken cancellationToken);
         public Task CancelAsync(Guid orderId, CancellationToken cancellationToken);
