@@ -30,7 +30,7 @@ namespace Ecommerce.Infrastructure.Data.Repositories
         }
         public async Task<RefreshToken?> GetActiveByUserIdAsync(Guid userId, CancellationToken cancellationToken)
         {
-            return await _appDbContext.RefreshTokens.Where(x => x.UserId == userId).FirstOrDefaultAsync(x => !(DateTime.UtcNow < x.ExpiresAt) && (x.RevokedAt == null), cancellationToken);
+            return await _appDbContext.RefreshTokens.Where(x => x.UserId == userId).FirstOrDefaultAsync(x => (x.ExpiresAt > DateTime.UtcNow) && (x.RevokedAt == null), cancellationToken);
         }
         public async Task<RefreshToken?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
