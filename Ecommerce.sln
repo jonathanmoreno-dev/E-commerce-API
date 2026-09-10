@@ -18,8 +18,20 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecommerce.Fakers", "Ecommer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecommerce.Tests.Unit", "Ecommerce.Tests.Unit\Ecommerce.Tests.Unit.csproj", "{A0CDB707-665A-817A-6578-BE36D6838B32}"
 	ProjectSection(ProjectDependencies) = postProject
-		{16626911-B732-4E9B-B0CC-AE6E9BE30065} = {16626911-B732-4E9B-B0CC-AE6E9BE30065}
 		{A0A0D909-07CA-4AB0-AE96-8B7B8E597597} = {A0A0D909-07CA-4AB0-AE96-8B7B8E597597}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Itens de Solução", "Itens de Solução", "{380A7511-A354-6D7A-0CC0-8FA1F1BA7B6C}"
+	ProjectSection(SolutionItems) = preProject
+		coverlet.runsettings = coverlet.runsettings
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecommerce.Tests.Integration", "Ecommerce.Tests.Integration\Ecommerce.Tests.Integration.csproj", "{B2935227-D2D2-3B9E-A06A-94547804D126}"
+	ProjectSection(ProjectDependencies) = postProject
+		{51F2B71A-FCDD-4183-BF9E-53BE0E992ABA} = {51F2B71A-FCDD-4183-BF9E-53BE0E992ABA}
+		{8F0BF9CE-7586-4449-87FD-F8D09446F74E} = {8F0BF9CE-7586-4449-87FD-F8D09446F74E}
+		{A0A0D909-07CA-4AB0-AE96-8B7B8E597597} = {A0A0D909-07CA-4AB0-AE96-8B7B8E597597}
+		{C3ECBE45-9E3A-471D-BB56-A8CCD1545C8B} = {C3ECBE45-9E3A-471D-BB56-A8CCD1545C8B}
 	EndProjectSection
 EndProject
 Global
@@ -52,6 +64,10 @@ Global
 		{A0CDB707-665A-817A-6578-BE36D6838B32}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0CDB707-665A-817A-6578-BE36D6838B32}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0CDB707-665A-817A-6578-BE36D6838B32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2935227-D2D2-3B9E-A06A-94547804D126}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2935227-D2D2-3B9E-A06A-94547804D126}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2935227-D2D2-3B9E-A06A-94547804D126}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2935227-D2D2-3B9E-A06A-94547804D126}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
